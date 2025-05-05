@@ -34,4 +34,5 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Code Style check
         run: |
+          echo "Checking code style..."
           git ls-files *.{c,h} | xargs clang-format -i --verbose && git diff --exit-code
