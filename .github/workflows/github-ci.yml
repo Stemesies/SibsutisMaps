@@ -33,8 +33,7 @@ jobs:
       
       - name: build test
         run: |
-          mkdir obj
-          mkdir bin
+          make init
           echo "Compiling the code..."
           make
           echo "Compile complete."
