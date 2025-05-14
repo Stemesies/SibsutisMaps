@@ -1,0 +1,22 @@
+all: main run
+
+#Программу можно запускать с аргументами прямо из makefile
+#Для этого вы можете прописать make ARGS="<аргументы>"
+ARGS=
+
+LINK= gcc -g -Wall -Wextra -Werror
+COMPILE= gcc -c -g -Wall -Wextra -Werror
+
+OUTPUT= bin/test
+
+#Какие файлы программа использует
+DEPENDENCIES=obj/main.o
+
+main: ${DEPENDENCIES}
+	${LINK} $^ -o ${OUTPUT}
+
+obj/main.o: src/main.c
+	${COMPILE} $< -o $@
+
+run:
+	./${OUTPUT} ${ARGS}
