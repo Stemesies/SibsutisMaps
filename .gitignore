@@ -1,2 +1,3 @@
-c/bin/*
-c/obj/*
+c/bin/
+c/obj/
+.vscode/

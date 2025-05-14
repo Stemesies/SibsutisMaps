@@ -10,13 +10,19 @@ COMPILE= gcc -c -g -Wall -Wextra -Werror
 OUTPUT= bin/test
 
 #Какие файлы программа использует
-DEPENDENCIES=obj/main.o
+DEPENDENCIES=obj/main.o obj/config.o
 
 main: ${DEPENDENCIES}
 	${LINK} $^ -o ${OUTPUT}
 
-obj/main.o: src/main.c
+obj/main.o: src/main.c src/config.c src/config.h
+	${COMPILE} $< -o $@
+
+obj/config.o: src/config.c src/config.h
 	${COMPILE} $< -o $@
 
 run:
 	./${OUTPUT} ${ARGS}
+
+memcheck:
+	valgrind --tool=memcheck ${OUTPUT} ${ARGS}
