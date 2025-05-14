@@ -26,3 +26,7 @@ run:
 
 memcheck:
 	valgrind --tool=memcheck ${OUTPUT} ${ARGS}
+
+init:
+	mkdir bin
+	mkdir obj
