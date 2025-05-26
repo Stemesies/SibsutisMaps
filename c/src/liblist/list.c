@@ -135,11 +135,17 @@ void* list_bpop(List* list)
     if (node == NULL)
         return NULL;
 
-    void* value = node->value;
-    node->previous->next = NULL;
-    list->tail = node->previous;
-    listnode_free(node);
     list->size--;
+
+    void* value = node->value;
+    if (list_is_empty(list)) {
+        list->head = NULL;
+        list->tail = NULL;
+    } else {
+        node->previous->next = NULL;
+        list->tail = node->previous;
+    }
+    listnode_free(node);
 
     return value;
 }
@@ -214,6 +220,9 @@ void list_insert(List* list, void* value, unsigned int index)
     if (list == NULL)
         return;
 
+    if (index > list_size(list))
+        return;
+
     if (index == 0)
         return list_fpush(list, value);
     else if (index == list_size(list))
@@ -255,7 +264,7 @@ List* list_copy(const List* from, List* to)
     while ((fnode = fnode->next) != NULL) {
         last_tnode = tnode;
         tnode = listnode_create(fnode->value);
-        if(tnode == NULL) {
+        if (tnode == NULL) {
             list_clear(to);
             return to;
         }

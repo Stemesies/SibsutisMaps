@@ -20,16 +20,14 @@ typedef struct LIST {
 #define list_itp(type) (((type*)it))
 #define list_it(type) (*((type*)it))
 
-#define listFpopOf(type, list) ((type*)listFpop(list))
-#define listBpopOf(type, list) ((type*)listBpop(list))
-#define listRemoveOf(type, list, index) ((type*)listRemove(list, index))
-#define listGet(list, index) listGbind(list, index);
-#define listGbindOf(type, list, index) ((type*)listGbind(list, index))
-#define listGetOf(type, list, index) ((type*)listGbind(list, index))
-#define listFirstOf(type, list) ((type*)listFirst(list))
-#define listLastOf(type, list) ((type*)listLast(list))
+#define list_fpopof(type, list) ((type*)list_fpop(list))
+#define list_bpopof(type, list) ((type*)list_bpop(list))
+#define list_removeof(type, list, index) ((type*)list_remove(list, index))
+#define list_getof(type, list, index) ((type*)list_get(list, index))
+#define list_firstof(type, list) ((type*)list_first(list))
+#define list_lastof(type, list) ((type*)list_last(list))
 
-#define listNewCopy(from) listCopy((from), listCreate())
+#define listNewCopy(from) list_copy((from), list_create())
 
 #define listForEachInlined(list, bbbblock)  \
     if (1) {                                \
@@ -42,15 +40,13 @@ typedef struct LIST {
         }                                   \
     }
 
-
 /*
 Очищает и освобождает данный лист.
 Имейте в виду, что этот метод не освобождает значения, хранящиеся в листе.
 */
 #define list_free(list) \
-    list_clear(list); \
+    list_clear(list);   \
     free(list);
-
 
 List* list_create();
 void list_clear(List* list);
