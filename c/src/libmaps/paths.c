@@ -257,21 +257,26 @@ void show_paths(PATHS* paths)
 /*Лучший путь по выбранному критерию*/
 LIST* best_path(PATHS* path, int what_path, int res)
 {
-    LIST *res_short = path->first, *res_long = res_short,
-         *res_quick = res_short;
+    LIST *res_short = NULL, *res_long = NULL, *res_quick = NULL;
+    int temp_short = INT_MAX, temp_long = 0.0;
+    double temp_quick = DBL_MAX;
     for (LIST* curr = path->first; curr != NULL; curr = curr->next) {
         if (curr->tail->num == res) {
-            if (curr->path < res_short->path)
+            if (curr->path < temp_short) {
                 res_short = curr;
-            if (curr->path > res_long->path)
+                temp_short = curr->path;
+            }
+            if (curr->path > temp_long) {
                 res_long = curr;
-            if (curr->time < res_quick->time)
+                temp_long = curr->path;
+            }
+            if (curr->time < temp_quick) {
                 res_quick = curr;
+                temp_quick = curr->time;
+            }
         }
     }
-    if (res_long->tail->num != res || res_short->tail->num != res
-        || res_quick->tail->num != res)
-        return NULL;
+
     switch (what_path) {
     case LONGEST:
         return res_long;

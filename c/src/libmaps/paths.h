@@ -1,7 +1,9 @@
 #ifndef PATH_H_
 #define PATH_H_
 
+#include <float.h>
 #include <libmaps/graph.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
