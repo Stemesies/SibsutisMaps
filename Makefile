@@ -70,7 +70,10 @@ clean:
 	find $(LANG_DIR)/$(OBJ_DIR) -name '*.$(OBJ_EXT)' -exec $(RM) '{}' \;
 	find $(LANG_DIR)/$(OBJ_DIR) -name '*.d' -exec $(RM) '{}' \;
 
-
-# init:
-# 	mkdir c/bin
-# 	mkdir c/obj
+.PHONY: init
+init:
+	mkdir c/bin
+	mkdir c/obj
+	mkdir c/obj/src
+	mkdir c/obj/src/libmaps
+	mkdir c/obj/src/maps
