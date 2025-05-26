@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define HASHTAB_SIZE 5
-#define MAXSTR strlen("Ust-Blagoveschensk")
+#define HASHTAB_SIZE 45
+#define MAXSTR strlen("Stantsionno-Oyashinskiy")
 
 /*Ребро графа*/
 typedef struct edge
