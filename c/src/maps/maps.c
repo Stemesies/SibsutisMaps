@@ -44,18 +44,24 @@ int main()
         path,
         graph);
 
-    show_paths(path);
-    printf("Karasuk: %d\n", hashtab_lookup(table, "Moshkovo"));
-    printf("%s\n", table[43].key);
+    // show_paths(path, table, hashtab_lookup(table, "Karasuk"));
+    alternative(
+            path,
+            table,
+            hashtab_lookup(table, "Novosibirsk"),
+            hashtab_lookup(table, "Karasuk"),
+            1.5,
+            Shortest);
+    // printf("Karasuk: %d\n", hashtab_lookup(table, "Moshkovo"));
+    // printf("%s\n", table[43].key);
 
-    LIST* a = best_path(path, Longest, hashtab_lookup(table, "Karasuk"));
-    // printf("%p\n", a);
+    // LIST* a = best_path(path, Longest, hashtab_lookup(table, "Karasuk"));
+    // // printf("%p\n", a);
 
-    printf("Самый длинный путь из Новосибирска в Карасук: \n");
-    for (NODE* temp = a->head; temp != NULL; temp = temp->next)
-        printf("%s->", table[temp->num].key);
-    printf(": %d км, %.2lf ч\n", a->path, a->time);
-    // printf("len: %d\n", graph->graph_matrix[35][23].len);
+    // printf("Самый длинный путь из Новосибирска в Карасук: \n");
+    // for (NODE* temp = a->head; temp != NULL; temp = temp->next)
+    //     printf("%s->", table[temp->num].key);
+    // printf(": %d км, %.2lf ч\n", a->path, a->time);
     graph_destroy(graph);
 
     return 0;

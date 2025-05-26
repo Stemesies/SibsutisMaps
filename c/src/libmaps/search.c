@@ -94,7 +94,7 @@ void Bfs(int src, int res, PATHS* path, size_t n, EDGE** graph)
 }
 
 /*Лучший путь по выбранному критерию*/
-LIST* best_path(PATHS* path, int what_path, int res)
+LIST* best_path(PATHS* path, Priority what_path, int res)
 {
     LIST *res_short = NULL, *res_long = NULL, *res_quick = NULL;
     int temp_short = INT_MAX, temp_long = 0.0;
@@ -128,6 +128,42 @@ LIST* best_path(PATHS* path, int what_path, int res)
     }
 }
 
-void alternative()
+void alternative(
+        PATHS* paths,
+        HASH* table,
+        int src,
+        int res,
+        double rate,
+        Priority what_path)
 {
+    int count = 0;
+    LIST* a = best_path(paths, what_path, res);
+    printf("Альтернативные пути %s - %s:\n", table[src].key, table[res].key);
+    for (LIST* curr = paths->first; curr != NULL; curr = curr->next) {
+        if (curr->tail->num == res) {
+            switch (what_path) {
+            case Longest:
+                if (((double)a->path / (double)curr->path) <= rate) {
+                    count++;
+                    print_path(curr, table, count);
+                }
+                break;
+            case Shortest:
+                if (((double)curr->path / (double)a->path) <= rate) {
+                    count++;
+                    print_path(curr, table, count);
+                }
+                break;
+            case Quickest:
+                if ((curr->time / a->time) <= rate) {
+                    count++;
+                    print_path(curr, table, count);
+                }
+                break;
+
+            default:
+                break;
+            }
+        }
+    }
 }

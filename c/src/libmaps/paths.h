@@ -48,6 +48,7 @@ void insert_in_list(LIST* list, int num, EDGE* edge);
 void insert_in_path(PATHS* path, LIST* insert);
 LIST* copy_list(LIST* src, int num);
 bool is_visited(LIST* src, int num);
-void show_paths(PATHS* paths);
+void print_path(LIST* path, HASH* table, int count);
+void show_paths(PATHS* paths, HASH* is_in_table, int res);
 
 #endif

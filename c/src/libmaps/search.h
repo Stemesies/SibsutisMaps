@@ -8,6 +8,13 @@ typedef enum PRIORITY { Shortest, Quickest, Longest } Priority;
 
 void Dfs(int src, int res, PATHS* path, GRAPH* graph);
 void Bfs(int src, int res, PATHS* path, size_t n, EDGE** graph);
-LIST* best_path(PATHS* path, int what_path, int res);
+LIST* best_path(PATHS* path, Priority what_path, int res);
+void alternative(
+        PATHS* paths,
+        HASH* table,
+        int src,
+        int res,
+        double rate,
+        Priority what_path);
 
 #endif

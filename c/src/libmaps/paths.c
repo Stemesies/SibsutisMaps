@@ -148,15 +148,21 @@ void func(LIST* path, bool* visited)
     }
 }
 
-void show_paths(PATHS* paths)
+void print_path(LIST* path, HASH* table, int count)
+{
+    printf("Путь %d: ", count);
+    for (NODE* temp = path->head; temp != NULL; temp = temp->next)
+        printf("%s->", table[temp->num].key);
+    printf(": %d км, %.2lf ч\n", path->path, path->time);
+}
+
+void show_paths(PATHS* paths, HASH* table, int res)
 {
     int count = 0;
     for (LIST* curr = paths->first; curr != NULL; curr = curr->next) {
-        count++;
-        printf("Путь %d: ", count);
-
-        for (NODE* temp = curr->head; temp != NULL; temp = temp->next)
-            printf("%d->", temp->num);
-        printf(": %d км, %.2lf ч\n", curr->path, curr->time);
+        if (curr->tail->num == res) {
+            count++;
+            print_path(curr, table, count);
+        }
     }
 }
