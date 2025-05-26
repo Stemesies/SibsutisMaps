@@ -117,13 +117,17 @@ LIST* best_path(PATHS* path, int what_path, int res)
     }
 
     switch (what_path) {
-    case LONGEST:
+    case Longest:
         return res_long;
-    case SHORTEST:
+    case Shortest:
         return res_short;
-    case QUICKEST:
+    case Quickest:
         return res_quick;
     default:
         return NULL;
     }
+}
+
+void alternative()
+{
 }

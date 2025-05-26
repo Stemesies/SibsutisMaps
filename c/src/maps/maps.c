@@ -48,7 +48,7 @@ int main()
     printf("Karasuk: %d\n", hashtab_lookup(table, "Moshkovo"));
     printf("%s\n", table[43].key);
 
-    LIST* a = best_path(path, LONGEST, hashtab_lookup(table, "Karasuk"));
+    LIST* a = best_path(path, Longest, hashtab_lookup(table, "Karasuk"));
     // printf("%p\n", a);
 
     printf("Самый длинный путь из Новосибирска в Карасук: \n");

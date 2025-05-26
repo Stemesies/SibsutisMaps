@@ -3,9 +3,8 @@
 
 #include <libmaps/graph.h>
 #include <libmaps/paths.h>
-#define SHORTEST 0
-#define LONGEST 1
-#define QUICKEST 2
+
+typedef enum PRIORITY { Shortest, Quickest, Longest } Priority;
 
 void Dfs(int src, int res, PATHS* path, GRAPH* graph);
 void Bfs(int src, int res, PATHS* path, size_t n, EDGE** graph);
