@@ -1,3 +1,4 @@
+/*Файл для работы со структурой графа и входными данными*/
 #include <libmaps/graph.h>
 
 GRAPH* graph_create(int n)
@@ -50,8 +51,8 @@ HASH* hashtab_create()
     HASH* a = (HASH*)calloc(HASHTAB_SIZE, sizeof(HASH));
     for (int i = 0; i < HASHTAB_SIZE; i++) {
         a[i].key = NULL;
-        // a[i].next = NULL;
     }
+    a->count = 0;
     return a;
 }
 
@@ -75,6 +76,7 @@ unsigned int hashtab_add(HASH* hashtab, char* key)
                 hashtab[i].key = calloc(strlen(key) + 1, sizeof(char));
                 strcpy(hashtab[i].key, key);
                 index = i;
+                hashtab->count++;
                 break;
             }
             if ((index == temp) && (i == HASHTAB_SIZE - 1))
@@ -83,6 +85,7 @@ unsigned int hashtab_add(HASH* hashtab, char* key)
     } else {
         hashtab[index].key = calloc(strlen(key) + 1, sizeof(char));
         strcpy(hashtab[index].key, key);
+        hashtab->count++;
     }
 
     return index;
@@ -130,7 +133,6 @@ void graph_init(GRAPH* graph, HASH* table, FILE* fp)
         v_1 = (!is_in_table(table, str)) ? hashtab_add(table, str)
                                          : ELFHash(str);
         count = 0;
-        // fseek(fp, 1, SEEK_CUR);
         while ((ch = fgetc(fp)) != ' ' && ch != EOF) {
             str[count] = ch;
             count++;
@@ -139,7 +141,6 @@ void graph_init(GRAPH* graph, HASH* table, FILE* fp)
         v_2 = (!is_in_table(table, str)) ? hashtab_add(table, str)
                                          : ELFHash(str);
         count = 0;
-        // fseek(fp, 1, SEEK_CUR);
         fscanf(fp, " %d", &path);
         fscanf(fp, " %d", &speed);
         add_edge(graph, v_1, v_2, path, speed);
@@ -151,16 +152,11 @@ void graph_init(GRAPH* graph, HASH* table, FILE* fp)
 /*Демонстрация графа как матрицы смежности*/
 void show_graph(int v, EDGE** mass)
 {
+    if (!mass)
+        puts("Нечего показывать.");
     for (int i = 0; i < v; i++) {
         for (int j = 0; j < v; j++) {
             printf("{%d %d}\t", mass[i][j].len, mass[i][j].speed);
-
-            // if (mass[i][j].len > 0)
-            // {
-            //   // printf("i: %d, j: %d\n", i, j);
-            // }
-            // else
-            //   printf("{%d %d}\t", mass[i][j].len, mass[i][j].speed);
         }
         putchar('\n');
     }

@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define HASHTAB_SIZE 45
+#define HASHTAB_SIZE 50
 #define MAXSTR strlen("Stantsionno-Oyashinskiy")
 
 /*Ребро графа*/
@@ -25,6 +25,7 @@ typedef struct graph {
 /*Структура для хранения соответствий номеров вершин и населённых пунктов*/
 typedef struct hashtable {
     char* key;
+    int count;
 } HASH;
 
 GRAPH* graph_create(int n);
