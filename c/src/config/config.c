@@ -6,9 +6,9 @@
 
 Config config;
 
-#define isFlag(str) strcmp(argv[i], str) == 0
-#define isFlag2(str, str2) isFlag(str) || isFlag(str2)
-#define expectArgument(message_expectedValue)                                  \
+#define isflag(str) strcmp(argv[i], str) == 0
+#define isflag2(str, str2) isflag(str) || isflag(str2)
+#define expect_argument(message_expectedValue)                                 \
     if (argc <= i + 1) {                                                       \
         printf("Флаг %s ожидает " message_expectedValue " после себя.\n",      \
                argv[i]);                                                       \
@@ -20,24 +20,24 @@ Config config;
         exit(-1);                                                              \
     }
 
-void printHelp() {
+void print_help() {
     printf("Тут должна быть документация по использованию программы\n");
 }
 
-void configInit(char *defaultOutputPath) {
+void config_init(char *defaultOutputPath) {
     config.priority = Quickest;
     config.limit = 0;
-    config.altWaysCount = 0;
-    config.altWaysFilterCoefficient = 1.5;
+    config.altways_count = 0;
+    config.altways_filter_coefficient = 1.5;
 
-    config.outputStream = defaultOutputPath;
-    config.moreDetailedOutput = 0;
+    config.output_stream = defaultOutputPath;
+    config.more_detailed_output = 0;
 }
 
 /*
 Данный метод чисто для дебага. Возможно вскоре будет удален.
 */
-void configPrint() {
+void config_print() {
     printf("\n--- Конфиг приложения ---\n");
     printf("Приоритет: ");
 
@@ -57,11 +57,11 @@ void configPrint() {
     }
 
     printf("Лимит: %u\n", config.limit);
-    printf("Количество альт. путей: %u\n", config.altWaysCount);
-    printf("Коэффициент оптимальности: %f\n", config.altWaysFilterCoefficient);
+    printf("Количество альт. путей: %u\n", config.altways_count);
+    printf("Коэффициент оптимальности: %f\n", config.altways_filter_coefficient);
 
-    printf("Более детальный маршрут: %d\n", config.moreDetailedOutput);
-    printf("Путь к файлу: %s\n", config.outputStream);
+    printf("Более детальный маршрут: %d\n", config.more_detailed_output);
+    printf("Путь к файлу: %s\n", config.output_stream);
 }
 
 /*
@@ -69,13 +69,13 @@ void configPrint() {
 Составляет конфиг. Вы можете обратиться к нему через
 переменную config.
 */
-void parseArguments(int argc, char *argv[], char *defaultOutputPath) {
+void parse_arguments(int argc, char *argv[], char *defaultOutputPath) {
     if (argc < 2) { // аргументов нет
-        printHelp();
+        print_help();
         exit(0);
     }
 
-    configInit(defaultOutputPath);
+    config_init(defaultOutputPath);
 
     // Первый аргумент (i=0) всегда является именем файла. Пропускаем.
     for (int i = 1; i < argc; i++) {
@@ -85,33 +85,33 @@ void parseArguments(int argc, char *argv[], char *defaultOutputPath) {
             printf("Встречена точка %s\n", argv[i]);
         } else {
 
-            if (isFlag2("-Q", "--quickest")) {
+            if (isflag2("-Q", "--quickest")) {
                 config.priority = Quickest;
-            } else if (isFlag2("-S", "--shortest")) {
+            } else if (isflag2("-S", "--shortest")) {
                 config.priority = Shortest;
-            } else if (isFlag2("-L", "--longest")) {
+            } else if (isflag2("-L", "--longest")) {
                 config.priority = Longest;
             }
 
-            else if (isFlag2("-l", "--limit")) {
-                expectArgument("целое число");
+            else if (isflag2("-l", "--limit")) {
+                expect_argument("целое число");
                 // Инкрементируем i, чтобы программа пропустила аргумент.
                 config.limit = atoi(argv[++i]);
-            } else if (isFlag2("-alts", "--show-alternatives")) {
-                expectArgument("целое число");
-                config.altWaysCount = atoi(argv[++i]);
-            } else if (isFlag2("-altf", "--alt-filter")) {
-                expectArgument("число с плавающей точкой");
-                config.altWaysFilterCoefficient = atof(argv[++i]);
+            } else if (isflag2("-alts", "--show-alternatives")) {
+                expect_argument("целое число");
+                config.altways_count = atoi(argv[++i]);
+            } else if (isflag2("-altf", "--alt-filter")) {
+                expect_argument("число с плавающей точкой");
+                config.altways_filter_coefficient= atof(argv[++i]);
             }
 
-            else if (isFlag2("-p", "--path")) {
-                config.moreDetailedOutput = 1;
-            } else if (isFlag2("-f", "--print-to-file")) {
-                expectArgument("путь к файлу");
-                config.outputStream = argv[++i];
-            } else if (isFlag2("-h", "--help")) {
-                printHelp();
+            else if (isflag2("-p", "--path")) {
+                config.more_detailed_output = 1;
+            } else if (isflag2("-f", "--print-to-file")) {
+                expect_argument("путь к файлу");
+                config.output_stream = argv[++i];
+            } else if (isflag2("-h", "--help")) {
+                print_help();
                 exit(0);
             } else {
                 printf("Неизвестный флаг \"%s\".\n", argv[i]);

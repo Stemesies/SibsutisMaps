@@ -18,26 +18,26 @@ typedef struct CONFIG {
 
     Priority priority;
     unsigned int limit;
-    unsigned int altWaysCount;
-    float altWaysFilterCoefficient;
+    unsigned int altways_count;
+    float altways_filter_coefficient;
 
-    char *outputStream;
-    char moreDetailedOutput;
+    char *output_stream;
+    char more_detailed_output;
 
 } Config;
 
 extern Config config;
 
-void configInit(char *defaultOutputPath);
+void config_init(char *default_output_path);
 
 /*
 Данный метод чисто для дебага. Возможно вскоре будет удален.
 */
-void configPrint();
+void config_print();
 
 /*
 Обрабатывает аргументы, поданные при запуске программы
 Составляет конфиг. Вы можете обратиться к нему через
 переменную config.
 */
-void parseArguments(int argc, char *argv[], char *defaultOutputPath);
+void parse_arguments(int argc, char *argv[], char *defaultOutputPath);

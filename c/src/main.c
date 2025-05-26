@@ -2,16 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "config.h"
+#include "config/config.h"
 
 void amogus() { printf("exit\n"); }
 
 int main(int argc, char *argv[]) {
     // Обработка аргументов и записывание настроек в структуру Config.
-    char *defaultOutputPath = "result";
-    parseArguments(argc, argv, defaultOutputPath);
+    char *default_output_path = "result";
+    parse_arguments(argc, argv, default_output_path);
 
-    configPrint();
+    config_print();
 
     return 0;
 }

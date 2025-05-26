@@ -15,10 +15,10 @@ DEPENDENCIES=obj/main.o obj/config.o
 main: ${DEPENDENCIES}
 	${LINK} $^ -o ${OUTPUT}
 
-obj/main.o: src/main.c src/config.c src/config.h
+obj/main.o: src/main.c src/config/config.c src/config/config.h
 	${COMPILE} $< -o $@
 
-obj/config.o: src/config.c src/config.h
+obj/config.o: src/config/config.c src/config/config.h
 	${COMPILE} $< -o $@
 
 run:
