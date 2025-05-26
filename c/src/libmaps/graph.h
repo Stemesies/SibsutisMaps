@@ -4,18 +4,22 @@
 #define GRAPH_H
 
 #include <stdbool.h>
-#define HASHTAB_SIZE 50
+// #define HASHTAB_SIZE 50
 
-typedef struct edge {
-  double speed;
-  int len;
+typedef struct edge
+{
+    double speed;
+    int len;
 } EDGE;
 
-typedef struct graph {
-  int n_verticles;
-  EDGE **graph_matrix;
-  int *verticles;
-  bool *visited;
+typedef struct graph
+{
+    int n_verticles;
+    EDGE **graph_matrix;
+    int *verticles;
+    bool *visited;
 } GRAPH;
+
+void show_graph(int v, EDGE **mass);
 
 #endif

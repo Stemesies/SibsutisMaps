@@ -7,14 +7,16 @@
 #include <stdlib.h>
 
 /*Узел списка*/
-typedef struct node {
+typedef struct node
+{
   EDGE *edge;
   int num;
   struct node *next;
 } NODE;
 
 /*Список вершин (путь)*/
-typedef struct list {
+typedef struct list
+{
   NODE *head, *tail;
   int path;
   double time;
@@ -23,13 +25,15 @@ typedef struct list {
 } LIST;
 
 /*Структура для хранения путей*/
-typedef struct paths {
+typedef struct paths
+{
   LIST *first, *last;
   int count;
 } PATHS;
 
 /*Очередь вершин*/
-typedef struct queue {
+typedef struct queue
+{
   int size;
   NODE *head, *tail;
 } QUEUE;
@@ -46,7 +50,9 @@ void insert_in_list(LIST *list, int num, EDGE *edge);
 void insert_in_path(PATHS *path, LIST *insert);
 LIST *copy_list(LIST *src, int num);
 bool is_visited(LIST *src, int num);
-void show_graph(int v, EDGE **mass);
+void Dfs(int src, int res, PATHS *path, size_t n, EDGE **graph, int *verticles,
+         bool *visited);
+void Bfs(int src, int res, PATHS *path, size_t n, EDGE **graph);
 void show_paths(PATHS *paths);
 
 #endif
