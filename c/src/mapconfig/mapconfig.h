@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 typedef enum PRIORITY { Shortest, Quickest, Longest } Priority;
 
 /*
@@ -56,6 +55,7 @@ void config_print(MapConfig* config);
 Составляет конфиг. Вы можете обратиться к нему через
 переменную mapconfig из любой точки программы.
 */
-void parse_arguments(MapConfig* config, int argc, char* argv[], char* defaultOutputPath);
+void parse_arguments(
+        MapConfig* config, int argc, char* argv[], char* defaultOutputPath);
 
 #endif

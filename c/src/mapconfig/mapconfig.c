@@ -89,7 +89,8 @@ void config_print(MapConfig* config)
 Составляет конфиг. Вы можете обратиться к нему через
 переменную mapconfig из любой точки программы.
 */
-void parse_arguments(MapConfig* config, int argc, char* argv[], char* defaultOutputPath)
+void parse_arguments(
+        MapConfig* config, int argc, char* argv[], char* defaultOutputPath)
 {
     if (argc < 2) { // аргументов нет
         print_help();

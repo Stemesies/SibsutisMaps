@@ -29,10 +29,19 @@ jobs:
       
       - name: build test
         run: |
-          cd c
           make init
           echo "Compiling the code..."
-          make main
+          make
           echo "Compile complete."
-          echo "Performing testing."
-          make config-tests
+  test: 
+    runs-on: ubuntu-latest
+    steps:
+      # Running Unit-tests
+      - uses: actions/checkout@v4
+
+      - name: Unit-tests
+        run: | 
+          make init
+          echo "Start testing functions..."
+          make test
+          echo "Tests complete."
