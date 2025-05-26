@@ -3,7 +3,6 @@
 int main()
 {
   HASH *table = hashtab_create();
-  // hashtab_add(table, "Новосибирск");
   printf("%u\n", ELFHash("Pikhtovka"));
   FILE *fp = fopen("c/input", "r");
   GRAPH *graph = graph_create(HASHTAB_SIZE);

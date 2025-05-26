@@ -1,5 +1,4 @@
 #include <libmaps/graph.h>
-// #include <uchar.h>
 
 GRAPH *graph_create(int n)
 {
@@ -33,15 +32,6 @@ void add_edge(GRAPH *graph, unsigned int i, unsigned int j, int len,
   graph->graph_matrix[j][i].len = len;
   graph->graph_matrix[j][i].speed = speed;
 }
-
-// /*хэш-функция КР*/
-// unsigned int KRHash(char *key)
-// {
-//     unsigned int h = 0, hash_mul = 31;
-//     while (*key)
-//         h = h * hash_mul + (unsigned int)*key++;
-//     return h % HASHTAB_SIZE;
-// }
 
 /*хэш-функция ELF*/
 unsigned int ELFHash(char *s)
@@ -82,16 +72,12 @@ void hashtab_destroy(HASH *table)
 
 unsigned int hashtab_add(HASH *hashtab, char *key)
 {
-  // HASH *node = malloc(sizeof(*node));
-  // unsigned int index = KRHash(key);
   unsigned int index = ELFHash(key);
 
   if (hashtab[index].key != NULL)
   {
     for (int i = index; i < HASHTAB_SIZE; i++)
     {
-      // (r % 2 == 0) ? (i += r) : (i -= r);
-
       if (hashtab[i].key == NULL)
       {
         strcpy(hashtab[i].key, key);
@@ -110,8 +96,6 @@ unsigned int hashtab_add(HASH *hashtab, char *key)
 
 int hashtab_lookup(HASH *hashtab, char *key)
 {
-  // HASH node;
-  // int index = KRHash(key);
   if (!key)
     return -1;
   int index = ELFHash(key);
@@ -120,8 +104,6 @@ int hashtab_lookup(HASH *hashtab, char *key)
 
   for (int i = index; i < HASHTAB_SIZE; i++)
   {
-    // (r % 2 == 0) ? (i += r) : (i -= r);
-
     if (strcmp(hashtab[i].key, key) == 0)
       return i;
   }
