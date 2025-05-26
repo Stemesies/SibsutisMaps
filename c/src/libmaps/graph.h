@@ -9,23 +9,21 @@
 #define MAXSTR strlen("Stantsionno-Oyashinskiy")
 
 /*Ребро графа*/
-typedef struct edge
-{
+typedef struct edge {
     int speed, len;
 } EDGE;
 
 /*Структура для хранения графа*/
-typedef struct graph
-{
+typedef struct graph {
     int n_verticles;
     EDGE **graph_matrix;
-    int *verticles;
+    int *verticles; // массив verticles отвечает за количество посещений каждой
+                    // вершины
     bool *visited;
 } GRAPH;
 
 /*Структура для хранения соответствий номеров вершин и населённых пунктов*/
-typedef struct listnode
-{
+typedef struct hashtable {
     char *key;
 } HASH;
 
