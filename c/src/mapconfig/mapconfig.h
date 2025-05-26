@@ -1,9 +1,18 @@
+#ifndef MAPCONFIG_H_
+#define MAPCONFIG_H_
+
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
 typedef enum PRIORITY { Shortest, Quickest, Longest } Priority;
 
 /*
 Настройки данной программы.
 Вы можете обратиться к ним из любой точки программы
-с помощью переменной config, если подключите config.h
+с помощью переменной mapconfig, если подключите mapconfig.h
 
 ** priority: кратчайший/быстрейший/длиннейший приоритет программы
 ** limit: ограничение кол-ва промежуточных точек при нахождении пути
@@ -23,28 +32,30 @@ typedef struct CONFIG {
     unsigned int altways_count;
     float altways_filter_coefficient;
 
-    char *output_stream;
+    char* output_stream;
     char more_detailed_output;
 
-} Config;
+} MapConfig;
 
-extern Config config;
+extern MapConfig mapconfig;
 
-void config_init(Config *config, char *default_output_path);
+void config_init(MapConfig* config, char* default_output_path);
 
 /*
 Сравнивает поданые конфиги, возвращая 1 если они идентичны, 0 - если нет.
 */
-int config_compare(Config *config1, Config *config2);
+bool config_compare(MapConfig* config1, MapConfig* config2);
 
 /*
 Данный метод чисто для дебага. Возможно вскоре будет удален.
 */
-void config_print(Config *config);
+void config_print(MapConfig* config);
 
 /*
 Обрабатывает аргументы, поданные при запуске программы
 Составляет конфиг. Вы можете обратиться к нему через
-переменную config из любой точки программы.
+переменную mapconfig из любой точки программы.
 */
-void parse_arguments(int argc, char *argv[], char *defaultOutputPath);
+void parse_arguments(MapConfig* config, int argc, char* argv[], char* defaultOutputPath);
+
+#endif
