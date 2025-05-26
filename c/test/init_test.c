@@ -1,5 +1,6 @@
 #include <ctest.h>
 #include <libmaps/graph.h>
+#define N_VERT 46
 
 CTEST(test_graph, create)
 {
@@ -30,6 +31,7 @@ CTEST(test_hash, add_lookup)
     ASSERT_EQUAL(v, ELFHash("Novosibirsk"));
     ASSERT_EQUAL(ELFHash("Novosibirsk"), hashtab_lookup(table, "Novosibirsk"));
     ASSERT_EQUAL(true, is_in_table(table, "Novosibirsk"));
+    ASSERT_NOT_EQUAL(0, table->count);
 
     hashtab_destroy(table);
 }
@@ -55,6 +57,42 @@ CTEST(test_graph, add)
     graph_destroy(graph);
 }
 
-CTEST(test_hash, lookup)
+CTEST(test_graph, init)
 {
+    GRAPH* graph = graph_create(HASHTAB_SIZE);
+    HASH* table = hashtab_create();
+    FILE* fp = fopen("input", "r");
+    ASSERT_NOT_NULL(fp);
+    graph_init(graph, table, fp);
+    fseek(fp, 0, SEEK_SET);
+    char* str = calloc(MAXSTR, sizeof(char));
+    char ch;
+    int count = 0;
+    /*Считываем первый нас. пункт, чтобы проверить, есть ли он в таблице*/
+    while ((ch = fgetc(fp)) != ' ' && ch != EOF) {
+        str[count] = ch;
+        count++;
+    }
+    str[count] = '\0';
+    ASSERT_EQUAL(true, is_in_table(table, str));
+    ASSERT_EQUAL(N_VERT, table->count);
+
+    graph_destroy(graph);
+    hashtab_destroy(table);
+    free(str);
+    fclose(fp);
+}
+
+CTEST(test_in, empty_input)
+{
+    FILE* fp = fopen("c/test/empty_input", "r");
+    HASH* table = hashtab_create();
+    GRAPH* graph = graph_create(1);
+    graph_init(graph, table, fp);
+    ASSERT_EQUAL(0, table->count);
+    show_graph(1, graph->graph_matrix);
+
+    graph_destroy(graph);
+    hashtab_destroy(table);
+    fclose(fp);
 }
