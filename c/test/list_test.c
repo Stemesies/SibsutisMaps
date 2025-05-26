@@ -1,5 +1,5 @@
 #include <ctest.h>
-#include <liblist/list.h>
+#include <libmaps/list.h>
 
 CTEST(list, list_create)
 {

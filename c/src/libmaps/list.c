@@ -1,5 +1,8 @@
-#include <liblist/list.h>
+#include <libmaps/list.h>
 
+/*
+Выделяет память под новый связный список
+*/
 List* list_create()
 {
     List* list = (List*)malloc(sizeof(List));
@@ -12,7 +15,7 @@ List* list_create()
     return list;
 }
 
-ListNode* listnode_create(void* value)
+/*private*/ ListNode* listnode_create(void* value)
 {
     ListNode* node = (ListNode*)malloc(sizeof(ListNode));
     if (node == NULL)
@@ -24,7 +27,7 @@ ListNode* listnode_create(void* value)
     return node;
 }
 
-void listnode_free(ListNode* node)
+/*private*/ void listnode_free(ListNode* node)
 {
     if (node == NULL)
         return;
@@ -34,7 +37,7 @@ void listnode_free(ListNode* node)
     free(node);
 }
 
-ListNode* listnode_find(List* list, unsigned int index)
+/*private*/ ListNode* listnode_find(List* list, unsigned int index)
 {
     ListNode* current = list->head;
     unsigned int i = 0;
@@ -47,6 +50,10 @@ ListNode* listnode_find(List* list, unsigned int index)
     return current;
 }
 
+/*
+Очищает заданный список.
+Учтите: данный метод не уничтожает значения, хранящиеся в листе.
+*/
 void list_clear(List* list)
 {
     if (list == NULL)
@@ -64,6 +71,9 @@ void list_clear(List* list)
     list->size = 0;
 }
 
+/*
+Добавляет элемент в начало списка.
+*/
 void list_fpush(List* list, void* value)
 {
     if (list == NULL)
@@ -84,6 +94,11 @@ void list_fpush(List* list, void* value)
     list->size++;
 }
 
+/*
+Убирает элемент из начала списка.
+Возвращает: значение, хранящееся в начальном ноде.
+Null - если лист был пустой.
+*/
 void* list_fpop(List* list)
 {
     if (list == NULL)
@@ -107,6 +122,9 @@ void* list_fpop(List* list)
     return value;
 }
 
+/*
+Добавляет элемент в конец списка.
+*/
 void list_bpush(List* list, void* value)
 {
     if (list == NULL)
@@ -127,6 +145,11 @@ void list_bpush(List* list, void* value)
     list->size++;
 }
 
+/*
+Убирает элемент из конца списка.
+Возвращает: значение, хранящееся в конечном ноде.
+Null - если лист был пустой.
+*/
 void* list_bpop(List* list)
 {
     if (list == NULL)
@@ -150,6 +173,10 @@ void* list_bpop(List* list)
     return value;
 }
 
+/*
+Данный метод возвращает значение, хранящееся по указанному индексу.
+Если индекс за пределами листа или если лист пустой - возвращает NULL.
+*/
 void* list_get(List* list, unsigned int index)
 {
     if (list == NULL)
@@ -165,6 +192,10 @@ void* list_get(List* list, unsigned int index)
         return current->value;
 }
 
+/*
+Возвращает: значение, хранящееся в начальном ноде.
+Null - если лист пустой.
+*/
 void* list_first(List* list)
 {
     if (list == NULL)
@@ -176,6 +207,10 @@ void* list_first(List* list)
         return NULL;
 }
 
+/*
+Возвращает: значение, хранящееся в конечном ноде.
+Null - если лист пустой.
+*/
 void* list_last(List* list)
 {
     if (list == NULL)
@@ -187,6 +222,11 @@ void* list_last(List* list)
         return NULL;
 }
 
+/*
+Убирает элемент, находящийся на указанной позиции.
+Возвращает: значение убранного элемента.
+Если индекс за пределами листа или если лист пустой - возвращает NULL.
+*/
 void* list_remove(List* list, unsigned int index)
 {
     if (list == NULL)
@@ -199,15 +239,15 @@ void* list_remove(List* list, unsigned int index)
 
     void* value = current->value;
 
-    if (current->previous != NULL) // is not head?
+    if (current->previous == NULL)
+        list->head = current->next; // голова?
+    else
         current->previous->next = current->next;
-    else // is head?
-        list->head = current->next;
 
-    if (current->next != NULL) // is not tail?
-        current->next->previous = current->previous;
-    else // is tail?
+    if (current->next == NULL) // хвост?
         list->tail = current->previous;
+    else
+        current->next->previous = current->previous;
 
     list->size--;
     listnode_free(current);
@@ -215,6 +255,10 @@ void* list_remove(List* list, unsigned int index)
     return value;
 }
 
+/*
+Вставляет элемент в указанную позицию.
+Если индекс за пределами листа - ничего не происходит.
+*/
 void list_insert(List* list, void* value, unsigned int index)
 {
     if (list == NULL)
@@ -242,6 +286,9 @@ void list_insert(List* list, void* value, unsigned int index)
     list->size++;
 }
 
+/*
+Очищает лист to и копирует туда все значения, находящиеся в from.
+*/
 List* list_copy(const List* from, List* to)
 {
     if (from == NULL || to == NULL)

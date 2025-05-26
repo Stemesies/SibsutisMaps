@@ -1,7 +1,7 @@
 #ifndef MAPCONFIG_H_
 #define MAPCONFIG_H_
 
-#include <liblist/list.h>
+#include <libmaps/list.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -60,7 +60,6 @@ void config_print(MapConfig* config);
 Составляет конфиг. Вы можете обратиться к нему через
 переменную mapconfig из любой точки программы.
 */
-void parse_arguments(
-        MapConfig* config, int argc, char* argv[]);
+void parse_arguments(MapConfig* config, int argc, char* argv[]);
 
 #endif
