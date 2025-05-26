@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     char *default_output_path = "result";
     parse_arguments(argc, argv, default_output_path);
 
-    config_print();
+    config_print(&config);
 
     return 0;
 }

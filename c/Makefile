@@ -15,11 +15,9 @@ DEPENDENCIES=obj/main.o obj/config.o
 main: ${DEPENDENCIES}
 	${LINK} $^ -o ${OUTPUT}
 
-obj/main.o: src/main.c src/config/config.c src/config/config.h
-	${COMPILE} $< -o $@
-
-obj/config.o: src/config/config.c src/config/config.h
-	${COMPILE} $< -o $@
+config-tests: obj/tests_config.o obj/config.o
+	${LINK} $^ -o bin/config_tests
+	./bin/config_tests
 
 run:
 	./${OUTPUT} ${ARGS}
@@ -30,3 +28,15 @@ memcheck:
 init:
 	mkdir bin
 	mkdir obj
+
+
+obj/tests_config.o: src/config/tests_config.c src/config/config.c src/config/config.h
+	${COMPILE} $< -o $@
+
+obj/main.o: src/main.c src/config/config.c src/config/config.h
+	${COMPILE} $< -o $@
+
+obj/config.o: src/config/config.c src/config/config.h
+	${COMPILE} $< -o $@
+
+

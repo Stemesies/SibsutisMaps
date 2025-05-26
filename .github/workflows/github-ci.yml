@@ -32,5 +32,7 @@ jobs:
           cd c
           make init
           echo "Compiling the code..."
-          make
+          make main
           echo "Compile complete."
+          echo "Performing testing."
+          make config-tests
