@@ -1,8 +1,9 @@
 #include <libmaps/graph.h>
 
-GRAPH *graph_create(int n) {
-    GRAPH *graph = calloc(n, sizeof(GRAPH));
-    graph->graph_matrix = calloc(n, sizeof(EDGE *));
+GRAPH* graph_create(int n)
+{
+    GRAPH* graph = calloc(n, sizeof(GRAPH));
+    graph->graph_matrix = calloc(n, sizeof(EDGE*));
     for (int i = 0; i < n; i++)
         graph->graph_matrix[i] = calloc(n, sizeof(EDGE));
     graph->n_verticles = n;
@@ -11,7 +12,8 @@ GRAPH *graph_create(int n) {
     return graph;
 }
 
-void graph_destroy(GRAPH *graph) {
+void graph_destroy(GRAPH* graph)
+{
     free(graph->visited);
     free(graph->verticles);
     for (int i = 0; i < graph->n_verticles; i++) {
@@ -21,8 +23,8 @@ void graph_destroy(GRAPH *graph) {
     free(graph);
 }
 
-void add_edge(GRAPH *graph, unsigned int i, unsigned int j, int len,
-              int speed) {
+void add_edge(GRAPH* graph, unsigned int i, unsigned int j, int len, int speed)
+{
     graph->graph_matrix[i][j].len = len;
     graph->graph_matrix[i][j].speed = speed;
     graph->graph_matrix[j][i].len = len;
@@ -30,7 +32,8 @@ void add_edge(GRAPH *graph, unsigned int i, unsigned int j, int len,
 }
 
 /*хэш-функция ELF*/
-unsigned int ELFHash(char *s) {
+unsigned int ELFHash(char* s)
+{
     unsigned int h = 0, g;
     while (*s) {
         h = (h << 4) + (unsigned int)*s++;
@@ -42,8 +45,9 @@ unsigned int ELFHash(char *s) {
     return h % HASHTAB_SIZE;
 }
 
-HASH *hashtab_create() {
-    HASH *a = (HASH *)calloc(HASHTAB_SIZE, sizeof(HASH));
+HASH* hashtab_create()
+{
+    HASH* a = (HASH*)calloc(HASHTAB_SIZE, sizeof(HASH));
     for (int i = 0; i < HASHTAB_SIZE; i++) {
         a[i].key = NULL;
         // a[i].next = NULL;
@@ -51,7 +55,8 @@ HASH *hashtab_create() {
     return a;
 }
 
-void hashtab_destroy(HASH *table) {
+void hashtab_destroy(HASH* table)
+{
     for (int i = 0; i < HASHTAB_SIZE; i++) {
         if (!table[i].key)
             continue;
@@ -60,7 +65,8 @@ void hashtab_destroy(HASH *table) {
     free(table);
 }
 
-unsigned int hashtab_add(HASH *hashtab, char *key) {
+unsigned int hashtab_add(HASH* hashtab, char* key)
+{
     unsigned int index = ELFHash(key), temp = index;
 
     if (hashtab[index].key != NULL) {
@@ -82,7 +88,8 @@ unsigned int hashtab_add(HASH *hashtab, char *key) {
     return index;
 }
 
-int hashtab_lookup(HASH *hashtab, char *key) {
+int hashtab_lookup(HASH* hashtab, char* key)
+{
     if (!key)
         return -1;
     int index = ELFHash(key);
@@ -102,13 +109,15 @@ int hashtab_lookup(HASH *hashtab, char *key) {
     return -1;
 }
 
-bool is_in_table(HASH *table, char *key) {
+bool is_in_table(HASH* table, char* key)
+{
     return (hashtab_lookup(table, key) >= 0);
 }
 
-void graph_init(GRAPH *graph, HASH *table, FILE *fp) {
+void graph_init(GRAPH* graph, HASH* table, FILE* fp)
+{
     int path, speed, count = 0;
-    char *str = calloc(MAXSTR, sizeof(char));
+    char* str = calloc(MAXSTR, sizeof(char));
     char ch = 0;
     unsigned int v_1, v_2;
     while ((ch = fgetc(fp)) != EOF) {
@@ -140,7 +149,8 @@ void graph_init(GRAPH *graph, HASH *table, FILE *fp) {
 }
 
 /*Демонстрация графа как матрицы смежности*/
-void show_graph(int v, EDGE **mass) {
+void show_graph(int v, EDGE** mass)
+{
     for (int i = 0; i < v; i++) {
         for (int j = 0; j < v; j++) {
             printf("{%d %d}\t", mass[i][j].len, mass[i][j].speed);
