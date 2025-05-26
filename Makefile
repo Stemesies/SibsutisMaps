@@ -76,3 +76,4 @@ init:
 	mkdir c/obj/src
 	mkdir c/obj/src/libmaps
 	mkdir c/obj/src/maps
+	mkdir c/obj/test
