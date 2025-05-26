@@ -1,27 +1,22 @@
 #include <libmaps/paths.h>
 
-int main()
-{
+int main() {
   PATHS *path = def_path_construct();
   int *verticles = calloc(7, sizeof(int));
   bool *visited = calloc(7, sizeof(bool));
   EDGE **graph = malloc(7 * sizeof(EDGE *));
-  if (!graph)
-  {
+  if (!graph) {
     puts("noo(");
     exit(EXIT_FAILURE);
   }
-  for (int v = 0; v < 7; v++)
-  {
+  for (int v = 0; v < 7; v++) {
     graph[v] = malloc(7 * sizeof(EDGE));
     if (!graph[v])
       exit(EXIT_FAILURE);
   }
 
-  for (int i = 0; i < 7; i++)
-  {
-    for (int j = 0; j < 7; j++)
-    {
+  for (int i = 0; i < 7; i++) {
+    for (int j = 0; j < 7; j++) {
       graph[i][j].len = 0;
       graph[i][j].speed = 0.0;
     }
@@ -37,8 +32,7 @@ int main()
   graph[4][6].len = 19;
   graph[5][6].len = 33;
 
-  for (int i = 0; i < 7; i++)
-  {
+  for (int i = 0; i < 7; i++) {
     for (int j = 0; j < 7; j++)
       if (graph[i][j].len > 0)
         graph[j][i].len = graph[i][j].len;
