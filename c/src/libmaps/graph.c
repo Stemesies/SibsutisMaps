@@ -2,8 +2,8 @@
 
 GRAPH *graph_create(int n)
 {
-  GRAPH *graph = malloc(sizeof(GRAPH) * n);
-  graph->graph_matrix = malloc(sizeof(EDGE *) * n);
+  GRAPH *graph = calloc(n, sizeof(GRAPH));
+  graph->graph_matrix = calloc(n, sizeof(EDGE *));
   for (int i = 0; i < n; i++)
     graph->graph_matrix[i] = calloc(n, sizeof(EDGE));
   graph->n_verticles = n;
@@ -50,7 +50,7 @@ unsigned int ELFHash(char *s)
 
 HASH *hashtab_create()
 {
-  HASH *a = (HASH *)malloc(sizeof(HASH) * HASHTAB_SIZE);
+  HASH *a = (HASH *)calloc(HASHTAB_SIZE, sizeof(HASH));
   for (int i = 0; i < HASHTAB_SIZE; i++)
   {
     a[i].key = NULL;
@@ -72,7 +72,7 @@ void hashtab_destroy(HASH *table)
 
 unsigned int hashtab_add(HASH *hashtab, char *key)
 {
-  unsigned int index = ELFHash(key);
+  unsigned int index = ELFHash(key), temp = index;
 
   if (hashtab[index].key != NULL)
   {
@@ -80,9 +80,13 @@ unsigned int hashtab_add(HASH *hashtab, char *key)
     {
       if (hashtab[i].key == NULL)
       {
+        hashtab[i].key = calloc(MAXSTR, sizeof(char));
         strcpy(hashtab[i].key, key);
         index = i;
+        break;
       }
+      if ((index == temp) && (i == HASHTAB_SIZE - 1))
+        i = -1;
     }
   }
   else
@@ -104,8 +108,14 @@ int hashtab_lookup(HASH *hashtab, char *key)
 
   for (int i = index; i < HASHTAB_SIZE; i++)
   {
+    if (hashtab[i].key == NULL)
+      return -1;
     if (strcmp(hashtab[i].key, key) == 0)
       return i;
+    if (i == HASHTAB_SIZE - 1)
+    {
+      i = -1;
+    }
   }
 
   return -1;

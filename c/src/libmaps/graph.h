@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define HASHTAB_SIZE 15
+#define HASHTAB_SIZE 5
 #define MAXSTR strlen("Ust-Blagoveschensk")
 
 /*Ребро графа*/
