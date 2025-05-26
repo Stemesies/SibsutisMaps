@@ -131,7 +131,7 @@ void graph_init(GRAPH* graph, HASH* table, FILE* fp)
         }
         str[count] = '\0';
         v_1 = (!is_in_table(table, str)) ? hashtab_add(table, str)
-                                         : ELFHash(str);
+                                         : hashtab_lookup(table, str);
         count = 0;
         while ((ch = fgetc(fp)) != ' ' && ch != EOF) {
             str[count] = ch;
@@ -139,7 +139,8 @@ void graph_init(GRAPH* graph, HASH* table, FILE* fp)
         }
         str[count] = '\0';
         v_2 = (!is_in_table(table, str)) ? hashtab_add(table, str)
-                                         : ELFHash(str);
+                                         : hashtab_lookup(table, str);
+
         count = 0;
         fscanf(fp, " %d", &path);
         fscanf(fp, " %d", &speed);
