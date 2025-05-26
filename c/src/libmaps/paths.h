@@ -1,41 +1,37 @@
 #ifndef PATH_H_
 #define PATH_H_
 
+#include <libmaps/graph.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <libmaps/graph.h>
 
 /*Узел списка*/
-typedef struct node
-{
-    EDGE *edge;
-    int num;
-    struct node *next;
+typedef struct node {
+  EDGE *edge;
+  int num;
+  struct node *next;
 } NODE;
 
 /*Список вершин (путь)*/
-typedef struct list
-{
-    NODE *head, *tail;
-    int path;
-    double time;
-    // bool *visited;
-    struct list *next;
+typedef struct list {
+  NODE *head, *tail;
+  int path;
+  double time;
+  // bool *visited;
+  struct list *next;
 } LIST;
 
 /*Структура для хранения путей*/
-typedef struct paths
-{
-    LIST *first, *last;
-    int count;
+typedef struct paths {
+  LIST *first, *last;
+  int count;
 } PATHS;
 
 /*Очередь вершин*/
-typedef struct queue
-{
-    int size;
-    NODE *head, *tail;
+typedef struct queue {
+  int size;
+  NODE *head, *tail;
 } QUEUE;
 
 /*Прототипы функций*/
