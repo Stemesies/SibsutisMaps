@@ -50,8 +50,7 @@ void insert_in_list(LIST *list, int num, EDGE *edge);
 void insert_in_path(PATHS *path, LIST *insert);
 LIST *copy_list(LIST *src, int num);
 bool is_visited(LIST *src, int num);
-void Dfs(int src, int res, PATHS *path, size_t n, EDGE **graph, int *verticles,
-         bool *visited);
+void Dfs(int src, int res, PATHS *path, GRAPH *graph);
 void Bfs(int src, int res, PATHS *path, size_t n, EDGE **graph);
 void show_paths(PATHS *paths);
 

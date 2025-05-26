@@ -164,8 +164,7 @@ void func(LIST *path, bool *visited)
   }
 }
 
-void Dfs(int src, int res, PATHS *path, size_t n, EDGE **graph, int *verticles,
-         bool *visited)
+void Dfs(int src, int res, PATHS *path, GRAPH *graph)
 {
   if (src == res)
     return;
@@ -175,20 +174,20 @@ void Dfs(int src, int res, PATHS *path, size_t n, EDGE **graph, int *verticles,
     puts("noo(");
     exit(EXIT_FAILURE);
   }
-  visited[src] = true;
-  for (int i = 0; i < n; i++)
+  graph->visited[src] = true;
+  for (int i = 0; i < graph->n_verticles; i++)
   {
 
-    if (graph[src][i].len > 0)
+    if (graph->graph_matrix[src][i].len > 0)
     {
-      if (!visited[i])
+      if (!(graph->visited[i]))
       {
         LIST *new_list = NULL;
 
-        if (verticles[src] > 0)
+        if (graph->verticles[src] > 0)
         {
           new_list = copy_list(path->last, src);
-          insert_in_list(new_list, i, &(graph[src][i]));
+          insert_in_list(new_list, i, &(graph->graph_matrix[src][i]));
           insert_in_path(path, new_list);
         }
         else
@@ -198,17 +197,17 @@ void Dfs(int src, int res, PATHS *path, size_t n, EDGE **graph, int *verticles,
             if (path->count == 0)
             {
               new_list = def_list_construct(src);
-              insert_in_list(new_list, i, &(graph[src][i]));
+              insert_in_list(new_list, i, &(graph->graph_matrix[src][i]));
               insert_in_path(path, new_list);
             }
             else
-              insert_in_list(path->last, i, &(graph[src][i]));
+              insert_in_list(path->last, i, &(graph->graph_matrix[src][i]));
           }
         }
 
-        verticles[src]++;
-        Dfs(i, res, path, n, graph, verticles, visited);
-        visited[i] = false;
+        graph->verticles[src]++;
+        Dfs(i, res, path, graph);
+        graph->visited[i] = false;
       }
     }
   }

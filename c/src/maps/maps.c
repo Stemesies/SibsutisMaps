@@ -44,10 +44,10 @@ int main()
         graph[j][i].len = graph[i][j].len;
   }
 
-  Dfs(0, 5, path, 7, graph, verticles, visited);
+  // Dfs(0, 5, path, graph);
   // Bfs(0, 5, path, 7, graph);
 
-  printf("count: %d\n", path->count);
+  // printf("count: %d\n", path->count);
   show_paths(path);
   free(verticles);
   free(visited);
