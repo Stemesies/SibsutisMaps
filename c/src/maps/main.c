@@ -1,6 +1,7 @@
 #include <libmaps/graph.h>
 
-int main() {
+int main()
+{
   HASH *table = hashtab_create();
   // hashtab_add(table, "Новосибирск");
   printf("%u\n", ELFHash("Pikhtovka"));
@@ -12,6 +13,10 @@ int main() {
   printf("path: %d\nspeed: %d\n",
          graph->graph_matrix[ELFHash("Kolyvan")][ELFHash("Pikhtovka")].len,
          graph->graph_matrix[ELFHash("Pikhtovka")][ELFHash("Kolyvan")].speed);
+
+  fclose(fp);
+  hashtab_destroy(table);
+  graph_destroy(graph);
 
   return 0;
 }

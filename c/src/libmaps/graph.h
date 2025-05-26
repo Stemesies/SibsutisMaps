@@ -9,21 +9,24 @@
 #define MAXSTR strlen("Ust-Blagoveschensk")
 
 /*Ребро графа*/
-typedef struct edge {
-  int speed, len;
+typedef struct edge
+{
+    int speed, len;
 } EDGE;
 
 /*Структура для хранения графа*/
-typedef struct graph {
-  int n_verticles;
-  EDGE **graph_matrix;
-  int *verticles;
-  bool *visited;
+typedef struct graph
+{
+    int n_verticles;
+    EDGE **graph_matrix;
+    int *verticles;
+    bool *visited;
 } GRAPH;
 
 /*Структура для хранения соответствий номеров вершин и населённых пунктов*/
-typedef struct listnode {
-  char *key;
+typedef struct listnode
+{
+    char *key;
 } HASH;
 
 GRAPH *graph_create(int n);

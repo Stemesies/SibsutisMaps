@@ -4,6 +4,7 @@ LANG_DIR = c
 
 CFLAGS = -Wall -Werror -g
 CPPFLAGS = -I c/src -MP -MMD
+VALFLAGS = --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes
 
 SRC_DIR = src
 OBJ_DIR = obj
