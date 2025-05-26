@@ -33,3 +33,15 @@ jobs:
           echo "Compiling the code..."
           make
           echo "Compile complete."
+  test: 
+    runs-on: ubuntu-latest
+    steps:
+      # Running Unit-tests
+      - uses: actions/checkout@v4
+
+      - name: Unit-tests
+        run: | 
+          make init
+          echo "Start testing functions..."
+          make test
+          echo "Tests complete."
