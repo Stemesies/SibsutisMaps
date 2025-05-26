@@ -1,4 +1,4 @@
-#include <libmaps/paths.h>
+#include <libmaps/search.h>
 
 int main()
 {
