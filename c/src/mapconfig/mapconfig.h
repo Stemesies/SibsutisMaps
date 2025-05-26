@@ -1,10 +1,13 @@
 #ifndef MAPCONFIG_H_
 #define MAPCONFIG_H_
 
+#include <liblist/list.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#define DEFAULT_OUTPUT_PATH "result"
 
 typedef enum PRIORITY { Shortest, Quickest, Longest } Priority;
 
@@ -24,7 +27,7 @@ typedef enum PRIORITY { Shortest, Quickest, Longest } Priority;
 ** moreDetailedOutput: более подробная визуальная маршрута.
 */
 typedef struct CONFIG {
-    // List* points (Начальная, конечная и промежуточные точки)
+    List* points;
 
     Priority priority;
     unsigned int limit;
@@ -38,7 +41,9 @@ typedef struct CONFIG {
 
 extern MapConfig mapconfig;
 
-void config_init(MapConfig* config, char* default_output_path);
+MapConfig* config_create();
+void config_dispose(MapConfig* config);
+void config_init(MapConfig* config);
 
 /*
 Сравнивает поданые конфиги, возвращая 1 если они идентичны, 0 - если нет.
@@ -56,6 +61,6 @@ void config_print(MapConfig* config);
 переменную mapconfig из любой точки программы.
 */
 void parse_arguments(
-        MapConfig* config, int argc, char* argv[], char* defaultOutputPath);
+        MapConfig* config, int argc, char* argv[]);
 
 #endif

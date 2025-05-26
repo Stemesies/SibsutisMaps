@@ -21,14 +21,38 @@ void print_help()
     printf("Тут должна быть документация по использованию программы\n");
 }
 
-void config_init(MapConfig* config, char* default_output_path)
+MapConfig* config_create()
 {
+    MapConfig* mapconfig = (MapConfig*)malloc(sizeof(MapConfig));
+    if (mapconfig == NULL)
+        return NULL;
+    mapconfig->points = list_create();
+    if (mapconfig->points == NULL) {
+        free(mapconfig);
+        return NULL;
+    }
+    config_init(mapconfig);
+    return mapconfig;
+}
+
+void config_dispose(MapConfig* config)
+{
+    if (config != NULL) {
+        list_free(config->points);
+    }
+    free(config);
+}
+
+void config_init(MapConfig* config)
+{
+    list_clear(config->points);
+
     config->priority = Quickest;
     config->limit = 0;
     config->altways_count = 0;
     config->altways_filter_coefficient = 1.5;
 
-    config->output_stream = default_output_path;
+    config->output_stream = DEFAULT_OUTPUT_PATH;
     config->more_detailed_output = 0;
 }
 
@@ -58,6 +82,10 @@ bool config_compare(MapConfig* config1, MapConfig* config2)
 void config_print(MapConfig* config)
 {
     printf("\n--- Конфиг приложения ---\n");
+
+    printf("Путь: ");
+    list_foreach_inlined(config->points, { printf("%s -> ", list_itp(char)); });
+
     printf("Приоритет: ");
 
     switch (config->priority) {
@@ -89,21 +117,19 @@ void config_print(MapConfig* config)
 Составляет конфиг. Вы можете обратиться к нему через
 переменную mapconfig из любой точки программы.
 */
-void parse_arguments(
-        MapConfig* config, int argc, char* argv[], char* defaultOutputPath)
+void parse_arguments(MapConfig* config, int argc, char* argv[])
 {
     if (argc < 2) { // аргументов нет
         print_help();
         exit(0);
     }
 
-    config_init(config, defaultOutputPath);
+    config_init(config);
 
     // Первый аргумент (i=0) всегда является именем файла. Пропускаем.
     for (int i = 1; i < argc; i++) {
         if (argv[i][0] != '-') {
-            // тут мы должны добавить точку в лист config.points
-            printf("Встречена точка %s\n", argv[i]);
+            list_bpush(config->points, argv[i]);
         } else {
             if (isflag2("-Q", "--quickest")) {
                 config->priority = Quickest;

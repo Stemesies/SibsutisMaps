@@ -29,7 +29,7 @@ typedef struct LIST {
 
 #define listNewCopy(from) list_copy((from), list_create())
 
-#define listForEachInlined(list, bbbblock)  \
+#define list_foreach_inlined(list, bbbblock)  \
     if (1) {                                \
         ListNode* node = list->head;        \
         void* it = NULL;                    \

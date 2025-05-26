@@ -68,6 +68,11 @@ memcheck: $(APP_PATH)
 .PHONY: test
 test: $(TEST_PATH)
 	$(TEST_PATH) 
+
+.PHONY: memcheck_tests
+memcheck_tests: $(TEST_PATH)
+	valgrind $(VALFLAGS) $(TEST_PATH)
+
 # .PHONY: memcheck_tests
 # memcheck_tests: $(TEST_PATH)
 # 	valgrind $(VALFLAGS) $(TEST_PATH) < $(INPUT_FILES_PATH)
