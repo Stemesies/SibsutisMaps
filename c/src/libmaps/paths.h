@@ -5,6 +5,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#define SHORTEST 0
+#define LONGEST 1
+#define QUICKEST 2
 
 /*Узел списка*/
 typedef struct node {
@@ -49,5 +52,6 @@ bool is_visited(LIST* src, int num);
 void Dfs(int src, int res, PATHS* path, GRAPH* graph);
 void Bfs(int src, int res, PATHS* path, size_t n, EDGE** graph);
 void show_paths(PATHS* paths);
+LIST* best_path(PATHS* path, int what_path, int res);
 
 #endif

@@ -250,6 +250,36 @@ void show_paths(PATHS* paths)
 
         for (NODE* temp = curr->head; temp != NULL; temp = temp->next)
             printf("%d->", temp->num);
-        printf(": %d\n", curr->path);
+        printf(": %d км, %.2lf ч\n", curr->path, curr->time);
+    }
+}
+
+/*Лучший путь по выбранному критерию*/
+LIST* best_path(PATHS* path, int what_path, int res)
+{
+    LIST *res_short = path->first, *res_long = res_short,
+         *res_quick = res_short;
+    for (LIST* curr = path->first; curr != NULL; curr = curr->next) {
+        if (curr->tail->num == res) {
+            if (curr->path < res_short->path)
+                res_short = curr;
+            if (curr->path > res_long->path)
+                res_long = curr;
+            if (curr->time < res_quick->time)
+                res_quick = curr;
+        }
+    }
+    if (res_long->tail->num != res || res_short->tail->num != res
+        || res_quick->tail->num != res)
+        return NULL;
+    switch (what_path) {
+    case LONGEST:
+        return res_long;
+    case SHORTEST:
+        return res_short;
+    case QUICKEST:
+        return res_quick;
+    default:
+        return NULL;
     }
 }

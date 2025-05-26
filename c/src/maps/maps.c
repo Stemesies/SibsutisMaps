@@ -15,10 +15,23 @@ int main()
     graph->graph_matrix[4][6].len = 19;
     graph->graph_matrix[5][6].len = 33;
 
+    graph->graph_matrix[0][1].speed = 80;
+    graph->graph_matrix[0][2].speed = 60;
+    graph->graph_matrix[0][3].speed = 85;
+    graph->graph_matrix[1][4].speed = 60;
+    graph->graph_matrix[2][4].speed = 58;
+    graph->graph_matrix[3][5].speed = 37;
+    graph->graph_matrix[4][5].speed = 69;
+    graph->graph_matrix[4][6].speed = 73;
+    graph->graph_matrix[5][6].speed = 90;
+
     for (int i = 0; i < 7; i++) {
         for (int j = 0; j < 7; j++)
-            if (graph->graph_matrix[i][j].len > 0)
+            if (graph->graph_matrix[i][j].len > 0) {
                 graph->graph_matrix[j][i].len = graph->graph_matrix[i][j].len;
+                graph->graph_matrix[j][i].speed
+                        = graph->graph_matrix[i][j].speed;
+            }
     }
     show_graph(HASHTAB_SIZE, graph->graph_matrix);
 
@@ -27,6 +40,8 @@ int main()
 
     printf("count: %d\n", path->count);
     show_paths(path);
+    printf("Самый быстрый путь из 0 в 5: %.2lf ч\n",
+           best_path(path, QUICKEST, 5)->time);
     graph_destroy(graph);
 
     return 0;
