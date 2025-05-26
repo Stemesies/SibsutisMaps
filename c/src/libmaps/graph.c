@@ -72,7 +72,7 @@ unsigned int hashtab_add(HASH* hashtab, char* key)
     if (hashtab[index].key != NULL) {
         for (int i = index; i < HASHTAB_SIZE; i++) {
             if (hashtab[i].key == NULL) {
-                hashtab[i].key = calloc(MAXSTR, sizeof(char));
+                hashtab[i].key = calloc(strlen(key) + 1, sizeof(char));
                 strcpy(hashtab[i].key, key);
                 index = i;
                 break;
@@ -81,7 +81,7 @@ unsigned int hashtab_add(HASH* hashtab, char* key)
                 i = -1;
         }
     } else {
-        hashtab[index].key = calloc(MAXSTR, sizeof(char));
+        hashtab[index].key = calloc(strlen(key) + 1, sizeof(char));
         strcpy(hashtab[index].key, key);
     }
 
@@ -117,7 +117,7 @@ bool is_in_table(HASH* table, char* key)
 void graph_init(GRAPH* graph, HASH* table, FILE* fp)
 {
     int path, speed, count = 0;
-    char* str = calloc(MAXSTR, sizeof(char));
+    char* str = calloc(MAXSTR + 1, sizeof(char));
     char ch = 0;
     unsigned int v_1, v_2;
     while ((ch = fgetc(fp)) != EOF) {

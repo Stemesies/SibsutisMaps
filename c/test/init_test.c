@@ -55,6 +55,27 @@ CTEST(test_graph, add)
     graph_destroy(graph);
 }
 
-CTEST(test_hash, lookup)
+CTEST(test_graph, init)
 {
+    GRAPH* graph = graph_create(HASHTAB_SIZE);
+    HASH* table = hashtab_create();
+    FILE* fp = fopen("input", "r");
+    ASSERT_NOT_NULL(fp);
+    graph_init(graph, table, fp);
+    fseek(fp, 0, SEEK_SET);
+    char* str = calloc(MAXSTR, sizeof(char));
+    char ch;
+    int count = 0;
+    /*Считываем первый нас. пункт, чтобы проверить, есть ли он в таблице*/
+    while ((ch = fgetc(fp)) != ' ' && ch != EOF) {
+        str[count] = ch;
+        count++;
+    }
+    str[count] = '\0';
+    ASSERT_EQUAL(true, is_in_table(table, str));
+
+    graph_destroy(graph);
+    hashtab_destroy(table);
+    free(str);
+    fclose(fp);
 }

@@ -4,7 +4,7 @@ int main()
 {
     HASH* table = hashtab_create();
     printf("%u\n", ELFHash("Pikhtovka"));
-    FILE* fp = fopen("c/input", "r");
+    FILE* fp = fopen("input", "r");
     GRAPH* graph = graph_create(HASHTAB_SIZE);
     graph_init(graph, table, fp);
     printf("%d\n", hashtab_lookup(table, "Pikhtovka"));
