@@ -117,6 +117,8 @@ void destroy_paths(PATHS* paths)
     free(paths);
 }
 
+/*Головной элемент списка всегда занят исходной вершиной, поэтому начинаем
+ * вставку с head->next.*/
 void insert_in_list(LIST* list, int num, EDGE* edge)
 {
     if (!list) {
@@ -142,7 +144,12 @@ void insert_in_path(PATHS* path, LIST* insert)
     if (!path || !insert) {
         exit(EXIT_FAILURE);
     }
-    LIST* copy = copy_list(insert, insert->tail->num);
+    LIST* copy = NULL;
+    if (!(insert->tail))
+        copy = copy_list(insert, insert->head->num);
+    else
+        copy = copy_list(insert, insert->tail->num);
+
     if (path->count == 0) {
         path->first = copy;
         path->last = copy;
