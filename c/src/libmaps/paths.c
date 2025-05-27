@@ -28,6 +28,19 @@ QUEUE* queue_create()
     return queue;
 }
 
+void destroy_queue(QUEUE* a)
+{
+    NODE* temp = NULL;
+    if (!a)
+        return;
+    for (NODE* curr = a->head; curr != NULL;) {
+        temp = curr;
+        curr = curr->next;
+        destroy_node(temp);
+    }
+    free(a);
+}
+
 void queue_add(QUEUE* queue, int num, EDGE* edge)
 {
     if (!queue) {
@@ -51,7 +64,6 @@ NODE* queue_take(QUEUE* queue)
 {
     if (queue->size > 0) {
         NODE* curr = queue->head;
-        // if (queue->head->next != NULL)
         queue->head = queue->head->next;
         queue->size--;
         return curr;
