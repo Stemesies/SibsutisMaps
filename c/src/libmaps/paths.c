@@ -66,6 +66,19 @@ LIST* def_list_construct(int src)
     return list;
 }
 
+void destroy_list(LIST* a)
+{
+    NODE* temp = NULL;
+    if (!a)
+        return;
+    for (NODE* curr = a->head; curr != NULL;) {
+        temp = curr;
+        curr = curr->next;
+        destroy_node(temp);
+    }
+    free(a);
+}
+
 PATHS* def_path_construct()
 {
     PATHS* paths = malloc(sizeof(PATHS));
@@ -75,13 +88,28 @@ PATHS* def_path_construct()
     return paths;
 }
 
+void destroy_paths(PATHS* paths)
+{
+    LIST* temp = NULL;
+    if (!paths)
+        return;
+    for (LIST* curr = paths->first; curr != NULL;) {
+        temp = curr;
+        curr = curr->next;
+        destroy_list(temp);
+    }
+    free(paths);
+}
+
 void insert_in_list(LIST* list, int num, EDGE* edge)
 {
     if (!list) {
         exit(EXIT_FAILURE);
     }
     NODE* insert = def_node_construct(num);
-    insert->edge = edge;
+    insert->edge->len = edge->len;
+    insert->edge->speed = edge->speed;
+
     if (list->head->next == NULL) {
         list->head->next = insert;
         list->tail = insert;
@@ -99,12 +127,13 @@ void insert_in_path(PATHS* path, LIST* insert)
     if (!path || !insert) {
         exit(EXIT_FAILURE);
     }
+    LIST* copy = copy_list(insert, insert->tail->num);
     if (path->count == 0) {
-        path->first = insert;
-        path->last = insert;
+        path->first = copy;
+        path->last = copy;
     } else {
-        path->last->next = insert;
-        path->last = insert;
+        path->last->next = copy;
+        path->last = copy;
     }
     path->count++;
 }
@@ -118,7 +147,6 @@ LIST* copy_list(LIST* src, int num) // num - до какой вершины ко
         return res;
     NODE* current = src->head->next;
     while (current != NULL) {
-        // NODE *insert = def_node_construct();
         insert_in_list(res, current->num, current->edge);
         if (current->num == num)
             break;
@@ -136,16 +164,6 @@ bool is_visited(LIST* src, int num)
             return true;
     }
     return false;
-}
-
-void func(LIST* path, bool* visited)
-{
-    if (path && path->head && path->head->next) {
-        for (NODE* curr = path->head->next->next; curr != NULL;
-             curr = curr->next) {
-            visited[curr->num] = false;
-        }
-    }
 }
 
 void print_path(LIST* path, HASH* table, int count)
@@ -166,3 +184,17 @@ void show_paths(PATHS* paths, HASH* table, int res)
         }
     }
 }
+
+// /*Возвращает количество одинаковых вершин в сравниваемых путях.*/
+// int compare_paths(LIST* a, LIST* b)
+// {
+//     int count = 0;
+//     if (!a || !b)
+//         return -1;
+//     for (NODE *curr = a->head, *temp = b->head; curr && temp;
+//          curr = curr->next, temp = temp->next) {
+//         if (curr->num == temp->num)
+//             count++;
+//     }
+//     return count;
+// }

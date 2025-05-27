@@ -18,6 +18,7 @@ void Dfs(int src, int res, PATHS* path, GRAPH* graph)
                     new_list = copy_list(path->last, src);
                     insert_in_list(new_list, i, &(graph->graph_matrix[src][i]));
                     insert_in_path(path, new_list);
+                    // destroy_list(new_list);
                 } else {
                     if (!is_visited(path->last, i)) {
                         if (path->count == 0) {
@@ -27,6 +28,7 @@ void Dfs(int src, int res, PATHS* path, GRAPH* graph)
                                     i,
                                     &(graph->graph_matrix[src][i]));
                             insert_in_path(path, new_list);
+                            // destroy_list(new_list);
                         } else
                             insert_in_list(
                                     path->last,
@@ -38,6 +40,7 @@ void Dfs(int src, int res, PATHS* path, GRAPH* graph)
                 graph->verticles[src]++;
                 Dfs(i, res, path, graph);
                 graph->visited[i] = false;
+                destroy_list(new_list);
             }
         }
     }
