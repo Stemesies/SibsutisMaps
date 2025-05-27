@@ -37,11 +37,13 @@ typedef struct queue {
 } QUEUE;
 
 /*Прототипы функций*/
-QUEUE* queue_create();
-void queue_add(QUEUE* queue, int num, EDGE* edge);
-NODE* queue_take(QUEUE* queue);
+
 NODE* def_node_construct(int num);
 void destroy_node(NODE* node);
+QUEUE* queue_create();
+void destroy_queue(QUEUE* a);
+void queue_add(QUEUE* queue, int num, EDGE* edge);
+NODE* queue_take(QUEUE* queue);
 LIST* def_list_construct(int num);
 void destroy_list(LIST* a);
 PATHS* def_path_construct();
