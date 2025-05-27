@@ -1,42 +1,8 @@
+/*Файл для работы со структурами хранения путей. Очередь может использоваться
+ * при реализации Bfs, если решим использовать его в качестве алгоритма поиска
+ * путей. Связный список используется как хранение одного пути, структура path
+ * представляет собой список путей.*/
 #include <libmaps/paths.h>
-
-QUEUE* queue_create()
-{
-    QUEUE* queue = malloc(sizeof(QUEUE));
-    queue->size = 0;
-    queue->head = NULL;
-    queue->tail = NULL;
-    return queue;
-}
-
-void queue_add(QUEUE* queue, int num, EDGE* edge)
-{
-    if (!queue) {
-        exit(EXIT_FAILURE);
-    }
-    NODE* insert = def_node_construct(num);
-    insert->edge = edge;
-    if (queue->size == 0) {
-        queue->head = insert;
-        queue->tail = insert;
-    } else {
-        queue->tail->next = insert;
-        queue->tail = insert;
-    }
-    queue->size++;
-}
-
-NODE* queue_take(QUEUE* queue)
-{
-    if (queue->size > 0) {
-        NODE* curr = queue->head;
-        // if (queue->head->next != NULL)
-        queue->head = queue->head->next;
-        queue->size--;
-        return curr;
-    }
-    return NULL;
-}
 
 NODE* def_node_construct(int src)
 {
@@ -53,17 +19,80 @@ void destroy_node(NODE* node)
     free(node);
 }
 
+QUEUE* queue_create()
+{
+    QUEUE* queue = malloc(sizeof(QUEUE));
+    queue->size = 0;
+    queue->head = NULL;
+    queue->tail = NULL;
+    return queue;
+}
+
+void destroy_queue(QUEUE* a)
+{
+    NODE* temp = NULL;
+    if (!a)
+        return;
+    for (NODE* curr = a->head; curr != NULL;) {
+        temp = curr;
+        curr = curr->next;
+        destroy_node(temp);
+    }
+    free(a);
+}
+
+void queue_add(QUEUE* queue, int num, EDGE* edge)
+{
+    if (!queue) {
+        exit(EXIT_FAILURE);
+    }
+    NODE* insert = def_node_construct(num);
+    insert->edge->len = edge->len;
+    insert->edge->speed = edge->speed;
+
+    if (queue->size == 0) {
+        queue->head = insert;
+        queue->tail = insert;
+    } else {
+        queue->tail->next = insert;
+        queue->tail = insert;
+    }
+    queue->size++;
+}
+
+NODE* queue_take(QUEUE* queue)
+{
+    if (queue->size > 0) {
+        NODE* curr = queue->head;
+        queue->head = queue->head->next;
+        queue->size--;
+        return curr;
+    }
+    return NULL;
+}
+
 LIST* def_list_construct(int src)
 {
     LIST* list = malloc(sizeof(LIST));
     list->head = def_node_construct(src);
-    // list->visited = calloc(10, sizeof(bool)); // 10 переделать
-    // list->visited[src] = true;
     list->tail = NULL;
     list->next = NULL;
     list->path = 0;
     list->time = 0;
     return list;
+}
+
+void destroy_list(LIST* a)
+{
+    NODE* temp = NULL;
+    if (!a)
+        return;
+    for (NODE* curr = a->head; curr != NULL;) {
+        temp = curr;
+        curr = curr->next;
+        destroy_node(temp);
+    }
+    free(a);
 }
 
 PATHS* def_path_construct()
@@ -75,13 +104,30 @@ PATHS* def_path_construct()
     return paths;
 }
 
+void destroy_paths(PATHS* paths)
+{
+    LIST* temp = NULL;
+    if (!paths)
+        return;
+    for (LIST* curr = paths->first; curr != NULL;) {
+        temp = curr;
+        curr = curr->next;
+        destroy_list(temp);
+    }
+    free(paths);
+}
+
+/*Головной элемент списка всегда занят исходной вершиной, поэтому начинаем
+ * вставку с head->next.*/
 void insert_in_list(LIST* list, int num, EDGE* edge)
 {
     if (!list) {
         exit(EXIT_FAILURE);
     }
     NODE* insert = def_node_construct(num);
-    insert->edge = edge;
+    insert->edge->len = edge->len;
+    insert->edge->speed = edge->speed;
+
     if (list->head->next == NULL) {
         list->head->next = insert;
         list->tail = insert;
@@ -91,7 +137,6 @@ void insert_in_list(LIST* list, int num, EDGE* edge)
     }
     list->path += edge->len;
     list->time += ((double)edge->len / (double)edge->speed);
-    // list->visited[num] = true;
 }
 
 void insert_in_path(PATHS* path, LIST* insert)
@@ -99,12 +144,18 @@ void insert_in_path(PATHS* path, LIST* insert)
     if (!path || !insert) {
         exit(EXIT_FAILURE);
     }
+    LIST* copy = NULL;
+    if (!(insert->tail))
+        copy = copy_list(insert, insert->head->num);
+    else
+        copy = copy_list(insert, insert->tail->num);
+
     if (path->count == 0) {
-        path->first = insert;
-        path->last = insert;
+        path->first = copy;
+        path->last = copy;
     } else {
-        path->last->next = insert;
-        path->last = insert;
+        path->last->next = copy;
+        path->last = copy;
     }
     path->count++;
 }
@@ -118,7 +169,6 @@ LIST* copy_list(LIST* src, int num) // num - до какой вершины ко
         return res;
     NODE* current = src->head->next;
     while (current != NULL) {
-        // NODE *insert = def_node_construct();
         insert_in_list(res, current->num, current->edge);
         if (current->num == num)
             break;
@@ -138,148 +188,37 @@ bool is_visited(LIST* src, int num)
     return false;
 }
 
-void func(LIST* path, bool* visited)
+void print_path(LIST* path, HASH* table, int count)
 {
-    if (path && path->head && path->head->next) {
-        for (NODE* curr = path->head->next->next; curr != NULL;
-             curr = curr->next) {
-            visited[curr->num] = false;
-        }
-    }
+    printf("Путь %d: ", count);
+    for (NODE* temp = path->head; temp != NULL; temp = temp->next)
+        printf("%s->", table[temp->num].key);
+    printf(": %d км, %.2lf ч\n", path->path, path->time);
 }
 
-void Dfs(int src, int res, PATHS* path, GRAPH* graph)
-{
-    if (src == res)
-        return;
-
-    if (!path) {
-        exit(EXIT_FAILURE);
-    }
-    graph->visited[src] = true;
-    for (int i = 0; i < graph->n_verticles; i++) {
-        if (graph->graph_matrix[src][i].len > 0) {
-            if (!(graph->visited[i])) {
-                LIST* new_list = NULL;
-
-                if (graph->verticles[src] > 0) {
-                    new_list = copy_list(path->last, src);
-                    insert_in_list(new_list, i, &(graph->graph_matrix[src][i]));
-                    insert_in_path(path, new_list);
-                } else {
-                    if (!is_visited(path->last, i)) {
-                        if (path->count == 0) {
-                            new_list = def_list_construct(src);
-                            insert_in_list(
-                                    new_list,
-                                    i,
-                                    &(graph->graph_matrix[src][i]));
-                            insert_in_path(path, new_list);
-                        } else
-                            insert_in_list(
-                                    path->last,
-                                    i,
-                                    &(graph->graph_matrix[src][i]));
-                    }
-                }
-
-                graph->verticles[src]++;
-                Dfs(i, res, path, graph);
-                graph->visited[i] = false;
-            }
-        }
-    }
-}
-
-void Bfs(int src, int res, PATHS* path, size_t n, EDGE** graph)
-{
-    bool* visited = calloc(n, sizeof(bool));
-    NODE* vert;
-    QUEUE* queue = queue_create();
-    visited[src] = true;
-    EDGE src_edge = {0, 0};
-    queue_add(queue, src, &src_edge);
-    int* verticles = calloc(n, sizeof(int));
-    while (queue->size > 0) {
-        vert = queue_take(queue);
-        if (vert->num == res)
-            continue;
-        for (int i = 0; i < n; i++) {
-            if (graph[vert->num][i].len > 0) {
-                queue_add(queue, i, &(graph[vert->num][i]));
-                LIST* new_list = NULL;
-
-                if (verticles[vert->num] > 0) {
-                    for (LIST* curr = path->first; curr != NULL;
-                         curr = curr->next)
-                    // if (curr->tail->num == vert->num && !(curr->visited[i]))
-                    {
-                        new_list = copy_list(curr, vert->num);
-                        insert_in_list(new_list, i, &(graph[vert->num][i]));
-                        insert_in_path(path, new_list);
-                    }
-                } else {
-                    if (path->count == 0) {
-                        new_list = def_list_construct(src);
-                        insert_in_list(new_list, i, &(graph[src][i]));
-                        insert_in_path(path, new_list);
-                    } else // добавить поиск списка по крайней вершине
-                           // (проверять на совпадение с vert->num)
-                    {
-                        for (LIST* curr = path->first; curr != NULL;
-                             curr = curr->next)
-                            // if (curr->tail->num == vert->num &&
-                            // !(curr->visited[i]))
-                            insert_in_list(curr, i, &(graph[vert->num][i]));
-                    }
-                }
-
-                visited[i] = true;
-                verticles[vert->num]++;
-            }
-        }
-    }
-}
-
-void show_paths(PATHS* paths)
+void show_paths(PATHS* paths, HASH* table, int res)
 {
     int count = 0;
     for (LIST* curr = paths->first; curr != NULL; curr = curr->next) {
-        count++;
-        printf("Путь %d: ", count);
-
-        for (NODE* temp = curr->head; temp != NULL; temp = temp->next)
-            printf("%d->", temp->num);
-        printf(": %d км, %.2lf ч\n", curr->path, curr->time);
+        if (curr->tail->num == res) {
+            count++;
+            print_path(curr, table, count);
+        }
     }
 }
 
-/*Лучший путь по выбранному критерию*/
-LIST* best_path(PATHS* path, int what_path, int res)
+/*Возвращает количество вершин из a, которых нет в b. Может быть полезно при
+ * реализации пути с возвратом в исходную точку, чтобы не идти по одинаковому
+ * пути туда и обратно. Трудоёмкий метод, O(n*k), где n и k - кол-во вершин в
+ * списках. Не рекоммендуется к использованию.*/
+int compare_paths(LIST* a, LIST* b)
 {
-    LIST *res_short = path->first, *res_long = res_short,
-         *res_quick = res_short;
-    for (LIST* curr = path->first; curr != NULL; curr = curr->next) {
-        if (curr->tail->num == res) {
-            if (curr->path < res_short->path)
-                res_short = curr;
-            if (curr->path > res_long->path)
-                res_long = curr;
-            if (curr->time < res_quick->time)
-                res_quick = curr;
-        }
+    int count = 0;
+    if (!a || !b)
+        return -1;
+    for (NODE* curr = a->head; curr; curr = curr->next) {
+        if (!is_visited(b, curr->num))
+            count++;
     }
-    if (res_long->tail->num != res || res_short->tail->num != res
-        || res_quick->tail->num != res)
-        return NULL;
-    switch (what_path) {
-    case LONGEST:
-        return res_long;
-    case SHORTEST:
-        return res_short;
-    case QUICKEST:
-        return res_quick;
-    default:
-        return NULL;
-    }
+    return count;
 }
