@@ -85,3 +85,19 @@ CTEST(test_copy_insert, list)
     destroy_list(a);
     destroy_list(b);
 }
+
+CTEST(test_compare, lists)
+{
+    LIST* a = def_list_construct(SRC);
+    EDGE edge_1 = {SPEED, LEN};
+    EDGE edge_2 = {60, 3};
+    EDGE edge_3 = {50, 95};
+    insert_in_list(a, NUM, &edge_1);
+    insert_in_list(a, 21, &edge_3);
+    LIST* b = copy_list(a, SRC);
+    insert_in_list(b, 9, &edge_2);
+    ASSERT_EQUAL(2, compare_paths(a, b));
+
+    destroy_list(a);
+    destroy_list(b);
+}
