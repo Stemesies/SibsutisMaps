@@ -1,5 +1,8 @@
+/*Файл для работы с поиском путей, определением подходящих.*/
 #include <libmaps/search.h>
 
+/*Модифицированный обход в глубину. Ищет все возможные пути из точки src в точку
+ * res, сохраняет их в список путей path.*/
 void Dfs(int src, int res, PATHS* path, GRAPH* graph)
 {
     if (src == res)
@@ -46,6 +49,8 @@ void Dfs(int src, int res, PATHS* path, GRAPH* graph)
     }
 }
 
+/*Обход графа в ширину. Может использоваться для поиска путей, но скорее всего
+ * будет выпилен.*/
 void Bfs(int src, int res, PATHS* path, size_t n, EDGE** graph)
 {
     bool* visited = calloc(n, sizeof(bool));
@@ -96,7 +101,7 @@ void Bfs(int src, int res, PATHS* path, size_t n, EDGE** graph)
     }
 }
 
-/*Лучший путь по выбранному критерию*/
+/*Поиск лучшего пути по выбранному критерию*/
 LIST* best_path(PATHS* path, Priority what_path, int res)
 {
     LIST *res_short = NULL, *res_long = NULL, *res_quick = NULL;
@@ -131,6 +136,7 @@ LIST* best_path(PATHS* path, Priority what_path, int res)
     }
 }
 
+/*Поиск путей, не медленнее/не дольше/не короче наилучшего в rate раз.*/
 void alternative(
         PATHS* paths,
         HASH* table,
