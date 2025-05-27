@@ -55,5 +55,6 @@ bool is_visited(LIST* src, int num);
 void print_path(LIST* path, HASH* table, int count);
 void show_paths(PATHS* paths, HASH* is_in_table, int res);
 int compare_paths(LIST* a, LIST* b);
+PATHS* correct_paths(PATHS* paths, int res);
 
 #endif

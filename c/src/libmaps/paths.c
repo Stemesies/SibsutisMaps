@@ -191,8 +191,14 @@ bool is_visited(LIST* src, int num)
 void print_path(LIST* path, HASH* table, int count)
 {
     printf("Путь %d: ", count);
-    for (NODE* temp = path->head; temp != NULL; temp = temp->next)
-        printf("%s->", table[temp->num].key);
+    NODE* temp = path->head;
+    if (!temp) {
+        return;
+    }
+    printf("%s", table[temp->num].key);
+    temp = temp->next;
+    for (; temp != NULL; temp = temp->next)
+        printf("->%s", table[temp->num].key);
     printf(": %d км, %.2lf ч\n", path->path, path->time);
 }
 
@@ -200,10 +206,7 @@ void show_paths(PATHS* paths, HASH* table, int res)
 {
     int count = 0;
     for (LIST* curr = paths->first; curr != NULL; curr = curr->next) {
-        if (curr->tail->num == res) {
-            count++;
-            print_path(curr, table, count);
-        }
+        print_path(curr, table, ++count);
     }
 }
 
@@ -221,4 +224,17 @@ int compare_paths(LIST* a, LIST* b)
             count++;
     }
     return count;
+}
+
+PATHS* correct_paths(PATHS* paths, int res)
+{
+    PATHS* res_paths = def_path_construct();
+    for (LIST* curr = paths->first; curr != NULL; curr = curr->next) {
+        if (curr->tail->num == res) {
+            insert_in_path(res_paths, curr);
+        }
+    }
+    destroy_paths(paths);
+
+    return res_paths;
 }
