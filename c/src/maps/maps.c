@@ -1,4 +1,5 @@
 #include <libmaps/search.h>
+#include <libmaps/sort.h>
 
 int main()
 {
@@ -45,14 +46,19 @@ int main()
         graph);
     PATHS* new_paths = correct_paths(path, hashtab_lookup(table, "Karasuk"));
 
-    show_paths(new_paths, table, hashtab_lookup(table, "Karasuk"));
-    alternative(
-            new_paths,
-            table,
-            hashtab_lookup(table, "Novosibirsk"),
-            hashtab_lookup(table, "Karasuk"),
-            1.5,
-            Shortest);
+    // FIXME Добавить проверку на необходимость поиска n альтернативных путей
+    PATHS* sorted_paths = NULL;
+    if (!sorted_paths)
+        sorted_paths = sort_paths(new_paths, Quickest);
+
+    show_paths(sorted_paths, table, hashtab_lookup(table, "Karasuk"));
+    // alternative(
+    //         new_paths,
+    //         table,
+    //         hashtab_lookup(table, "Novosibirsk"),
+    //         hashtab_lookup(table, "Karasuk"),
+    //         1.5,
+    //         Shortest);
     // printf("Karasuk: %d\n", hashtab_lookup(table, "Moshkovo"));
     // printf("%s\n", table[43].key);
 
