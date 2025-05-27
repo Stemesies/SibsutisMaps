@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define HASHTAB_SIZE 50
+#define HASHTAB_SIZE 100
 #define MAXSTR strlen("Stantsionno-Oyashinskiy")
 
 /*Ребро графа*/
