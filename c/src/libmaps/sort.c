@@ -50,11 +50,8 @@ PATHS* sort_paths(PATHS* path, Priority priotity)
     int n = 0;
     for (LIST* cur = path->first; cur; cur = cur->next) {
         paths_arr[n] = cur;
-        printf("%d: %d\n", n + 1, paths_arr[n]->path);
         n++;
     }
-
-    free(path);
 
     sort_paths_priority(paths_arr, 0, n - 1, priotity);
 
@@ -69,5 +66,6 @@ PATHS* sort_paths(PATHS* path, Priority priotity)
         }
     }
 
+    free(paths_arr);
     return sorted_paths;
 }

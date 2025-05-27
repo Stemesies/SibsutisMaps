@@ -72,6 +72,7 @@ int main()
     graph_destroy(graph);
     hashtab_destroy(table);
     destroy_paths(new_paths);
+    destroy_paths(sorted_paths);
     fclose(fp);
 
     return 0;
