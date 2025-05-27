@@ -28,7 +28,7 @@ CTEST(memory_test, list)
 
 CTEST(memory_test, queue)
 {
-    QUEUE* a = queue_create(SRC);
+    QUEUE* a = queue_create();
     ASSERT_NOT_NULL(a);
     ASSERT_EQUAL(0, a->size);
 
@@ -127,4 +127,29 @@ CTEST(test_visited, list)
     ASSERT_NOT_EQUAL(true, is_visited(a, 15));
 
     destroy_list(a);
+}
+
+CTEST(test_add, queue)
+{
+    QUEUE* a = queue_create();
+    EDGE edge = {SPEED, LEN};
+    queue_add(a, NUM, &edge);
+    ASSERT_EQUAL(NUM, a->head->num);
+    ASSERT_NOT_NULL(a->tail);
+    ASSERT_EQUAL(1, a->size);
+
+    destroy_queue(a);
+}
+
+CTEST(test_take, queue)
+{
+    QUEUE* a = queue_create();
+    EDGE edge = {SPEED, LEN};
+    queue_add(a, NUM, &edge);
+    NODE* taken = queue_take(a);
+    ASSERT_EQUAL(NUM, taken->num);
+    ASSERT_EQUAL(0, a->size);
+
+    destroy_queue(a);
+    destroy_node(taken);
 }
