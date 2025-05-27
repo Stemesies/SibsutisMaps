@@ -1,4 +1,23 @@
+/*Файл для работы со структурами хранения путей. Очередь может использоваться
+ * при реализации Bfs, если решим использовать его в качестве алгоритма поиска
+ * путей. Связный список используется как хранение одного пути, структура path
+ * представляет собой список путей.*/
 #include <libmaps/paths.h>
+
+NODE* def_node_construct(int src)
+{
+    NODE* node_list = malloc(sizeof(NODE));
+    node_list->edge = calloc(1, sizeof(EDGE));
+    node_list->num = src;
+    node_list->next = NULL;
+    return node_list;
+}
+
+void destroy_node(NODE* node)
+{
+    free(node->edge);
+    free(node);
+}
 
 QUEUE* queue_create()
 {
@@ -15,7 +34,9 @@ void queue_add(QUEUE* queue, int num, EDGE* edge)
         exit(EXIT_FAILURE);
     }
     NODE* insert = def_node_construct(num);
-    insert->edge = edge;
+    insert->edge->len = edge->len;
+    insert->edge->speed = edge->speed;
+
     if (queue->size == 0) {
         queue->head = insert;
         queue->tail = insert;
@@ -38,27 +59,10 @@ NODE* queue_take(QUEUE* queue)
     return NULL;
 }
 
-NODE* def_node_construct(int src)
-{
-    NODE* node_list = malloc(sizeof(NODE));
-    node_list->edge = calloc(1, sizeof(EDGE));
-    node_list->num = src;
-    node_list->next = NULL;
-    return node_list;
-}
-
-void destroy_node(NODE* node)
-{
-    free(node->edge);
-    free(node);
-}
-
 LIST* def_list_construct(int src)
 {
     LIST* list = malloc(sizeof(LIST));
     list->head = def_node_construct(src);
-    // list->visited = calloc(10, sizeof(bool)); // 10 переделать
-    // list->visited[src] = true;
     list->tail = NULL;
     list->next = NULL;
     list->path = 0;
@@ -119,7 +123,6 @@ void insert_in_list(LIST* list, int num, EDGE* edge)
     }
     list->path += edge->len;
     list->time += ((double)edge->len / (double)edge->speed);
-    // list->visited[num] = true;
 }
 
 void insert_in_path(PATHS* path, LIST* insert)
@@ -185,16 +188,18 @@ void show_paths(PATHS* paths, HASH* table, int res)
     }
 }
 
-// /*Возвращает количество одинаковых вершин в сравниваемых путях.*/
-// int compare_paths(LIST* a, LIST* b)
-// {
-//     int count = 0;
-//     if (!a || !b)
-//         return -1;
-//     for (NODE *curr = a->head, *temp = b->head; curr && temp;
-//          curr = curr->next, temp = temp->next) {
-//         if (curr->num == temp->num)
-//             count++;
-//     }
-//     return count;
-// }
+/*Возвращает количество вершин из a, которых нет в b. Может быть полезно при
+ * реализации пути с возвратом в исходную точку, чтобы не идти по одинаковому
+ * пути туда и обратно. Трудоёмкий метод, O(n*k), где n и k - кол-во вершин в
+ * списках. Не рекоммендуется к использованию.*/
+int compare_paths(LIST* a, LIST* b)
+{
+    int count = 0;
+    if (!a || !b)
+        return -1;
+    for (NODE* curr = a->head; curr; curr = curr->next) {
+        if (!is_visited(b, curr->num))
+            count++;
+    }
+    return count;
+}
