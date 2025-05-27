@@ -43,10 +43,11 @@ int main()
         hashtab_lookup(table, "Karasuk"),
         path,
         graph);
+    PATHS* new_paths = correct_paths(path, hashtab_lookup(table, "Karasuk"));
 
-    // show_paths(path, table, hashtab_lookup(table, "Karasuk"));
+    show_paths(new_paths, table, hashtab_lookup(table, "Karasuk"));
     alternative(
-            path,
+            new_paths,
             table,
             hashtab_lookup(table, "Novosibirsk"),
             hashtab_lookup(table, "Karasuk"),
@@ -64,7 +65,7 @@ int main()
     // printf(": %d км, %.2lf ч\n", a->path, a->time);
     graph_destroy(graph);
     hashtab_destroy(table);
-    destroy_paths(path);
+    destroy_paths(new_paths);
     fclose(fp);
 
     return 0;
