@@ -5,6 +5,16 @@
 #define SPEED 70
 #define LEN 79
 
+CTEST(memory_test, node)
+{
+    NODE* a = def_node_construct(SRC);
+    ASSERT_NOT_NULL(a);
+    ASSERT_NOT_NULL(a->edge);
+    ASSERT_EQUAL(SRC, a->num);
+
+    destroy_node(a);
+}
+
 CTEST(memory_test, list)
 {
     LIST* a = def_list_construct(SRC);
@@ -100,4 +110,21 @@ CTEST(test_compare, lists)
 
     destroy_list(a);
     destroy_list(b);
+}
+
+CTEST(test_visited, list)
+{
+    LIST* a = def_list_construct(SRC);
+    EDGE edge_1 = {SPEED, LEN};
+    EDGE edge_2 = {60, 3};
+    EDGE edge_3 = {50, 95};
+    insert_in_list(a, NUM, &edge_1);
+    insert_in_list(a, 21, &edge_3);
+    insert_in_list(a, 9, &edge_2);
+    ASSERT_EQUAL(true, is_visited(a, SRC));
+    ASSERT_EQUAL(true, is_visited(a, 21));
+    ASSERT_EQUAL(true, is_visited(a, 9));
+    ASSERT_NOT_EQUAL(true, is_visited(a, 15));
+
+    destroy_list(a);
 }
