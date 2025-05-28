@@ -7,7 +7,7 @@
 
 CTEST(memory_test, node)
 {
-    NODE* a = def_node_construct(SRC);
+    PathNode* a = def_node_construct(SRC);
     ASSERT_NOT_NULL(a);
     ASSERT_NOT_NULL(a->edge);
     ASSERT_EQUAL(SRC, a->num);
@@ -17,7 +17,7 @@ CTEST(memory_test, node)
 
 CTEST(memory_test, list)
 {
-    LIST* a = def_list_construct(SRC);
+    Path* a = def_list_construct(SRC);
     ASSERT_NOT_NULL(a);
     ASSERT_NOT_NULL(a->head);
     ASSERT_NOT_NULL(a->head->edge);
@@ -28,7 +28,7 @@ CTEST(memory_test, list)
 
 CTEST(memory_test, queue)
 {
-    QUEUE* a = queue_create();
+    Queue* a = queue_create();
     ASSERT_NOT_NULL(a);
     ASSERT_EQUAL(0, a->size);
 
@@ -37,7 +37,7 @@ CTEST(memory_test, queue)
 
 CTEST(memory_test, paths)
 {
-    PATHS* a = def_path_construct();
+    PathsContain* a = def_path_construct();
     ASSERT_NOT_NULL(a);
     ASSERT_EQUAL(0, a->count);
 
@@ -46,9 +46,9 @@ CTEST(memory_test, paths)
 
 CTEST(test_list, insert)
 {
-    LIST* a = def_list_construct(NUM);
+    Path* a = def_list_construct(NUM);
     int num = SRC;
-    EDGE edge = {SPEED, LEN};
+    Edge edge = {SPEED, LEN};
 
     insert_in_list(a, num, &edge);
     ASSERT_NOT_NULL(a->tail);
@@ -61,8 +61,8 @@ CTEST(test_list, insert)
 
 CTEST(test_paths, insert)
 {
-    PATHS* paths = def_path_construct();
-    LIST* path = def_list_construct(SRC);
+    PathsContain* paths = def_path_construct();
+    Path* path = def_list_construct(SRC);
     insert_in_path(paths, path);
     ASSERT_EQUAL(paths->first->head->num, path->head->num);
     ASSERT_EQUAL(1, paths->count);
@@ -74,8 +74,8 @@ CTEST(test_paths, insert)
 
 CTEST(test_copy, list)
 {
-    LIST* a = def_list_construct(SRC);
-    LIST* b = copy_list(a, SRC);
+    Path* a = def_list_construct(SRC);
+    Path* b = copy_list(a, SRC);
     ASSERT_EQUAL(a->head->num, b->head->num);
 
     destroy_list(a);
@@ -84,10 +84,10 @@ CTEST(test_copy, list)
 
 CTEST(test_copy_insert, list)
 {
-    LIST* a = def_list_construct(SRC);
-    EDGE edge = {SPEED, LEN};
+    Path* a = def_list_construct(SRC);
+    Edge edge = {SPEED, LEN};
     insert_in_list(a, NUM, &edge);
-    LIST* b = copy_list(a, SRC);
+    Path* b = copy_list(a, SRC);
     ASSERT_EQUAL(a->head->num, b->head->num);
     ASSERT_NOT_NULL(a->tail);
     ASSERT_NULL(b->tail);
@@ -98,13 +98,13 @@ CTEST(test_copy_insert, list)
 
 CTEST(test_compare, lists)
 {
-    LIST* a = def_list_construct(SRC);
-    EDGE edge_1 = {SPEED, LEN};
-    EDGE edge_2 = {60, 3};
-    EDGE edge_3 = {50, 95};
+    Path* a = def_list_construct(SRC);
+    Edge edge_1 = {SPEED, LEN};
+    Edge edge_2 = {60, 3};
+    Edge edge_3 = {50, 95};
     insert_in_list(a, NUM, &edge_1);
     insert_in_list(a, 21, &edge_3);
-    LIST* b = copy_list(a, SRC);
+    Path* b = copy_list(a, SRC);
     insert_in_list(b, 9, &edge_2);
     ASSERT_EQUAL(2, compare_paths(a, b));
 
@@ -114,10 +114,10 @@ CTEST(test_compare, lists)
 
 CTEST(test_visited, list)
 {
-    LIST* a = def_list_construct(SRC);
-    EDGE edge_1 = {SPEED, LEN};
-    EDGE edge_2 = {60, 3};
-    EDGE edge_3 = {50, 95};
+    Path* a = def_list_construct(SRC);
+    Edge edge_1 = {SPEED, LEN};
+    Edge edge_2 = {60, 3};
+    Edge edge_3 = {50, 95};
     insert_in_list(a, NUM, &edge_1);
     insert_in_list(a, 21, &edge_3);
     insert_in_list(a, 9, &edge_2);
@@ -131,8 +131,8 @@ CTEST(test_visited, list)
 
 CTEST(test_add, queue)
 {
-    QUEUE* a = queue_create();
-    EDGE edge = {SPEED, LEN};
+    Queue* a = queue_create();
+    Edge edge = {SPEED, LEN};
     queue_add(a, NUM, &edge);
     ASSERT_EQUAL(NUM, a->head->num);
     ASSERT_NOT_NULL(a->tail);
@@ -143,10 +143,10 @@ CTEST(test_add, queue)
 
 CTEST(test_take, queue)
 {
-    QUEUE* a = queue_create();
-    EDGE edge = {SPEED, LEN};
+    Queue* a = queue_create();
+    Edge edge = {SPEED, LEN};
     queue_add(a, NUM, &edge);
-    NODE* taken = queue_take(a);
+    PathNode* taken = queue_take(a);
     ASSERT_EQUAL(NUM, taken->num);
     ASSERT_EQUAL(0, a->size);
 

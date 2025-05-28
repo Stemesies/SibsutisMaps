@@ -1,19 +1,19 @@
 /*Файл для работы со структурой графа и входными данными*/
 #include <libmaps/graph.h>
 
-GRAPH* graph_create(int n)
+Graph* graph_create(int n)
 {
-    GRAPH* graph = calloc(n, sizeof(GRAPH));
-    graph->graph_matrix = calloc(n, sizeof(EDGE*));
+    Graph* graph = calloc(n, sizeof(Graph));
+    graph->graph_matrix = calloc(n, sizeof(Edge*));
     for (int i = 0; i < n; i++)
-        graph->graph_matrix[i] = calloc(n, sizeof(EDGE));
+        graph->graph_matrix[i] = calloc(n, sizeof(Edge));
     graph->n_verticles = n;
     graph->verticles = calloc(n, sizeof(int));
     graph->visited = calloc(n, sizeof(bool));
     return graph;
 }
 
-void graph_destroy(GRAPH* graph)
+void graph_destroy(Graph* graph)
 {
     free(graph->visited);
     free(graph->verticles);
@@ -24,7 +24,7 @@ void graph_destroy(GRAPH* graph)
     free(graph);
 }
 
-void add_edge(GRAPH* graph, unsigned int i, unsigned int j, int len, int speed)
+void add_edge(Graph* graph, unsigned int i, unsigned int j, int len, int speed)
 {
     graph->graph_matrix[i][j].len = len;
     graph->graph_matrix[i][j].speed = speed;
@@ -43,22 +43,22 @@ unsigned int ELFHash(char* s)
             h ^= g >> 24;
         h &= ~g;
     }
-    return h % HASHTAB_SIZE;
+    return h % HashTableTAB_SIZE;
 }
 
-HASH* hashtab_create()
+HashTable* hashtab_create()
 {
-    HASH* a = (HASH*)calloc(HASHTAB_SIZE, sizeof(HASH));
-    for (int i = 0; i < HASHTAB_SIZE; i++) {
+    HashTable* a = (HashTable*)calloc(HashTableTAB_SIZE, sizeof(HashTable));
+    for (int i = 0; i < HashTableTAB_SIZE; i++) {
         a[i].key = NULL;
     }
     a->count = 0;
     return a;
 }
 
-void hashtab_destroy(HASH* table)
+void hashtab_destroy(HashTable* table)
 {
-    for (int i = 0; i < HASHTAB_SIZE; i++) {
+    for (int i = 0; i < HashTableTAB_SIZE; i++) {
         if (!table[i].key)
             continue;
         free(table[i].key);
@@ -66,12 +66,12 @@ void hashtab_destroy(HASH* table)
     free(table);
 }
 
-unsigned int hashtab_add(HASH* hashtab, char* key)
+unsigned int hashtab_add(HashTable* hashtab, char* key)
 {
     unsigned int index = ELFHash(key), temp = index;
 
     if (hashtab[index].key != NULL) {
-        for (int i = index; i < HASHTAB_SIZE; i++) {
+        for (int i = index; i < HashTableTAB_SIZE; i++) {
             if (hashtab[i].key == NULL) {
                 hashtab[i].key = calloc(strlen(key) + 1, sizeof(char));
                 strcpy(hashtab[i].key, key);
@@ -79,7 +79,7 @@ unsigned int hashtab_add(HASH* hashtab, char* key)
                 hashtab->count++;
                 break;
             }
-            if ((index == temp) && (i == HASHTAB_SIZE - 1))
+            if ((index == temp) && (i == HashTableTAB_SIZE - 1))
                 i = -1;
         }
     } else {
@@ -91,7 +91,7 @@ unsigned int hashtab_add(HASH* hashtab, char* key)
     return index;
 }
 
-int hashtab_lookup(HASH* hashtab, char* key)
+int hashtab_lookup(HashTable* hashtab, char* key)
 {
     if (!key)
         return -1;
@@ -99,12 +99,12 @@ int hashtab_lookup(HASH* hashtab, char* key)
     if (hashtab[index].key == NULL)
         return -1;
 
-    for (int i = index; i < HASHTAB_SIZE; i++) {
+    for (int i = index; i < HashTableTAB_SIZE; i++) {
         if (hashtab[i].key == NULL)
             return -1;
         if (strcmp(hashtab[i].key, key) == 0)
             return i;
-        if (i == HASHTAB_SIZE - 1) {
+        if (i == HashTableTAB_SIZE - 1) {
             i = -1;
         }
     }
@@ -112,12 +112,12 @@ int hashtab_lookup(HASH* hashtab, char* key)
     return -1;
 }
 
-bool is_in_table(HASH* table, char* key)
+bool is_in_table(HashTable* table, char* key)
 {
     return (hashtab_lookup(table, key) >= 0);
 }
 
-void graph_init(GRAPH* graph, HASH* table, FILE* fp)
+void graph_init(Graph* graph, HashTable* table, FILE* fp)
 {
     int path, speed, count = 0;
     char* str = calloc(MAXSTR + 1, sizeof(char));
@@ -151,7 +151,7 @@ void graph_init(GRAPH* graph, HASH* table, FILE* fp)
 }
 
 /*Демонстрация графа как матрицы смежности*/
-void show_graph(int v, EDGE** mass)
+void show_graph(int v, Edge** mass)
 {
     if (!mass)
         puts("Нечего показывать.");

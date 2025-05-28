@@ -4,36 +4,36 @@
  * представляет собой список путей.*/
 #include <libmaps/paths.h>
 
-NODE* def_node_construct(int src)
+PathNode* def_node_construct(int src)
 {
-    NODE* node_list = malloc(sizeof(NODE));
-    node_list->edge = calloc(1, sizeof(EDGE));
+    PathNode* node_list = malloc(sizeof(PathNode));
+    node_list->edge = calloc(1, sizeof(Edge));
     node_list->num = src;
     node_list->next = NULL;
     return node_list;
 }
 
-void destroy_node(NODE* node)
+void destroy_node(PathNode* node)
 {
     free(node->edge);
     free(node);
 }
 
-QUEUE* queue_create()
+Queue* queue_create()
 {
-    QUEUE* queue = malloc(sizeof(QUEUE));
+    Queue* queue = malloc(sizeof(Queue));
     queue->size = 0;
     queue->head = NULL;
     queue->tail = NULL;
     return queue;
 }
 
-void destroy_queue(QUEUE* a)
+void destroy_queue(Queue* a)
 {
-    NODE* temp = NULL;
+    PathNode* temp = NULL;
     if (!a)
         return;
-    for (NODE* curr = a->head; curr != NULL;) {
+    for (PathNode* curr = a->head; curr != NULL;) {
         temp = curr;
         curr = curr->next;
         destroy_node(temp);
@@ -41,12 +41,12 @@ void destroy_queue(QUEUE* a)
     free(a);
 }
 
-void queue_add(QUEUE* queue, int num, EDGE* edge)
+void queue_add(Queue* queue, int num, Edge* edge)
 {
     if (!queue) {
         exit(EXIT_FAILURE);
     }
-    NODE* insert = def_node_construct(num);
+    PathNode* insert = def_node_construct(num);
     insert->edge->len = edge->len;
     insert->edge->speed = edge->speed;
 
@@ -60,10 +60,10 @@ void queue_add(QUEUE* queue, int num, EDGE* edge)
     queue->size++;
 }
 
-NODE* queue_take(QUEUE* queue)
+PathNode* queue_take(Queue* queue)
 {
     if (queue->size > 0) {
-        NODE* curr = queue->head;
+        PathNode* curr = queue->head;
         queue->head = queue->head->next;
         queue->size--;
         return curr;
@@ -71,9 +71,9 @@ NODE* queue_take(QUEUE* queue)
     return NULL;
 }
 
-LIST* def_list_construct(int src)
+Path* def_list_construct(int src)
 {
-    LIST* list = malloc(sizeof(LIST));
+    Path* list = malloc(sizeof(Path));
     list->head = def_node_construct(src);
     list->tail = NULL;
     list->next = NULL;
@@ -82,12 +82,12 @@ LIST* def_list_construct(int src)
     return list;
 }
 
-void destroy_list(LIST* a)
+void destroy_list(Path* a)
 {
-    NODE* temp = NULL;
+    PathNode* temp = NULL;
     if (!a)
         return;
-    for (NODE* curr = a->head; curr != NULL;) {
+    for (PathNode* curr = a->head; curr != NULL;) {
         temp = curr;
         curr = curr->next;
         destroy_node(temp);
@@ -95,21 +95,21 @@ void destroy_list(LIST* a)
     free(a);
 }
 
-PATHS* def_path_construct()
+PathsContain* def_path_construct()
 {
-    PATHS* paths = malloc(sizeof(PATHS));
+    PathsContain* paths = malloc(sizeof(PathsContain));
     paths->count = 0;
     paths->first = NULL;
     paths->last = NULL;
     return paths;
 }
 
-void destroy_paths(PATHS* paths)
+void destroy_paths(PathsContain* paths)
 {
-    LIST* temp = NULL;
+    Path* temp = NULL;
     if (!paths)
         return;
-    for (LIST* curr = paths->first; curr != NULL;) {
+    for (Path* curr = paths->first; curr != NULL;) {
         temp = curr;
         curr = curr->next;
         destroy_list(temp);
@@ -119,12 +119,12 @@ void destroy_paths(PATHS* paths)
 
 /*Головной элемент списка всегда занят исходной вершиной, поэтому начинаем
  * вставку с head->next.*/
-void insert_in_list(LIST* list, int num, EDGE* edge)
+void insert_in_list(Path* list, int num, Edge* edge)
 {
     if (!list) {
         exit(EXIT_FAILURE);
     }
-    NODE* insert = def_node_construct(num);
+    PathNode* insert = def_node_construct(num);
     insert->edge->len = edge->len;
     insert->edge->speed = edge->speed;
 
@@ -139,12 +139,12 @@ void insert_in_list(LIST* list, int num, EDGE* edge)
     list->time += ((double)edge->len / (double)edge->speed);
 }
 
-void insert_in_path(PATHS* path, LIST* insert)
+void insert_in_path(PathsContain* path, Path* insert)
 {
     if (!path || !insert) {
         exit(EXIT_FAILURE);
     }
-    LIST* copy = NULL;
+    Path* copy = NULL;
     if (!(insert->tail))
         copy = copy_list(insert, insert->head->num);
     else
@@ -160,14 +160,14 @@ void insert_in_path(PATHS* path, LIST* insert)
     path->count++;
 }
 
-LIST* copy_list(LIST* src, int num) // num - до какой вершины копировать список
+Path* copy_list(Path* src, int num) // num - до какой вершины копировать список
 {
     if (!src)
         return NULL;
-    LIST* res = def_list_construct(src->head->num);
+    Path* res = def_list_construct(src->head->num);
     if (src->head->num == num)
         return res;
-    NODE* current = src->head->next;
+    PathNode* current = src->head->next;
     while (current != NULL) {
         insert_in_list(res, current->num, current->edge);
         if (current->num == num)
@@ -177,21 +177,21 @@ LIST* copy_list(LIST* src, int num) // num - до какой вершины ко
     return res;
 }
 
-bool is_visited(LIST* src, int num)
+bool is_visited(Path* src, int num)
 {
     if (!src)
         return false;
-    for (NODE* curr = src->head; curr != NULL; curr = curr->next) {
+    for (PathNode* curr = src->head; curr != NULL; curr = curr->next) {
         if (curr->num == num)
             return true;
     }
     return false;
 }
 
-void print_path(LIST* path, HASH* table, int count)
+void print_path(Path* path, HashTable* table, int count)
 {
     printf("Путь %d: ", count);
-    NODE* temp = path->head;
+    PathNode* temp = path->head;
     if (!temp) {
         return;
     }
@@ -202,10 +202,10 @@ void print_path(LIST* path, HASH* table, int count)
     printf(": %d км, %.2lf ч\n", path->path, path->time);
 }
 
-void show_paths(PATHS* paths, HASH* table, int res)
+void show_paths(PathsContain* paths, HashTable* table, int res)
 {
     int count = 0;
-    for (LIST* curr = paths->first; curr != NULL; curr = curr->next) {
+    for (Path* curr = paths->first; curr != NULL; curr = curr->next) {
         print_path(curr, table, ++count);
     }
 }
@@ -214,22 +214,22 @@ void show_paths(PATHS* paths, HASH* table, int res)
  * реализации пути с возвратом в исходную точку, чтобы не идти по одинаковому
  * пути туда и обратно. Трудоёмкий метод, O(n*k), где n и k - кол-во вершин в
  * списках. Не рекоммендуется к использованию.*/
-int compare_paths(LIST* a, LIST* b)
+int compare_paths(Path* a, Path* b)
 {
     int count = 0;
     if (!a || !b)
         return -1;
-    for (NODE* curr = a->head; curr; curr = curr->next) {
+    for (PathNode* curr = a->head; curr; curr = curr->next) {
         if (!is_visited(b, curr->num))
             count++;
     }
     return count;
 }
 
-PATHS* correct_paths(PATHS* paths, int res)
+PathsContain* correct_paths(PathsContain* paths, int res)
 {
-    PATHS* res_paths = def_path_construct();
-    for (LIST* curr = paths->first; curr != NULL; curr = curr->next) {
+    PathsContain* res_paths = def_path_construct();
+    for (Path* curr = paths->first; curr != NULL; curr = curr->next) {
         if (curr->tail->num == res) {
             insert_in_path(res_paths, curr);
         }

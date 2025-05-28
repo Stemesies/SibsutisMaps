@@ -11,6 +11,6 @@ typedef union pivot {
 
 // Прототипы
 
-PATHS* sort_paths(PATHS* path, Priority priotity);
+PathsContain* sort_paths(PathsContain* path, Priority priotity);
 
 #endif

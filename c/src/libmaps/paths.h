@@ -10,51 +10,51 @@
 
 /*Узел списка*/
 typedef struct node {
-    EDGE* edge;
+    Edge* edge;
     int num;
     struct node* next;
-} NODE;
+} PathNode;
 
 /*Список вершин (путь)*/
 typedef struct list {
-    NODE *head, *tail;
+    PathNode *head, *tail;
     int path;
     double time;
     // bool *visited;
     struct list* next;
-} LIST;
+} Path;
 
 /*Структура для хранения путей*/
 typedef struct paths {
-    LIST *first, *last;
+    Path *first, *last;
     int count;
-} PATHS;
+} PathsContain;
 
 /*Очередь вершин*/
 typedef struct queue {
     int size;
-    NODE *head, *tail;
-} QUEUE;
+    PathNode *head, *tail;
+} Queue;
 
 /*Прототипы функций*/
 
-NODE* def_node_construct(int num);
-void destroy_node(NODE* node);
-QUEUE* queue_create();
-void destroy_queue(QUEUE* a);
-void queue_add(QUEUE* queue, int num, EDGE* edge);
-NODE* queue_take(QUEUE* queue);
-LIST* def_list_construct(int num);
-void destroy_list(LIST* a);
-PATHS* def_path_construct();
-void destroy_paths(PATHS* paths);
-void insert_in_list(LIST* list, int num, EDGE* edge);
-void insert_in_path(PATHS* path, LIST* insert);
-LIST* copy_list(LIST* src, int num);
-bool is_visited(LIST* src, int num);
-void print_path(LIST* path, HASH* table, int count);
-void show_paths(PATHS* paths, HASH* is_in_table, int res);
-int compare_paths(LIST* a, LIST* b);
-PATHS* correct_paths(PATHS* paths, int res);
+PathNode* def_node_construct(int num);
+void destroy_node(PathNode* node);
+Queue* queue_create();
+void destroy_queue(Queue* a);
+void queue_add(Queue* queue, int num, Edge* edge);
+PathNode* queue_take(Queue* queue);
+Path* def_list_construct(int num);
+void destroy_list(Path* a);
+PathsContain* def_path_construct();
+void destroy_paths(PathsContain* paths);
+void insert_in_list(Path* list, int num, Edge* edge);
+void insert_in_path(PathsContain* path, Path* insert);
+Path* copy_list(Path* src, int num);
+bool is_visited(Path* src, int num);
+void print_path(Path* path, HashTable* table, int count);
+void show_paths(PathsContain* paths, HashTable* is_in_table, int res);
+int compare_paths(Path* a, Path* b);
+PathsContain* correct_paths(PathsContain* paths, int res);
 
 #endif

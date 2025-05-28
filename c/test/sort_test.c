@@ -4,8 +4,8 @@
 
 CTEST(test_correct_paths, validate)
 {
-    PATHS* path = def_path_construct();
-    GRAPH* graph = graph_create(7);
+    PathsContain* path = def_path_construct();
+    Graph* graph = graph_create(7);
 
     graph->graph_matrix[0][1].len = 15;
     graph->graph_matrix[0][2].len = 10;
@@ -37,7 +37,7 @@ CTEST(test_correct_paths, validate)
     }
 
     Dfs(0, 5, path, graph);
-    PATHS* new_paths = correct_paths(path, 5);
+    PathsContain* new_paths = correct_paths(path, 5);
 
     ASSERT_EQUAL(5, new_paths->first->tail->num);
     ASSERT_EQUAL(5, new_paths->last->tail->num);
@@ -49,8 +49,8 @@ CTEST(test_correct_paths, validate)
 
 CTEST(test_sort, validate)
 {
-    PATHS* path = def_path_construct();
-    GRAPH* graph = graph_create(7);
+    PathsContain* path = def_path_construct();
+    Graph* graph = graph_create(7);
 
     graph->graph_matrix[0][1].len = 15;
     graph->graph_matrix[0][2].len = 10;
@@ -82,15 +82,15 @@ CTEST(test_sort, validate)
     }
 
     Dfs(0, 5, path, graph);
-    PATHS* new_paths = correct_paths(path, 5);
+    PathsContain* new_paths = correct_paths(path, 5);
 
-    PATHS* sorted_paths1 = sort_paths(new_paths, Shortest);
+    PathsContain* sorted_paths1 = sort_paths(new_paths, Shortest);
     ASSERT_EQUAL(32, sorted_paths1->first->path);
 
-    PATHS* sorted_paths2 = sort_paths(sorted_paths1, Longest);
+    PathsContain* sorted_paths2 = sort_paths(sorted_paths1, Longest);
     ASSERT_EQUAL(93, sorted_paths2->first->path);
 
-    PATHS* sorted_paths3 = sort_paths(sorted_paths2, Quickest);
+    PathsContain* sorted_paths3 = sort_paths(sorted_paths2, Quickest);
     ASSERT_DBL_NEAR_TOL(0.5, sorted_paths3->first->time, 0.1);
 
     graph_destroy(graph);

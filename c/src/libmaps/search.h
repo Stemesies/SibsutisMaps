@@ -5,12 +5,12 @@
 #include <libmaps/paths.h>
 #include <mapconfig/mapconfig.h>
 
-void Dfs(int src, int res, PATHS* path, GRAPH* graph);
-void Bfs(int src, int res, PATHS* path, size_t n, EDGE** graph);
-LIST* best_path(PATHS* path, Priority what_path, int res);
+void Dfs(int src, int res, PathsContain* path, Graph* graph);
+void Bfs(int src, int res, PathsContain* path, size_t n, Edge** graph);
+Path* best_path(PathsContain* path, Priority what_path, int res);
 void alternative(
-        PATHS* paths,
-        HASH* table,
+        PathsContain* paths,
+        HashTable* table,
         int src,
         int res,
         double rate,

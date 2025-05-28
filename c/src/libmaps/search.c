@@ -1,6 +1,6 @@
 #include <libmaps/search.h>
 
-void Dfs(int src, int res, PATHS* path, GRAPH* graph)
+void Dfs(int src, int res, PathsContain* path, Graph* graph)
 {
     if (src == res)
         return;
@@ -12,7 +12,7 @@ void Dfs(int src, int res, PATHS* path, GRAPH* graph)
     for (int i = 0; i < graph->n_verticles; i++) {
         if (graph->graph_matrix[src][i].len > 0) {
             if (!(graph->visited[i])) {
-                LIST* new_list = NULL;
+                Path* new_list = NULL;
 
                 if (graph->verticles[src] > 0) {
                     new_list = copy_list(path->last, src);
@@ -46,13 +46,13 @@ void Dfs(int src, int res, PATHS* path, GRAPH* graph)
     }
 }
 
-void Bfs(int src, int res, PATHS* path, size_t n, EDGE** graph)
+void Bfs(int src, int res, PathsContain* path, size_t n, Edge** graph)
 {
     bool* visited = calloc(n, sizeof(bool));
-    NODE* vert;
-    QUEUE* queue = queue_create();
+    PathNode* vert;
+    Queue* queue = queue_create();
     visited[src] = true;
-    EDGE src_edge = {0, 0};
+    Edge src_edge = {0, 0};
     queue_add(queue, src, &src_edge);
     int* verticles = calloc(n, sizeof(int));
     while (queue->size > 0) {
@@ -62,10 +62,10 @@ void Bfs(int src, int res, PATHS* path, size_t n, EDGE** graph)
         for (int i = 0; i < n; i++) {
             if (graph[vert->num][i].len > 0) {
                 queue_add(queue, i, &(graph[vert->num][i]));
-                LIST* new_list = NULL;
+                Path* new_list = NULL;
 
                 if (verticles[vert->num] > 0) {
-                    for (LIST* curr = path->first; curr != NULL;
+                    for (Path* curr = path->first; curr != NULL;
                          curr = curr->next)
                     // if (curr->tail->num == vert->num && !(curr->visited[i]))
                     {
@@ -81,7 +81,7 @@ void Bfs(int src, int res, PATHS* path, size_t n, EDGE** graph)
                     } else // добавить поиск списка по крайней вершине
                            // (проверять на совпадение с vert->num)
                     {
-                        for (LIST* curr = path->first; curr != NULL;
+                        for (Path* curr = path->first; curr != NULL;
                              curr = curr->next)
                             // if (curr->tail->num == vert->num &&
                             // !(curr->visited[i]))
@@ -97,12 +97,12 @@ void Bfs(int src, int res, PATHS* path, size_t n, EDGE** graph)
 }
 
 /*Лучший путь по выбранному критерию*/
-LIST* best_path(PATHS* path, Priority what_path, int res)
+Path* best_path(PathsContain* path, Priority what_path, int res)
 {
-    LIST *res_short = NULL, *res_long = NULL, *res_quick = NULL;
+    Path *res_short = NULL, *res_long = NULL, *res_quick = NULL;
     int temp_short = INT_MAX, temp_long = 0.0;
     double temp_quick = DBL_MAX;
-    for (LIST* curr = path->first; curr != NULL; curr = curr->next) {
+    for (Path* curr = path->first; curr != NULL; curr = curr->next) {
         if (curr->tail->num == res) {
             if (curr->path < temp_short) {
                 res_short = curr;
@@ -132,17 +132,17 @@ LIST* best_path(PATHS* path, Priority what_path, int res)
 }
 
 void alternative(
-        PATHS* paths,
-        HASH* table,
+        PathsContain* paths,
+        HashTable* table,
         int src,
         int res,
         double rate,
         Priority what_path)
 {
     int count = 0;
-    LIST* a = best_path(paths, what_path, res);
+    Path* a = best_path(paths, what_path, res);
     printf("Альтернативные пути %s - %s:\n", table[src].key, table[res].key);
-    for (LIST* curr = paths->first; curr != NULL; curr = curr->next) {
+    for (Path* curr = paths->first; curr != NULL; curr = curr->next) {
         if (curr->tail->num == res) {
             switch (what_path) {
             case Longest:
