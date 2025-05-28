@@ -5,8 +5,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define HashTableTAB_SIZE 100
+
+#define HASHTABSIZE 100
+
+//умножаем на 2 т.к. каждый символ кириллицы весит 2 байта.
 #define MAXSTR (strlen("Станционно-Ояшинский") * 2)
+
 
 /*Ребро графа*/
 typedef struct edge {
@@ -58,7 +62,7 @@ void hashtab_destroy(HashTable* table);
 unsigned int hashtab_add(HashTable* hashtab, char* key);
 
 /*Поиск вершины в таблице по ключу - возвращает индекс, по которому вершина
- * точно лежит в таблице. */
+ * точно лежит в таблице. Если элемент отсутствует, возвращает -1.*/
 int hashtab_lookup(HashTable* hashtab, char* key);
 
 /*Добавлен ли элемент с ключом key в таблицу table?*/

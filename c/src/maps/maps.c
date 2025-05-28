@@ -51,8 +51,17 @@ int construct_paths(MapConfig* mapconfig)
     if (mapconfig->altways_count > 0)
         alternative(&context);
 
-    map_destroy(map);
 
+    Path* merge_path
+            = path_with_return(sorted_paths->first, sorted_paths->first->next);
+    if (!merge_path)
+        puts("oh noo()");
+
+    print_path(merge_path, table, 5);
+    
+    destroy_path(merge_path);
+
+    map_destroy(map);
     destroy_paths_contain(sorted_paths);
 
     return 0;

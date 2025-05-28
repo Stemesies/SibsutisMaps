@@ -4,7 +4,7 @@
 
 CTEST(test_graph, create)
 {
-    Graph* graph = graph_create(HashTableTAB_SIZE);
+    Graph* graph = graph_create(HASHTABSIZE);
     ASSERT_NOT_NULL(graph);
     ASSERT_NOT_NULL(graph->graph_matrix);
     ASSERT_NOT_NULL(graph->verticles);
@@ -18,6 +18,7 @@ CTEST(hash_table_test, create)
     HashTable* table = hashtab_create();
     ASSERT_NOT_NULL(table);
     ASSERT_NULL(table[0].key);
+    ASSERT_EQUAL(0, table->count);
 
     hashtab_destroy(table);
 }
@@ -39,8 +40,10 @@ CTEST(test_hash, add_lookup)
 CTEST(test_graph, add)
 {
     int len = 15, speed = 55;
-    Graph* graph = graph_create(HashTableTAB_SIZE);
+
+    Graph* graph = graph_create(HASHTABSIZE);
     add_edge(graph, ELFHash("Новосибирск"), ELFHash("Колывань"), len, speed);
+
     ASSERT_EQUAL(
             len,
             graph->graph_matrix[ELFHash("Новосибирск")][ELFHash("Колывань")]
@@ -59,7 +62,7 @@ CTEST(test_graph, add)
 
 CTEST(test_graph, init)
 {
-    Graph* graph = graph_create(HashTableTAB_SIZE);
+    Graph* graph = graph_create(HASHTABSIZE);
     HashTable* table = hashtab_create();
     FILE* fp = fopen("input", "r");
     ASSERT_NOT_NULL(fp);
