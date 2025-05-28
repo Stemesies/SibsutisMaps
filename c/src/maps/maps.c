@@ -21,7 +21,7 @@ Map* fetch_map_data()
     return map;
 }
 
-int construct_paths()
+int construct_paths(MapConfig* mapconfig)
 {
     Map* map = fetch_map_data();
 
@@ -32,21 +32,20 @@ int construct_paths()
     HashTable* table = map->hashtable;
     PathsContain* path = def_path_contain_construct();
 
-    // show_graph(HashTableTAB_SIZE, graph->graph_matrix);
+    int departure_id
+            = hashtab_lookup(table, list_firstof(char, mapconfig->points));
+    int destination_id
+            = hashtab_lookup(table, list_lastof(char, mapconfig->points));
 
-    Dfs(hashtab_lookup(table, "Novosibirsk"),
-        hashtab_lookup(table, "Karasuk"),
-        path,
-        graph);
-    PathsContain* new_paths
-            = correct_paths(path, hashtab_lookup(table, "Karasuk"));
+    Dfs(departure_id, destination_id, path, graph);
+    PathsContain* new_paths = correct_paths(path, destination_id);
 
     // FIXME Добавить проверку на необходимость поиска n альтернативных путей
     PathsContain* sorted_paths = NULL;
     if (!sorted_paths)
         sorted_paths = sort_paths(new_paths, QUICKEST);
-
-    show_paths(sorted_paths, table, hashtab_lookup(table, "Karasuk"));
+    print_path(sorted_paths->first, table, 4);
+    
     // alternative(
     //         new_paths,
     //         table,

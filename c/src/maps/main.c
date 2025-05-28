@@ -3,17 +3,26 @@
 
 int main(int argc, char* argv[])
 {
-    mapconfig = config_create();
+    MapConfig* config = config_create();
 
-    if (mapconfig == NULL) {
+    if (config == NULL) {
         printf("[ОШИБКА] Невозможно выделить память под конфиг.\n");
         printf("Недостаточно ОЗУ для работы программы.\n.");
         return -1;
     }
 
-    parse_arguments(mapconfig, argc, argv);
+    parse_arguments(config, argc, argv);
 
-    construct_paths();
+    if(list_size(config->points) < 2) {
+        printf("Нечего искать.\n");
+        printf("Введите как минимум 2 точки: откуда и куда\n");
+        config_destroy(config);
+        return 0;
+    }
+
+    construct_paths(config);
+
+    config_destroy(config);
 
     return 0;
 }

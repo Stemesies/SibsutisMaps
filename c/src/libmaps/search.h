@@ -2,8 +2,8 @@
 #define SRCH_H_
 
 #include <libmaps/graph.h>
-#include <libmaps/paths.h>
 #include <libmaps/mapconfig.h>
+#include <libmaps/paths.h>
 
 /*Модифицированных обход в глубину. Находит и записывает в контейнер путей все,
  * даже которые не дошли до нужной вершины.*/

@@ -1,8 +1,8 @@
 #ifndef SORT_H_
 #define SORT_H
 
-#include <libmaps/paths.h>
 #include <libmaps/mapconfig.h>
+#include <libmaps/paths.h>
 
 typedef union pivot {
     int i;
