@@ -50,7 +50,7 @@ int main()
     // FIXME Добавить проверку на необходимость поиска n альтернативных путей
     PathsContain* sorted_paths = NULL;
     if (!sorted_paths)
-        sorted_paths = sort_paths(new_paths, Quickest);
+        sorted_paths = sort_paths(new_paths, QUICKEST);
 
     show_paths(sorted_paths, table, hashtab_lookup(table, "Karasuk"));
     // alternative(
@@ -59,11 +59,11 @@ int main()
     //         hashtab_lookup(table, "Novosibirsk"),
     //         hashtab_lookup(table, "Karasuk"),
     //         1.5,
-    //         Shortest);
+    //         SHORTEST);
     // printf("Karasuk: %d\n", hashtab_lookup(table, "Moshkovo"));
     // printf("%s\n", table[43].key);
 
-    // Path* a = best_path(path, Longest, hashtab_lookup(table, "Karasuk"));
+    // Path* a = best_path(path, LONGEST, hashtab_lookup(table, "Karasuk"));
     // // printf("%p\n", a);
 
     // printf("Самый длинный путь из Новосибирска в Карасук: \n");

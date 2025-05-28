@@ -11,7 +11,7 @@ static void swap(Path** a, Path** b)
 static int partition(Path** paths_arr, int low, int high, Priority priotity)
 {
     Pivot pivot;
-    if ((priotity == Shortest) || (priotity == Longest)) {
+    if ((priotity == SHORTEST) || (priotity == LONGEST)) {
         pivot.i = paths_arr[high]->path;
     } else {
         pivot.d = paths_arr[high]->time;
@@ -19,9 +19,9 @@ static int partition(Path** paths_arr, int low, int high, Priority priotity)
 
     int i = low;
     for (int j = low; j < high; j++) {
-        if ((((priotity == Shortest) || (priotity == Longest))
+        if ((((priotity == SHORTEST) || (priotity == LONGEST))
              && paths_arr[j]->path <= pivot.i)
-            || ((priotity == Quickest) && paths_arr[j]->time <= pivot.d)) {
+            || ((priotity == QUICKEST) && paths_arr[j]->time <= pivot.d)) {
             swap(paths_arr + i, paths_arr + j);
             i++;
         }
@@ -56,7 +56,7 @@ PathsContain* sort_paths(PathsContain* path, Priority priotity)
     sort_paths_priority(paths_arr, 0, n - 1, priotity);
 
     PathsContain* sorted_paths = def_path_contain_construct();
-    if (priotity == Longest) {
+    if (priotity == LONGEST) {
         for (int i = n - 1; i >= 0; i--) {
             insert_in_path_contain(sorted_paths, paths_arr[i]);
         }

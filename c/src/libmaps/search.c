@@ -120,11 +120,11 @@ Path* best_path(PathsContain* path, Priority what_path, int res)
     }
 
     switch (what_path) {
-    case Longest:
+    case LONGEST:
         return res_long;
-    case Shortest:
+    case SHORTEST:
         return res_short;
-    case Quickest:
+    case QUICKEST:
         return res_quick;
     default:
         return NULL;
@@ -145,19 +145,19 @@ void alternative(
     for (Path* curr = paths->first; curr != NULL; curr = curr->next) {
         if (curr->tail->num == res) {
             switch (what_path) {
-            case Longest:
+            case LONGEST:
                 if (((double)a->path / (double)curr->path) <= rate) {
                     count++;
                     print_path(curr, table, count);
                 }
                 break;
-            case Shortest:
+            case SHORTEST:
                 if (((double)curr->path / (double)a->path) <= rate) {
                     count++;
                     print_path(curr, table, count);
                 }
                 break;
-            case Quickest:
+            case QUICKEST:
                 if ((curr->time / a->time) <= rate) {
                     count++;
                     print_path(curr, table, count);

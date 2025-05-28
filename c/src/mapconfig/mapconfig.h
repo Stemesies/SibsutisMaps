@@ -9,7 +9,7 @@
 
 #define DEFAULT_OUTPUT_PATH "result"
 
-typedef enum PRIORITY { Shortest, Quickest, Longest } Priority;
+typedef enum PRIORITY { SHORTEST, QUICKEST, LONGEST } Priority;
 
 /*
 Настройки данной программы.

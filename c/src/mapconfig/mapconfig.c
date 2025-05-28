@@ -47,7 +47,7 @@ void config_init(MapConfig* config)
 {
     list_clear(config->points);
 
-    config->priority = Quickest;
+    config->priority = QUICKEST;
     config->limit = 0;
     config->altways_count = 0;
     config->altways_filter_coefficient = 1.5;
@@ -89,13 +89,13 @@ void config_print(MapConfig* config)
     printf("Приоритет: ");
 
     switch (config->priority) {
-    case Quickest:
+    case QUICKEST:
         puts("Быстрейший");
         break;
-    case Shortest:
+    case SHORTEST:
         puts("Кратчайший");
         break;
-    case Longest:
+    case LONGEST:
         puts("Длиннейший");
         break;
     default:
@@ -132,11 +132,11 @@ void parse_arguments(MapConfig* config, int argc, char* argv[])
             list_bpush(config->points, argv[i]);
         } else {
             if (isflag2("-Q", "--quickest")) {
-                config->priority = Quickest;
+                config->priority = QUICKEST;
             } else if (isflag2("-S", "--shortest")) {
-                config->priority = Shortest;
+                config->priority = SHORTEST;
             } else if (isflag2("-L", "--longest")) {
-                config->priority = Longest;
+                config->priority = LONGEST;
             }
 
             else if (isflag2("-l", "--limit")) {

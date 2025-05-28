@@ -84,13 +84,13 @@ CTEST(test_sort, validate)
     Dfs(0, 5, path, graph);
     PathsContain* new_paths = correct_paths(path, 5);
 
-    PathsContain* sorted_paths1 = sort_paths(new_paths, Shortest);
+    PathsContain* sorted_paths1 = sort_paths(new_paths, SHORTEST);
     ASSERT_EQUAL(32, sorted_paths1->first->path);
 
-    PathsContain* sorted_paths2 = sort_paths(sorted_paths1, Longest);
+    PathsContain* sorted_paths2 = sort_paths(sorted_paths1, LONGEST);
     ASSERT_EQUAL(93, sorted_paths2->first->path);
 
-    PathsContain* sorted_paths3 = sort_paths(sorted_paths2, Quickest);
+    PathsContain* sorted_paths3 = sort_paths(sorted_paths2, QUICKEST);
     ASSERT_DBL_NEAR_TOL(0.5, sorted_paths3->first->time, 0.1);
 
     graph_destroy(graph);
