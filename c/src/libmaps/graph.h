@@ -28,6 +28,8 @@ typedef struct hashtable {
     int count;
 } HashTable;
 
+/*Прототипы функций*/
+
 Graph* graph_create(int n);
 void graph_destroy(Graph* graph);
 void add_edge(Graph* graph, unsigned int i, unsigned int j, int len, int speed);
