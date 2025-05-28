@@ -153,3 +153,73 @@ CTEST(test_take, queue)
     destroy_queue(a);
     destroy_node(taken);
 }
+
+CTEST(pop_test, path)
+{
+    Path* a = def_path_construct(SRC);
+    Edge edge_1 = {SPEED, LEN};
+    Edge edge_2 = {60, 3};
+    Edge edge_3 = {50, 95};
+    insert_in_path(a, NUM, &edge_1);
+    insert_in_path(a, 21, &edge_3);
+    insert_in_path(a, 9, &edge_2);
+
+    PathNode* temp = a->head->next;
+    PathNode* pop = pop_node(a);
+    ASSERT_EQUAL(a->head->num, temp->num);
+    ASSERT_EQUAL(SRC, pop->num);
+
+    destroy_path(a);
+    destroy_node(pop);
+}
+
+CTEST(1, 2)
+{
+    Path* to = def_path_construct(0);
+    Path* back = def_path_construct(0);
+
+    Edge* edge_1 = calloc(1, sizeof(Edge));
+    edge_1->len = LEN;
+    edge_1->speed = SPEED;
+    Edge* edge_2 = calloc(1, sizeof(Edge));
+    edge_2->len = 3;
+    edge_2->speed = 60;
+    Edge* edge_3 = calloc(1, sizeof(Edge));
+    edge_3->len = 17;
+    edge_3->speed = 47;
+    insert_in_path(back, 1, edge_1);
+    insert_in_path(back, 2, edge_3);
+    insert_in_path(back, 5, edge_2);
+    printf("to: %d\n", back->path);
+
+    Edge* edge_4 = calloc(1, sizeof(Edge));
+    edge_4->len = 57;
+    edge_4->speed = 69;
+    Edge* edge_5 = calloc(1, sizeof(Edge));
+    edge_5->len = 39;
+    edge_5->speed = 68;
+    Edge* edge_6 = calloc(1, sizeof(Edge));
+    edge_6->len = 25;
+    edge_6->speed = 29;
+
+    insert_in_path(to, 3, edge_4);
+    insert_in_path(to, 4, edge_5);
+    insert_in_path(to, 5, edge_6);
+    printf("back: %d\n", to->path);
+
+    Path* res = path_with_return(to, back);
+    ASSERT_EQUAL(0, res->head->num);
+    ASSERT_EQUAL(0, res->tail->num);
+    ASSERT_EQUAL(3, res->head->next->num);
+    ASSERT_EQUAL(2, res->head->next->next->next->next->num);
+
+    free(edge_1);
+    free(edge_2);
+    free(edge_3);
+    free(edge_4);
+    free(edge_5);
+    free(edge_6);
+    destroy_path(to);
+    destroy_path(back);
+    destroy_path(res);
+}

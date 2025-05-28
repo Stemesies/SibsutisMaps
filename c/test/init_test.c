@@ -18,6 +18,7 @@ CTEST(hash_table_test, create)
     HashTable* table = hashtab_create();
     ASSERT_NOT_NULL(table);
     ASSERT_NULL(table[0].key);
+    ASSERT_EQUAL(0, table->count);
 
     hashtab_destroy(table);
 }

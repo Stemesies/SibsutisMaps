@@ -241,7 +241,7 @@ PathsContain* correct_paths(PathsContain* paths, int res)
 }
 
 /*Извлечение узла из начала пути*/
-static PathNode* pop_node(Path* path)
+PathNode* pop_node(Path* path)
 {
     if (!path || !(path->head))
         return NULL;
