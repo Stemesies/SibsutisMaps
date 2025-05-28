@@ -58,8 +58,8 @@ run: $(APP_PATH)
 	
 .PHONY: memcheck
 memcheck: $(APP_PATH)
-# valgrind $(VALFLAGS) $(XML_FLAGS)$(XML_MAIN_PATH) $(APP_PATH) 
-	valgrind-ci $(XML_MAIN_PATH) $(VALFLAGS)
+	valgrind $(VALFLAGS) $(XML_FLAGS)$(XML_MAIN_PATH) $(APP_PATH) 
+# valgrind-ci $(XML_MAIN_PATH) $(VALFLAGS)
 
 .PHONY: test
 test: $(TEST_PATH)
