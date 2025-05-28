@@ -76,4 +76,9 @@ int compare_paths(Path* a, Path* b);
  * результата Dfs. Переданный старый контейнер очищает.*/
 PathsContain* correct_paths(PathsContain* paths, int res);
 
+/*Объединяет путь path_to с реверсированным путём path_back (без результирующей
+ * вершины из path_back - предполагается, что концы путей совпадают, и мы уже
+ * находимся в этой вершине.)*/
+Path* path_with_return(Path* path_to, Path* path_back);
+
 #endif

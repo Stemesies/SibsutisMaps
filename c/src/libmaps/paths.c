@@ -238,3 +238,26 @@ PathsContain* correct_paths(PathsContain* paths, int res)
 
     return res_paths;
 }
+
+/*Извлечение узла из начала пути*/
+static PathNode* pop_node(Path* path)
+{
+    if (!path || !(path->head))
+        return NULL;
+    PathNode* res = path->head;
+    path->head = path->head->next;
+    return res;
+}
+
+Path* path_with_return(Path* path_to, Path* path_back)
+{
+    if (!path_to || !path_back)
+        return NULL;
+    Path* res = copy_path(path_to, path_to->tail->num);
+    while (path_back->head != NULL && path_back->head != path_back->tail) {
+        PathNode* insert = pop_node(path_back);
+        insert_in_path(res, insert->num, insert->edge);
+    }
+
+    return res;
+}
