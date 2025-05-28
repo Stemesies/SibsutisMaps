@@ -43,13 +43,13 @@ unsigned int ELFHash(char* s)
             h ^= g >> 24;
         h &= ~g;
     }
-    return h % HashTableTAB_SIZE;
+    return h % HASHTABSIZE;
 }
 
 HashTable* hashtab_create()
 {
-    HashTable* a = (HashTable*)calloc(HashTableTAB_SIZE, sizeof(HashTable));
-    for (int i = 0; i < HashTableTAB_SIZE; i++) {
+    HashTable* a = (HashTable*)calloc(HASHTABSIZE, sizeof(HashTable));
+    for (int i = 0; i < HASHTABSIZE; i++) {
         a[i].key = NULL;
     }
     a->count = 0;
@@ -58,7 +58,7 @@ HashTable* hashtab_create()
 
 void hashtab_destroy(HashTable* table)
 {
-    for (int i = 0; i < HashTableTAB_SIZE; i++) {
+    for (int i = 0; i < HASHTABSIZE; i++) {
         if (!table[i].key)
             continue;
         free(table[i].key);
@@ -71,7 +71,7 @@ unsigned int hashtab_add(HashTable* hashtab, char* key)
     unsigned int index = ELFHash(key), temp = index;
 
     if (hashtab[index].key != NULL) {
-        for (int i = index; i < HashTableTAB_SIZE; i++) {
+        for (int i = index; i < HASHTABSIZE; i++) {
             if (hashtab[i].key == NULL) {
                 hashtab[i].key = calloc(strlen(key) + 1, sizeof(char));
                 strcpy(hashtab[i].key, key);
@@ -79,7 +79,7 @@ unsigned int hashtab_add(HashTable* hashtab, char* key)
                 hashtab->count++;
                 break;
             }
-            if ((index == temp) && (i == HashTableTAB_SIZE - 1))
+            if ((index == temp) && (i == HASHTABSIZE - 1))
                 i = -1;
         }
     } else {
@@ -99,12 +99,12 @@ int hashtab_lookup(HashTable* hashtab, char* key)
     if (hashtab[index].key == NULL)
         return -1;
 
-    for (int i = index; i < HashTableTAB_SIZE; i++) {
+    for (int i = index; i < HASHTABSIZE; i++) {
         if (hashtab[i].key == NULL)
             return -1;
         if (strcmp(hashtab[i].key, key) == 0)
             return i;
-        if (i == HashTableTAB_SIZE - 1) {
+        if (i == HASHTABSIZE - 1) {
             i = -1;
         }
     }

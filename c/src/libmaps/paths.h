@@ -57,7 +57,7 @@ void insert_in_path(Path* list, int num, Edge* edge);
 void insert_in_path_contain(PathsContain* path, Path* insert);
 
 /*Копирует путь src до вершины num*/
-Path* copy_path(Path* src, int num);
+Path* copy_path(const Path* src, int num);
 
 /*Есть ли уже вершина num в пути path?*/
 bool is_visited(Path* path, int num);
@@ -79,6 +79,6 @@ PathsContain* correct_paths(PathsContain* paths, int res);
 /*Объединяет путь path_to с реверсированным путём path_back (без результирующей
  * вершины из path_back - предполагается, что концы путей совпадают, и мы уже
  * находимся в этой вершине.)*/
-Path* path_with_return(Path* path_to, Path* path_back);
+Path* path_with_return(const Path* path_to, Path* path_back);
 
 #endif

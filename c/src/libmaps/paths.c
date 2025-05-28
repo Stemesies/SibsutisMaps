@@ -160,7 +160,8 @@ void insert_in_path_contain(PathsContain* path, Path* insert)
     path->count++;
 }
 
-Path* copy_path(Path* src, int num) // num - до какой вершины копировать список
+Path* copy_path(
+        const Path* src, int num) // num - до какой вершины копировать список
 {
     if (!src)
         return NULL;
@@ -246,17 +247,27 @@ static PathNode* pop_node(Path* path)
         return NULL;
     PathNode* res = path->head;
     path->head = path->head->next;
+    res->next = NULL;
+
     return res;
 }
 
-Path* path_with_return(Path* path_to, Path* path_back)
+Path* path_with_return(const Path* path_to, Path* path_back)
 {
     if (!path_to || !path_back)
         return NULL;
     Path* res = copy_path(path_to, path_to->tail->num);
+    PathNode* next = NULL;
     while (path_back->head != NULL && path_back->head != path_back->tail) {
         PathNode* insert = pop_node(path_back);
+        PathNode* temp = res->tail;
         insert_in_path(res, insert->num, insert->edge);
+        res->tail->next = next;
+        res->tail = temp;
+        next = insert;
+    }
+    for (PathNode* curr = res->head; curr != NULL; curr = curr->next) {
+        printf("%d\n", curr->num);
     }
 
     return res;
