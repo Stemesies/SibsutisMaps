@@ -76,7 +76,7 @@ int main()
     //     printf("%s->", table[temp->num].key);
     // printf(": %d км, %.2lf ч\n", a->path, a->time);
     graph_destroy(graph);
-    hashtab_destroy(table);
+    // hashtab_destroy(table);
     destroy_paths_contain(new_paths);
     destroy_paths_contain(sorted_paths);
     destroy_path(merge_path);
