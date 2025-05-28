@@ -1,5 +1,5 @@
 #include <ctest.h>
-#include <mapconfig/mapconfig.h>
+#include <libmaps/mapconfig.h>
 
 CTEST(config, config_create)
 {

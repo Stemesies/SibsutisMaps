@@ -1,12 +1,13 @@
 /*Файл для работы со структурой графа и входными данными*/
 #include <libmaps/graph.h>
 
-Map* map_create() {
-    Map* map = (Map*) malloc(sizeof(Map));
+Map* map_create()
+{
+    Map* map = (Map*)malloc(sizeof(Map));
     Graph* graph = graph_create(HashTableTAB_SIZE);
     HashTable* table = hashtab_create();
 
-    if(map == NULL || graph == NULL || table == NULL) {
+    if (map == NULL || graph == NULL || table == NULL) {
         printf("[ОШИБКА] Невозможно выделить память под карту.\n");
         printf("Недостаточно ОЗУ для работы программы.\n.");
         free(map);
@@ -21,8 +22,9 @@ Map* map_create() {
     return map;
 }
 
-void map_destroy(Map* map) {
-    if(map != NULL) {
+void map_destroy(Map* map)
+{
+    if (map != NULL) {
         graph_destroy(map->graph);
         hashtab_destroy(map->hashtable);
         map->graph = NULL;

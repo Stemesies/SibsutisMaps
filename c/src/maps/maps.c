@@ -1,14 +1,15 @@
 #include <maps/maps.h>
 
-Map* fetch_map_data() {
+Map* fetch_map_data()
+{
     Map* map = map_create();
 
-    if(map == NULL)
+    if (map == NULL)
         return NULL;
 
     FILE* fp = fopen(DATABASE_NAME, "r");
 
-    if(fp == NULL) {
+    if (fp == NULL) {
         map_destroy(map);
         printf("[ОШИБКА] Невозможно открыть файл \"%s\".\n", DATABASE_NAME);
         printf("Возможно его не существует?\n.");
@@ -20,16 +21,17 @@ Map* fetch_map_data() {
     return map;
 }
 
-int construct_paths() {
+int construct_paths()
+{
     Map* map = fetch_map_data();
 
-    if(map == NULL)
+    if (map == NULL)
         return -1;
 
     Graph* graph = map->graph;
     HashTable* table = map->hashtable;
     PathsContain* path = def_path_contain_construct();
-    
+
     // show_graph(HashTableTAB_SIZE, graph->graph_matrix);
 
     Dfs(hashtab_lookup(table, "Novosibirsk"),
@@ -67,8 +69,6 @@ int construct_paths() {
 
     destroy_paths_contain(new_paths);
     destroy_paths_contain(sorted_paths);
-    
 
     return 0;
-
 }
