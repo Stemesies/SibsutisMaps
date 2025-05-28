@@ -84,4 +84,3 @@ init:
 	mkdir c/obj/src/libmaps
 	mkdir c/obj/src/maps
 	mkdir c/obj/test
-	mkdir c/memcheck
