@@ -5,7 +5,7 @@ LANG_DIR = c
 
 CFLAGS = -Wall -Werror -g
 CPPFLAGS = -I c/src -I c/thirdparty -MP -MMD
-VALFLAGS = --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes -s
+VALFLAGS = --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1 
 
 SRC_DIR = src
 OBJ_DIR = obj
@@ -55,7 +55,7 @@ run: $(APP_PATH)
 	
 .PHONY: memcheck
 memcheck: $(APP_PATH)
-	valgrind $(VALFLAGS) $(APP_PATH) 
+	valgrind $(VALFLAGS) $(APP_PATH)
 
 .PHONY: test
 test: $(TEST_PATH)
