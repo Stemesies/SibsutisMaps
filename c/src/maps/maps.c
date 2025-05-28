@@ -43,8 +43,8 @@ int construct_paths(MapConfig* mapconfig)
     // FIXME Добавить проверку на необходимость поиска n альтернативных путей
     PathsContain* sorted_paths = NULL;
     if (!sorted_paths)
-        sorted_paths = sort_paths(new_paths, QUICKEST);
-    print_path(sorted_paths->first, table, 4);
+        sorted_paths = sort_paths(new_paths, SHORTEST);
+    print_path(sorted_paths->first, table, 1);
     
     // alternative(
     //         new_paths,
