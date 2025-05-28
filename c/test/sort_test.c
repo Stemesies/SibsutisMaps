@@ -4,7 +4,7 @@
 
 CTEST(test_correct_paths, validate)
 {
-    PathsContain* path = def_path_construct();
+    PathsContain* path = def_path_contain_construct();
     Graph* graph = graph_create(7);
 
     graph->graph_matrix[0][1].len = 15;
@@ -44,12 +44,12 @@ CTEST(test_correct_paths, validate)
     ASSERT_EQUAL(5, new_paths->first->next->tail->num);
 
     graph_destroy(graph);
-    destroy_paths(new_paths);
+    destroy_paths_contain(new_paths);
 }
 
 CTEST(test_sort, validate)
 {
-    PathsContain* path = def_path_construct();
+    PathsContain* path = def_path_contain_construct();
     Graph* graph = graph_create(7);
 
     graph->graph_matrix[0][1].len = 15;
@@ -94,8 +94,8 @@ CTEST(test_sort, validate)
     ASSERT_DBL_NEAR_TOL(0.5, sorted_paths3->first->time, 0.1);
 
     graph_destroy(graph);
-    destroy_paths(new_paths);
-    destroy_paths(sorted_paths1);
-    destroy_paths(sorted_paths2);
-    destroy_paths(sorted_paths3);
+    destroy_paths_contain(new_paths);
+    destroy_paths_contain(sorted_paths1);
+    destroy_paths_contain(sorted_paths2);
+    destroy_paths_contain(sorted_paths3);
 }

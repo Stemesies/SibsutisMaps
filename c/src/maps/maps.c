@@ -3,7 +3,7 @@
 
 int main()
 {
-    PathsContain* path = def_path_construct();
+    PathsContain* path = def_path_contain_construct();
     Graph* graph = graph_create(HashTableTAB_SIZE);
     HashTable* table = hashtab_create();
     FILE* fp = fopen("input", "r");
@@ -72,8 +72,8 @@ int main()
     // printf(": %d км, %.2lf ч\n", a->path, a->time);
     graph_destroy(graph);
     hashtab_destroy(table);
-    destroy_paths(new_paths);
-    destroy_paths(sorted_paths);
+    destroy_paths_contain(new_paths);
+    destroy_paths_contain(sorted_paths);
     fclose(fp);
 
     return 0;

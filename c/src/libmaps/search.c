@@ -15,22 +15,22 @@ void Dfs(int src, int res, PathsContain* path, Graph* graph)
                 Path* new_list = NULL;
 
                 if (graph->verticles[src] > 0) {
-                    new_list = copy_list(path->last, src);
-                    insert_in_list(new_list, i, &(graph->graph_matrix[src][i]));
-                    insert_in_path(path, new_list);
-                    // destroy_list(new_list);
+                    new_list = copy_path(path->last, src);
+                    insert_in_path(new_list, i, &(graph->graph_matrix[src][i]));
+                    insert_in_path_contain(path, new_list);
+                    // destroy_path(new_list);
                 } else {
                     if (!is_visited(path->last, i)) {
                         if (path->count == 0) {
-                            new_list = def_list_construct(src);
-                            insert_in_list(
+                            new_list = def_path_construct(src);
+                            insert_in_path(
                                     new_list,
                                     i,
                                     &(graph->graph_matrix[src][i]));
-                            insert_in_path(path, new_list);
-                            // destroy_list(new_list);
+                            insert_in_path_contain(path, new_list);
+                            // destroy_path(new_list);
                         } else
-                            insert_in_list(
+                            insert_in_path(
                                     path->last,
                                     i,
                                     &(graph->graph_matrix[src][i]));
@@ -40,7 +40,7 @@ void Dfs(int src, int res, PathsContain* path, Graph* graph)
                 graph->verticles[src]++;
                 Dfs(i, res, path, graph);
                 graph->visited[i] = false;
-                destroy_list(new_list);
+                destroy_path(new_list);
             }
         }
     }
@@ -69,15 +69,15 @@ void Bfs(int src, int res, PathsContain* path, size_t n, Edge** graph)
                          curr = curr->next)
                     // if (curr->tail->num == vert->num && !(curr->visited[i]))
                     {
-                        new_list = copy_list(curr, vert->num);
-                        insert_in_list(new_list, i, &(graph[vert->num][i]));
-                        insert_in_path(path, new_list);
+                        new_list = copy_path(curr, vert->num);
+                        insert_in_path(new_list, i, &(graph[vert->num][i]));
+                        insert_in_path_contain(path, new_list);
                     }
                 } else {
                     if (path->count == 0) {
-                        new_list = def_list_construct(src);
-                        insert_in_list(new_list, i, &(graph[src][i]));
-                        insert_in_path(path, new_list);
+                        new_list = def_path_construct(src);
+                        insert_in_path(new_list, i, &(graph[src][i]));
+                        insert_in_path_contain(path, new_list);
                     } else // добавить поиск списка по крайней вершине
                            // (проверять на совпадение с vert->num)
                     {
@@ -85,7 +85,7 @@ void Bfs(int src, int res, PathsContain* path, size_t n, Edge** graph)
                              curr = curr->next)
                             // if (curr->tail->num == vert->num &&
                             // !(curr->visited[i]))
-                            insert_in_list(curr, i, &(graph[vert->num][i]));
+                            insert_in_path(curr, i, &(graph[vert->num][i]));
                     }
                 }
 

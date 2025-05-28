@@ -55,14 +55,14 @@ PathsContain* sort_paths(PathsContain* path, Priority priotity)
 
     sort_paths_priority(paths_arr, 0, n - 1, priotity);
 
-    PathsContain* sorted_paths = def_path_construct();
+    PathsContain* sorted_paths = def_path_contain_construct();
     if (priotity == Longest) {
         for (int i = n - 1; i >= 0; i--) {
-            insert_in_path(sorted_paths, paths_arr[i]);
+            insert_in_path_contain(sorted_paths, paths_arr[i]);
         }
     } else {
         for (int i = 0; i < n; i++) {
-            insert_in_path(sorted_paths, paths_arr[i]);
+            insert_in_path_contain(sorted_paths, paths_arr[i]);
         }
     }
 

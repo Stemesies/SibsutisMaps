@@ -71,7 +71,7 @@ PathNode* queue_take(Queue* queue)
     return NULL;
 }
 
-Path* def_list_construct(int src)
+Path* def_path_construct(int src)
 {
     Path* list = malloc(sizeof(Path));
     list->head = def_node_construct(src);
@@ -82,7 +82,7 @@ Path* def_list_construct(int src)
     return list;
 }
 
-void destroy_list(Path* a)
+void destroy_path(Path* a)
 {
     PathNode* temp = NULL;
     if (!a)
@@ -95,7 +95,7 @@ void destroy_list(Path* a)
     free(a);
 }
 
-PathsContain* def_path_construct()
+PathsContain* def_path_contain_construct()
 {
     PathsContain* paths = malloc(sizeof(PathsContain));
     paths->count = 0;
@@ -104,7 +104,7 @@ PathsContain* def_path_construct()
     return paths;
 }
 
-void destroy_paths(PathsContain* paths)
+void destroy_paths_contain(PathsContain* paths)
 {
     Path* temp = NULL;
     if (!paths)
@@ -112,14 +112,14 @@ void destroy_paths(PathsContain* paths)
     for (Path* curr = paths->first; curr != NULL;) {
         temp = curr;
         curr = curr->next;
-        destroy_list(temp);
+        destroy_path(temp);
     }
     free(paths);
 }
 
 /*Головной элемент списка всегда занят исходной вершиной, поэтому начинаем
  * вставку с head->next.*/
-void insert_in_list(Path* list, int num, Edge* edge)
+void insert_in_path(Path* list, int num, Edge* edge)
 {
     if (!list) {
         exit(EXIT_FAILURE);
@@ -139,16 +139,16 @@ void insert_in_list(Path* list, int num, Edge* edge)
     list->time += ((double)edge->len / (double)edge->speed);
 }
 
-void insert_in_path(PathsContain* path, Path* insert)
+void insert_in_path_contain(PathsContain* path, Path* insert)
 {
     if (!path || !insert) {
         exit(EXIT_FAILURE);
     }
     Path* copy = NULL;
     if (!(insert->tail))
-        copy = copy_list(insert, insert->head->num);
+        copy = copy_path(insert, insert->head->num);
     else
-        copy = copy_list(insert, insert->tail->num);
+        copy = copy_path(insert, insert->tail->num);
 
     if (path->count == 0) {
         path->first = copy;
@@ -160,16 +160,16 @@ void insert_in_path(PathsContain* path, Path* insert)
     path->count++;
 }
 
-Path* copy_list(Path* src, int num) // num - до какой вершины копировать список
+Path* copy_path(Path* src, int num) // num - до какой вершины копировать список
 {
     if (!src)
         return NULL;
-    Path* res = def_list_construct(src->head->num);
+    Path* res = def_path_construct(src->head->num);
     if (src->head->num == num)
         return res;
     PathNode* current = src->head->next;
     while (current != NULL) {
-        insert_in_list(res, current->num, current->edge);
+        insert_in_path(res, current->num, current->edge);
         if (current->num == num)
             break;
         current = current->next;
@@ -228,13 +228,13 @@ int compare_paths(Path* a, Path* b)
 
 PathsContain* correct_paths(PathsContain* paths, int res)
 {
-    PathsContain* res_paths = def_path_construct();
+    PathsContain* res_paths = def_path_contain_construct();
     for (Path* curr = paths->first; curr != NULL; curr = curr->next) {
         if (curr->tail->num == res) {
-            insert_in_path(res_paths, curr);
+            insert_in_path_contain(res_paths, curr);
         }
     }
-    destroy_paths(paths);
+    destroy_paths_contain(paths);
 
     return res_paths;
 }
