@@ -188,8 +188,7 @@ void* list_get(List* list, unsigned int index)
 
     if (current == NULL)
         return NULL;
-    else
-        return current->value;
+    return current->value;
 }
 
 /*
@@ -203,8 +202,7 @@ void* list_first(List* list)
 
     if (list->head != NULL)
         return list->head->value;
-    else
-        return NULL;
+    return NULL;
 }
 
 /*
@@ -218,8 +216,7 @@ void* list_last(List* list)
 
     if (list->tail != NULL)
         return list->tail->value;
-    else
-        return NULL;
+    return NULL;
 }
 
 /*

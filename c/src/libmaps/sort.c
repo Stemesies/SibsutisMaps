@@ -1,17 +1,17 @@
 #include <libmaps/sort.h>
 
-static void swap(LIST** a, LIST** b)
+static void swap(Path** a, Path** b)
 {
-    LIST* temp = *a;
+    Path* temp = *a;
     *a = *b;
     *b = temp;
 }
 
 /*Возврат индекса опорного элемента*/
-static int partition(LIST** paths_arr, int low, int high, Priority priotity)
+static int partition(Path** paths_arr, int low, int high, Priority priotity)
 {
     Pivot pivot;
-    if ((priotity == Shortest) || (priotity == Longest)) {
+    if ((priotity == SHORTEST) || (priotity == LONGEST)) {
         pivot.i = paths_arr[high]->path;
     } else {
         pivot.d = paths_arr[high]->time;
@@ -19,9 +19,9 @@ static int partition(LIST** paths_arr, int low, int high, Priority priotity)
 
     int i = low;
     for (int j = low; j < high; j++) {
-        if ((((priotity == Shortest) || (priotity == Longest))
+        if ((((priotity == SHORTEST) || (priotity == LONGEST))
              && paths_arr[j]->path <= pivot.i)
-            || ((priotity == Quickest) && paths_arr[j]->time <= pivot.d)) {
+            || ((priotity == QUICKEST) && paths_arr[j]->time <= pivot.d)) {
             swap(paths_arr + i, paths_arr + j);
             i++;
         }
@@ -31,7 +31,7 @@ static int partition(LIST** paths_arr, int low, int high, Priority priotity)
 }
 
 static void
-sort_paths_priority(LIST** paths_arr, int low, int high, Priority priotity)
+sort_paths_priority(Path** paths_arr, int low, int high, Priority priotity)
 {
     if (low < high) {
         int part = partition(paths_arr, low, high, priotity);
@@ -40,29 +40,29 @@ sort_paths_priority(LIST** paths_arr, int low, int high, Priority priotity)
     }
 }
 
-PATHS* sort_paths(PATHS* path, Priority priotity)
+PathsContain* sort_paths(PathsContain* path, Priority priotity)
 {
-    LIST** paths_arr = calloc(path->count, sizeof(LIST*));
+    Path** paths_arr = calloc(path->count, sizeof(Path*));
     if (!paths_arr) {
         return NULL;
     }
 
     int n = 0;
-    for (LIST* cur = path->first; cur; cur = cur->next) {
+    for (Path* cur = path->first; cur; cur = cur->next) {
         paths_arr[n] = cur;
         n++;
     }
 
     sort_paths_priority(paths_arr, 0, n - 1, priotity);
 
-    PATHS* sorted_paths = def_path_construct();
-    if (priotity == Longest) {
+    PathsContain* sorted_paths = def_path_contain_construct();
+    if (priotity == LONGEST) {
         for (int i = n - 1; i >= 0; i--) {
-            insert_in_path(sorted_paths, paths_arr[i]);
+            insert_in_path_contain(sorted_paths, paths_arr[i]);
         }
     } else {
         for (int i = 0; i < n; i++) {
-            insert_in_path(sorted_paths, paths_arr[i]);
+            insert_in_path_contain(sorted_paths, paths_arr[i]);
         }
     }
 

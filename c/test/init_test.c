@@ -4,7 +4,7 @@
 
 CTEST(test_graph, create)
 {
-    GRAPH* graph = graph_create(HASHTAB_SIZE);
+    Graph* graph = graph_create(HashTableTAB_SIZE);
     ASSERT_NOT_NULL(graph);
     ASSERT_NOT_NULL(graph->graph_matrix);
     ASSERT_NOT_NULL(graph->verticles);
@@ -15,7 +15,7 @@ CTEST(test_graph, create)
 
 CTEST(hash_table_test, create)
 {
-    HASH* table = hashtab_create();
+    HashTable* table = hashtab_create();
     ASSERT_NOT_NULL(table);
     ASSERT_NULL(table[0].key);
 
@@ -24,7 +24,7 @@ CTEST(hash_table_test, create)
 
 CTEST(test_hash, add_lookup)
 {
-    HASH* table = hashtab_create();
+    HashTable* table = hashtab_create();
     ASSERT_EQUAL(-1, hashtab_lookup(table, "Novosibirsk"));
     ASSERT_NOT_EQUAL(true, is_in_table(table, "Novosibirsk"));
     unsigned int v = hashtab_add(table, "Novosibirsk");
@@ -39,7 +39,7 @@ CTEST(test_hash, add_lookup)
 CTEST(test_graph, add)
 {
     int len = 15, speed = 55;
-    GRAPH* graph = graph_create(HASHTAB_SIZE);
+    Graph* graph = graph_create(HashTableTAB_SIZE);
     add_edge(graph, ELFHash("Novosibirsk"), ELFHash("Kolyvan"), len, speed);
     ASSERT_EQUAL(
             len,
@@ -59,8 +59,8 @@ CTEST(test_graph, add)
 
 CTEST(test_graph, init)
 {
-    GRAPH* graph = graph_create(HASHTAB_SIZE);
-    HASH* table = hashtab_create();
+    Graph* graph = graph_create(HashTableTAB_SIZE);
+    HashTable* table = hashtab_create();
     FILE* fp = fopen("input", "r");
     ASSERT_NOT_NULL(fp);
     graph_init(graph, table, fp);
@@ -86,8 +86,8 @@ CTEST(test_graph, init)
 CTEST(test_in, empty_input)
 {
     FILE* fp = fopen("c/test/empty_input", "r");
-    HASH* table = hashtab_create();
-    GRAPH* graph = graph_create(1);
+    HashTable* table = hashtab_create();
+    Graph* graph = graph_create(1);
     graph_init(graph, table, fp);
     ASSERT_EQUAL(0, table->count);
     show_graph(1, graph->graph_matrix);

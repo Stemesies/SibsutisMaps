@@ -3,9 +3,9 @@
 
 int main()
 {
-    PATHS* path = def_path_construct();
-    GRAPH* graph = graph_create(HASHTAB_SIZE);
-    HASH* table = hashtab_create();
+    PathsContain* path = def_path_contain_construct();
+    Graph* graph = graph_create(HashTableTAB_SIZE);
+    HashTable* table = hashtab_create();
     FILE* fp = fopen("input", "r");
 
     // graph->graph_matrix[0][1].len = 15;
@@ -38,18 +38,19 @@ int main()
     //         }
     // }
     graph_init(graph, table, fp);
-    // show_graph(HASHTAB_SIZE, graph->graph_matrix);
+    // show_graph(HashTableTAB_SIZE, graph->graph_matrix);
 
     Dfs(hashtab_lookup(table, "Novosibirsk"),
         hashtab_lookup(table, "Karasuk"),
         path,
         graph);
-    PATHS* new_paths = correct_paths(path, hashtab_lookup(table, "Karasuk"));
+    PathsContain* new_paths
+            = correct_paths(path, hashtab_lookup(table, "Karasuk"));
 
     // FIXME Добавить проверку на необходимость поиска n альтернативных путей
-    PATHS* sorted_paths = NULL;
+    PathsContain* sorted_paths = NULL;
     if (!sorted_paths)
-        sorted_paths = sort_paths(new_paths, Quickest);
+        sorted_paths = sort_paths(new_paths, QUICKEST);
 
     show_paths(sorted_paths, table, hashtab_lookup(table, "Karasuk"));
     // alternative(
@@ -58,21 +59,21 @@ int main()
     //         hashtab_lookup(table, "Novosibirsk"),
     //         hashtab_lookup(table, "Karasuk"),
     //         1.5,
-    //         Shortest);
+    //         SHORTEST);
     // printf("Karasuk: %d\n", hashtab_lookup(table, "Moshkovo"));
     // printf("%s\n", table[43].key);
 
-    // LIST* a = best_path(path, Longest, hashtab_lookup(table, "Karasuk"));
+    // Path* a = best_path(path, LONGEST, hashtab_lookup(table, "Karasuk"));
     // // printf("%p\n", a);
 
     // printf("Самый длинный путь из Новосибирска в Карасук: \n");
-    // for (NODE* temp = a->head; temp != NULL; temp = temp->next)
+    // for (PathNode* temp = a->head; temp != NULL; temp = temp->next)
     //     printf("%s->", table[temp->num].key);
     // printf(": %d км, %.2lf ч\n", a->path, a->time);
     graph_destroy(graph);
     hashtab_destroy(table);
-    destroy_paths(new_paths);
-    destroy_paths(sorted_paths);
+    destroy_paths_contain(new_paths);
+    destroy_paths_contain(sorted_paths);
     fclose(fp);
 
     return 0;

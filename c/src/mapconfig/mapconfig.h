@@ -1,15 +1,12 @@
 #ifndef MAPCONFIG_H_
 #define MAPCONFIG_H_
 
+#include <libmaps/graph.h>
 #include <libmaps/list.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define DEFAULT_OUTPUT_PATH "result"
 
-typedef enum PRIORITY { Shortest, Quickest, Longest } Priority;
+typedef enum priority { SHORTEST, QUICKEST, LONGEST } Priority;
 
 /*
 Настройки данной программы.
@@ -26,7 +23,7 @@ typedef enum PRIORITY { Shortest, Quickest, Longest } Priority;
 программы. Если "null" - программа должна все выводить в консоль
 ** moreDetailedOutput: более подробная визуальная маршрута.
 */
-typedef struct CONFIG {
+typedef struct config {
     List* points;
 
     Priority priority;

@@ -15,7 +15,7 @@ CTEST(config, quckest_short)
     int argc = 2;
     char* argv[] = {"./test", "-Q"};
     parse_arguments(cfg, argc, argv);
-    ASSERT_EQUAL(cfg->priority, Quickest);
+    ASSERT_EQUAL(cfg->priority, QUICKEST);
     config_dispose(cfg);
 }
 
@@ -25,7 +25,7 @@ CTEST(config, shortest_full)
     int argc = 2;
     char* argv[] = {"./test", "--shortest"};
     parse_arguments(cfg, argc, argv);
-    ASSERT_EQUAL(cfg->priority, Shortest);
+    ASSERT_EQUAL(cfg->priority, SHORTEST);
     config_dispose(cfg);
 }
 
@@ -98,7 +98,7 @@ CTEST(config, set_of_arguments)
     ASSERT_EQUAL(cfg->altways_count, 4);
     ASSERT_EQUAL(cfg->limit, 10);
     ASSERT_EQUAL(cfg->more_detailed_output, 1);
-    ASSERT_EQUAL(cfg->priority, Longest);
+    ASSERT_EQUAL(cfg->priority, LONGEST);
     ASSERT_STR(cfg->output_stream, "output.txt");
 
     ASSERT_NOT_NULL(cfg->points);

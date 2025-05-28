@@ -4,57 +4,76 @@
 #include <float.h>
 #include <libmaps/graph.h>
 #include <limits.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 /*Узел списка*/
 typedef struct node {
-    EDGE* edge;
+    Edge* edge;
     int num;
     struct node* next;
-} NODE;
+} PathNode;
 
 /*Список вершин (путь)*/
-typedef struct list {
-    NODE *head, *tail;
+typedef struct path {
+    PathNode *head, *tail;
     int path;
     double time;
-    // bool *visited;
-    struct list* next;
-} LIST;
+    struct path* next;
+} Path;
 
 /*Структура для хранения путей*/
 typedef struct paths {
-    LIST *first, *last;
+    Path *first, *last;
     int count;
-} PATHS;
+} PathsContain;
 
 /*Очередь вершин*/
 typedef struct queue {
     int size;
-    NODE *head, *tail;
-} QUEUE;
+    PathNode *head, *tail;
+} Queue;
 
 /*Прототипы функций*/
 
-NODE* def_node_construct(int num);
-void destroy_node(NODE* node);
-QUEUE* queue_create();
-void destroy_queue(QUEUE* a);
-void queue_add(QUEUE* queue, int num, EDGE* edge);
-NODE* queue_take(QUEUE* queue);
-LIST* def_list_construct(int num);
-void destroy_list(LIST* a);
-PATHS* def_path_construct();
-void destroy_paths(PATHS* paths);
-void insert_in_list(LIST* list, int num, EDGE* edge);
-void insert_in_path(PATHS* path, LIST* insert);
-LIST* copy_list(LIST* src, int num);
-bool is_visited(LIST* src, int num);
-void print_path(LIST* path, HASH* table, int count);
-void show_paths(PATHS* paths, HASH* is_in_table, int res);
-int compare_paths(LIST* a, LIST* b);
-PATHS* correct_paths(PATHS* paths, int res);
+/*Создаёт узел пути, инициализируя расстояние и путь нулями (так как вершина -
+ * начальная), а номер вершины - переданным значением src.*/
+PathNode* def_node_construct(int src);
+void destroy_node(PathNode* node);
+Queue* queue_create();
+void destroy_queue(Queue* a);
+void queue_add(Queue* queue, int num, Edge* edge);
+PathNode* queue_take(Queue* queue);
+/*Создаёт путь, помещая в него изначальную вершину.*/
+Path* def_path_construct(int src);
+void destroy_path(Path* a);
+PathsContain* def_path_contain_construct();
+void destroy_paths_contain(PathsContain* paths);
+
+/*Вставляет вершину num и соответствующие ей приоритеты ребра edge в путь
+ * list. Головной элемент пути всегда занят исходной вершиной, поэтому начинаем
+ * вставку с head->next.*/
+void insert_in_path(Path* list, int num, Edge* edge);
+
+/*Вставляет новый путь в контейнер путей. */
+void insert_in_path_contain(PathsContain* path, Path* insert);
+
+/*Копирует путь src до вершины num*/
+Path* copy_path(Path* src, int num);
+
+/*Есть ли уже вершина num в пути path?*/
+bool is_visited(Path* path, int num);
+
+void print_path(const Path* path, const HashTable* table, int count);
+void show_paths(
+        const PathsContain* paths, const HashTable* is_in_table, int res);
+
+/*Возвращает количество вершин из a, которых нет в b. Может быть полезно при
+реализации пути с возвратом в исходную точку, чтобы не идти по одинаковому
+пути туда и обратно. Трудоёмкий метод, O(n*k), где n и k - кол-во вершин в
+списках. Не рекоммендуется к использованию.*/
+int compare_paths(Path* a, Path* b);
+
+/*Создаёт контейнер со путями, которые дошли до итоговой точки, на основе
+ * результата Dfs. Переданный старый контейнер очищает.*/
+PathsContain* correct_paths(PathsContain* paths, int res);
 
 #endif

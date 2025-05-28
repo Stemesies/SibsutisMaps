@@ -68,7 +68,7 @@ memcheck_tests: $(TEST_PATH)
 
 .PHONY: clean
 clean:
-	$(RM) $(APP_PATH) $(LIB_PATH) 
+	$(RM) $(APP_PATH) $(LIB_PATH) $(TEST_PATH)
 	find $(LANG_DIR)/$(OBJ_DIR) -name '*.$(OBJ_EXT)' -exec $(RM) '{}' \;
 	find $(LANG_DIR)/$(OBJ_DIR) -name '*.d' -exec $(RM) '{}' \;
 
