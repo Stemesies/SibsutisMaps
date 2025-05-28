@@ -4,9 +4,6 @@
 #include <float.h>
 #include <libmaps/graph.h>
 #include <limits.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 /*Узел списка*/
 typedef struct node {
@@ -52,8 +49,9 @@ void insert_in_path(Path* list, int num, Edge* edge);
 void insert_in_path_contain(PathsContain* path, Path* insert);
 Path* copy_path(Path* src, int num);
 bool is_visited(Path* src, int num);
-void print_path(Path* path, HashTable* table, int count);
-void show_paths(PathsContain* paths, HashTable* is_in_table, int res);
+void print_path(const Path* path, const HashTable* table, int count);
+void show_paths(
+        const PathsContain* paths, const HashTable* is_in_table, int res);
 int compare_paths(Path* a, Path* b);
 PathsContain* correct_paths(PathsContain* paths, int res);
 

@@ -1,11 +1,8 @@
 #ifndef MAPCONFIG_H_
 #define MAPCONFIG_H_
 
+#include <libmaps/graph.h>
 #include <libmaps/list.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define DEFAULT_OUTPUT_PATH "result"
 

@@ -188,7 +188,7 @@ bool is_visited(Path* src, int num)
     return false;
 }
 
-void print_path(Path* path, HashTable* table, int count)
+void print_path(const Path* path, const HashTable* table, int count)
 {
     printf("Путь %d: ", count);
     PathNode* temp = path->head;
@@ -202,7 +202,7 @@ void print_path(Path* path, HashTable* table, int count)
     printf(": %d км, %.2lf ч\n", path->path, path->time);
 }
 
-void show_paths(PathsContain* paths, HashTable* table, int res)
+void show_paths(const PathsContain* paths, const HashTable* table, int res)
 {
     int count = 0;
     for (Path* curr = paths->first; curr != NULL; curr = curr->next) {
