@@ -175,8 +175,8 @@ CTEST(pop_test, path)
 
 CTEST(1, 2)
 {
-    Path* to = def_path_construct(0);
-    Path* back = def_path_construct(0);
+    Path* to = def_path_construct(0);   // путь: 0->3->4->5
+    Path* back = def_path_construct(9); // путь: 9->1->2->5
 
     Edge* edge_1 = calloc(1, sizeof(Edge));
     edge_1->len = LEN;
@@ -190,7 +190,6 @@ CTEST(1, 2)
     insert_in_path(back, 1, edge_1);
     insert_in_path(back, 2, edge_3);
     insert_in_path(back, 5, edge_2);
-    printf("to: %d\n", back->path);
 
     Edge* edge_4 = calloc(1, sizeof(Edge));
     edge_4->len = 57;
@@ -205,13 +204,14 @@ CTEST(1, 2)
     insert_in_path(to, 3, edge_4);
     insert_in_path(to, 4, edge_5);
     insert_in_path(to, 5, edge_6);
-    printf("back: %d\n", to->path);
 
     Path* res = path_with_return(to, back);
     ASSERT_EQUAL(0, res->head->num);
-    ASSERT_EQUAL(0, res->tail->num);
+    ASSERT_EQUAL(9, res->tail->num);
     ASSERT_EQUAL(3, res->head->next->num);
     ASSERT_EQUAL(2, res->head->next->next->next->next->num);
+    ASSERT_EQUAL(to->path + back->path, res->path);
+    ASSERT_DBL_NEAR_TOL(to->time + back->time, res->time, 0.1);
 
     free(edge_1);
     free(edge_2);

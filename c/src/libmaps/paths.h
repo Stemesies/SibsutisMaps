@@ -76,6 +76,8 @@ int compare_paths(Path* a, Path* b);
  * результата Dfs. Переданный старый контейнер очищает.*/
 PathsContain* correct_paths(PathsContain* paths, int res);
 
+/*Извлекает узел из начала пути. Устанавливает указатель этого узла на следующий
+ * в NULL.*/
 PathNode* pop_node(Path* path);
 
 /*Объединяет путь path_to с реверсированным путём path_back (без результирующей

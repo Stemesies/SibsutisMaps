@@ -257,22 +257,32 @@ Path* path_with_return(const Path* path_to, Path* path_back)
     if (!path_to || !path_back)
         return NULL;
     Path* res = copy_path(path_to, path_to->tail->num);
-    PathNode* next = NULL;
+    PathNode *next = NULL,
+             *tail = NULL; // tail запоминает элемент, который
+                           // был добавлен первым в путь res
+    int i = 0; // счётчик итераций цикла (нужен, чтобы отследить добавление
+               // первого элемента, на который в итоге будет передвинут
+               // res->tail)
+    /*В цикле - temp запоминает текущий tail, чтобы потом к нему возвращаться,
+     * сдвигая вставленные ранее элементы дальше в конец (нужно для получения
+     * реверса); next запоминает, куда будет указывать вновьдобавленный
+     * элемент*/
     while (path_back->head != NULL && path_back->head != path_back->tail) {
         PathNode* insert = pop_node(path_back);
         PathNode* temp = res->tail;
         insert_in_path(res, insert->num, insert->edge);
+        if (i == 0)
+            tail = res->tail;
+
         res->tail->next = next;
         next = res->tail;
         res->tail = temp;
         destroy_node(insert);
+        i++;
     }
     res->path = path_to->path + path_back->path;
     res->time = path_to->time + path_back->time;
-
-    // for (PathNode* curr = res->head; curr != NULL; curr = curr->next) {
-    //     printf("%d\n", curr->num);
-    // }
+    res->tail = tail;
 
     return res;
 }
