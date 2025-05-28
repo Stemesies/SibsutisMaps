@@ -1,43 +1,50 @@
 #include <libmaps/search.h>
 
-void Dfs(int src, int res, PathsContain* path, Graph* graph)
+#define c_src (context->src)
+#define c_res (context->res)
+#define c_path (context->paths)
+#define c_graph (context->map->graph)
+#define c_table (context->map->hashtable)
+
+void Dfs(SearchContext* context)
 {
-    if (src == res)
+    if (c_src == c_res)
         return;
 
-    if (!path) {
+    if (!c_path) {
         exit(EXIT_FAILURE);
     }
-    graph->visited[src] = true;
-    for (int i = 0; i < graph->n_verticles; i++) {
-        if (graph->graph_matrix[src][i].len > 0) {
-            if (!(graph->visited[i])) {
+    c_graph->visited[c_src] = true;
+    for (int i = 0; i < c_graph->n_verticles; i++) {
+        if (c_graph->graph_matrix[c_src][i].len > 0) {
+            if (!(c_graph->visited[i])) {
                 Path* new_list = NULL;
 
-                if (graph->verticles[src] > 0) {
-                    new_list = copy_path(path->last, src);
-                    insert_in_path(new_list, i, &(graph->graph_matrix[src][i]));
-                    insert_in_path_contain(path, new_list);
+                if (c_graph->verticles[c_src] > 0) {
+                    new_list = copy_path(c_path->last, c_src);
+                    insert_in_path(
+                            new_list, i, &(c_graph->graph_matrix[c_src][i]));
+                    insert_in_path_contain(c_path, new_list);
                 } else {
-                    if (!is_visited(path->last, i)) {
-                        if (path->count == 0) {
-                            new_list = def_path_construct(src);
+                    if (!is_visited(c_path->last, i)) {
+                        if (c_path->count == 0) {
+                            new_list = def_path_construct(c_src);
                             insert_in_path(
                                     new_list,
                                     i,
-                                    &(graph->graph_matrix[src][i]));
-                            insert_in_path_contain(path, new_list);
+                                    &(c_graph->graph_matrix[c_src][i]));
+                            insert_in_path_contain(c_path, new_list);
                         } else
                             insert_in_path(
-                                    path->last,
+                                    c_path->last,
                                     i,
-                                    &(graph->graph_matrix[src][i]));
+                                    &(c_graph->graph_matrix[c_src][i]));
                     }
                 }
 
-                graph->verticles[src]++;
-                Dfs(i, res, path, graph);
-                graph->visited[i] = false;
+                c_graph->verticles[c_src]++;
+                Dfs(context);
+                c_graph->visited[i] = false;
                 destroy_path(new_list);
             }
         }
@@ -95,13 +102,13 @@ void Bfs(int src, int res, PathsContain* path, size_t n, Edge** graph)
 }
 
 /*Лучший путь по выбранному критерию*/
-Path* best_path(PathsContain* path, Priority what_path, int res)
+Path* best_path(SearchContext* context)
 {
     Path *res_short = NULL, *res_long = NULL, *res_quick = NULL;
     int temp_short = INT_MAX, temp_long = 0.0;
     double temp_quick = DBL_MAX;
-    for (Path* curr = path->first; curr != NULL; curr = curr->next) {
-        if (curr->tail->num == res) {
+    for (Path* curr = c_path->first; curr != NULL; curr = curr->next) {
+        if (curr->tail->num == c_res) {
             if (curr->path < temp_short) {
                 res_short = curr;
                 temp_short = curr->path;
@@ -117,7 +124,7 @@ Path* best_path(PathsContain* path, Priority what_path, int res)
         }
     }
 
-    switch (what_path) {
+    switch (context->config->priority) {
     case LONGEST:
         return res_long;
     case SHORTEST:
@@ -129,42 +136,39 @@ Path* best_path(PathsContain* path, Priority what_path, int res)
     }
 }
 
-void alternative(
-        PathsContain* paths,
-        HashTable* table,
-        int src,
-        int res,
-        double rate,
-        Priority what_path,
-        int limit)
+void alternative(SearchContext* context)
 {
-    int count = 0;
-    Path* a = best_path(paths, what_path, res);
-    printf("Альтернативные пути %s - %s:\n", table[src].key, table[res].key);
-    for (Path* curr = paths->first; curr != NULL; curr = curr->next) {
-        if (curr->tail->num == res) {
+    int rate = context->config->altways_filter_coefficient;
+    int alt_limit = context->config->altways_count;
 
+    int count = 0;
+    Path* a = best_path(context);
+    printf("Альтернативные пути %s - %s:\n",
+           c_table[c_src].key,
+           c_table[c_res].key);
+    for (Path* curr = c_path->first; curr != NULL; curr = curr->next) {
+        if (curr->tail->num == c_res) {
             // Лучший путь не учитываем, как альтернативный
-            if(a == curr)
+            if (a == curr)
                 continue;
 
-            switch (what_path) {
+            switch (context->config->priority) {
             case LONGEST:
                 if (((double)a->path / (double)curr->path) <= rate) {
                     count++;
-                    print_path(curr, table, count);
+                    print_path(curr, c_table, count);
                 }
                 break;
             case SHORTEST:
                 if (((double)curr->path / (double)a->path) <= rate) {
                     count++;
-                    print_path(curr, table, count);
+                    print_path(curr, c_table, count);
                 }
                 break;
             case QUICKEST:
                 if ((curr->time / a->time) <= rate) {
                     count++;
-                    print_path(curr, table, count);
+                    print_path(curr, c_table, count);
                 }
                 break;
 
@@ -173,8 +177,8 @@ void alternative(
             }
         }
 
-        // Нам не нужно больше, чем limit альтернативных путей
-        if(count >= limit)
+        // Нам не нужно больше, чем alt_limit альтернативных путей
+        if (count >= alt_limit)
             break;
     }
 }

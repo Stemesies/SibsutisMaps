@@ -25,12 +25,12 @@ CTEST(hash_table_test, create)
 CTEST(test_hash, add_lookup)
 {
     HashTable* table = hashtab_create();
-    ASSERT_EQUAL(-1, hashtab_lookup(table, "Novosibirsk"));
-    ASSERT_NOT_EQUAL(true, is_in_table(table, "Novosibirsk"));
-    unsigned int v = hashtab_add(table, "Novosibirsk");
-    ASSERT_EQUAL(v, ELFHash("Novosibirsk"));
-    ASSERT_EQUAL(ELFHash("Novosibirsk"), hashtab_lookup(table, "Novosibirsk"));
-    ASSERT_EQUAL(true, is_in_table(table, "Novosibirsk"));
+    ASSERT_EQUAL(-1, hashtab_lookup(table, "Новосибирск"));
+    ASSERT_NOT_EQUAL(true, is_in_table(table, "Новосибирск"));
+    unsigned int v = hashtab_add(table, "Новосибирск");
+    ASSERT_EQUAL(v, ELFHash("Новосибирск"));
+    ASSERT_EQUAL(ELFHash("Новосибирск"), hashtab_lookup(table, "Новосибирск"));
+    ASSERT_EQUAL(true, is_in_table(table, "Новосибирск"));
     ASSERT_NOT_EQUAL(0, table->count);
 
     hashtab_destroy(table);
@@ -40,18 +40,18 @@ CTEST(test_graph, add)
 {
     int len = 15, speed = 55;
     Graph* graph = graph_create(HashTableTAB_SIZE);
-    add_edge(graph, ELFHash("Novosibirsk"), ELFHash("Kolyvan"), len, speed);
+    add_edge(graph, ELFHash("Новосибирск"), ELFHash("Колывань"), len, speed);
     ASSERT_EQUAL(
             len,
-            graph->graph_matrix[ELFHash("Novosibirsk")][ELFHash("Kolyvan")]
+            graph->graph_matrix[ELFHash("Новосибирск")][ELFHash("Колывань")]
                     .len);
     ASSERT_EQUAL(
             speed,
-            graph->graph_matrix[ELFHash("Novosibirsk")][ELFHash("Kolyvan")]
+            graph->graph_matrix[ELFHash("Новосибирск")][ELFHash("Колывань")]
                     .speed);
     ASSERT_EQUAL(
-            graph->graph_matrix[ELFHash("Kolyvan")][ELFHash("Novosibirsk")].len,
-            graph->graph_matrix[ELFHash("Novosibirsk")][ELFHash("Kolyvan")]
+            graph->graph_matrix[ELFHash("Колывань")][ELFHash("Новосибирск")].len,
+            graph->graph_matrix[ELFHash("Новосибирск")][ELFHash("Колывань")]
                     .len);
 
     graph_destroy(graph);

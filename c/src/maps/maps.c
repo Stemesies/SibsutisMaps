@@ -28,49 +28,31 @@ int construct_paths(MapConfig* mapconfig)
     if (map == NULL)
         return -1;
 
-    Graph* graph = map->graph;
     HashTable* table = map->hashtable;
     PathsContain* path = def_path_contain_construct();
 
-    int departure_id
-            = hashtab_lookup(table, list_firstof(char, mapconfig->points));
-    int destination_id
-            = hashtab_lookup(table, list_lastof(char, mapconfig->points));
+    int src = hashtab_lookup(table, list_firstof(char, mapconfig->points));
+    int res = hashtab_lookup(table, list_lastof(char, mapconfig->points));
 
-    Dfs(departure_id, destination_id, path, graph);
-    PathsContain* new_paths = correct_paths(path, destination_id);
+    SearchContext context = {map, path, mapconfig, src, res};
 
-    PathsContain* sorted_paths = NULL;
-    if (!sorted_paths)
-        sorted_paths = sort_paths(new_paths, SHORTEST);
+    Dfs(&context);
 
-    print_path(
-            best_path(sorted_paths, mapconfig->priority, destination_id),
-            table,
-            1);
+    PathsContain* new_paths = correct_paths(path, res);
+    PathsContain* sorted_paths = sort_paths(new_paths, mapconfig->priority);
 
-    alternative(
-            sorted_paths,
-            table,
-            departure_id,
-            destination_id,
-            mapconfig->altways_filter_coefficient,
-            mapconfig->priority,
-            mapconfig->altways_count);
-    // printf("Karasuk: %d\n", hashtab_lookup(table, "Moshkovo"));
-    // printf("%s\n", table[43].key);
+    context.paths = sorted_paths;
+    destroy_paths_contain(new_paths);
 
-    // Path* a = best_path(path, LONGEST, hashtab_lookup(table, "Karasuk"));
-    // // printf("%p\n", a);
+    // Выводим информацию о лучшем пути
+    print_path(best_path(&context), table, 1);
 
-    // printf("Самый длинный путь из Новосибирска в Карасук: \n");
-    // for (PathNode* temp = a->head; temp != NULL; temp = temp->next)
-    //     printf("%s->", table[temp->num].key);
-    // printf(": %d км, %.2lf ч\n", a->path, a->time);
+    // Выводим информацию об альтернативных путях
+    if (mapconfig->altways_count > 0)
+        alternative(&context);
 
     map_destroy(map);
 
-    destroy_paths_contain(new_paths);
     destroy_paths_contain(sorted_paths);
 
     return 0;

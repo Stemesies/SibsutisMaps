@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 
     parse_arguments(config, argc, argv);
 
-    if(list_size(config->points) < 2) {
+    if (list_size(config->points) < 2) {
         printf("Нечего искать.\n");
         printf("Введите как минимум 2 точки: откуда и куда\n");
         config_destroy(config);

@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #define HashTableTAB_SIZE 100
-#define MAXSTR (strlen("Станционно-Ояшинский")*2)
+#define MAXSTR (strlen("Станционно-Ояшинский") * 2)
 
 /*Ребро графа*/
 typedef struct edge {
