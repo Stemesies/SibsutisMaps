@@ -3,13 +3,13 @@
 
 #include <stdlib.h>
 
-typedef struct LIST_NODE {
-    struct LIST_NODE* previous;
-    struct LIST_NODE* next;
+typedef struct listnode {
+    struct listnode* previous;
+    struct listnode* next;
     void* value;
 } ListNode;
 
-typedef struct LIST {
+typedef struct list {
     unsigned int size;
     ListNode* head;
     ListNode* tail;

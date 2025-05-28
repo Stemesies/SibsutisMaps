@@ -6,7 +6,7 @@
 
 #define DEFAULT_OUTPUT_PATH "result"
 
-typedef enum PRIORITY { SHORTEST, QUICKEST, LONGEST } Priority;
+typedef enum priority { SHORTEST, QUICKEST, LONGEST } Priority;
 
 /*
 Настройки данной программы.
@@ -23,7 +23,7 @@ typedef enum PRIORITY { SHORTEST, QUICKEST, LONGEST } Priority;
 программы. Если "null" - программа должна все выводить в консоль
 ** moreDetailedOutput: более подробная визуальная маршрута.
 */
-typedef struct CONFIG {
+typedef struct config {
     List* points;
 
     Priority priority;
