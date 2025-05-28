@@ -135,13 +135,19 @@ void alternative(
         int src,
         int res,
         double rate,
-        Priority what_path)
+        Priority what_path,
+        int limit)
 {
     int count = 0;
     Path* a = best_path(paths, what_path, res);
     printf("Альтернативные пути %s - %s:\n", table[src].key, table[res].key);
     for (Path* curr = paths->first; curr != NULL; curr = curr->next) {
         if (curr->tail->num == res) {
+
+            // Лучший путь не учитываем, как альтернативный
+            if(a == curr)
+                continue;
+
             switch (what_path) {
             case LONGEST:
                 if (((double)a->path / (double)curr->path) <= rate) {
@@ -166,5 +172,9 @@ void alternative(
                 break;
             }
         }
+
+        // Нам не нужно больше, чем limit альтернативных путей
+        if(count >= limit)
+            break;
     }
 }

@@ -77,6 +77,7 @@ void config_print(MapConfig* config)
 
     printf("Путь: ");
     list_foreach_inlined(config->points, { printf("%s -> ", list_itp(char)); });
+    putchar('\n');
 
     printf("Приоритет: ");
 

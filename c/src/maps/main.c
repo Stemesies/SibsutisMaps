@@ -20,6 +20,8 @@ int main(int argc, char* argv[])
         return 0;
     }
 
+    config_print(config);
+
     construct_paths(config);
 
     config_destroy(config);

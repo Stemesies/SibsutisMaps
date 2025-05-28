@@ -40,19 +40,23 @@ int construct_paths(MapConfig* mapconfig)
     Dfs(departure_id, destination_id, path, graph);
     PathsContain* new_paths = correct_paths(path, destination_id);
 
-    // FIXME Добавить проверку на необходимость поиска n альтернативных путей
     PathsContain* sorted_paths = NULL;
     if (!sorted_paths)
         sorted_paths = sort_paths(new_paths, SHORTEST);
-    print_path(sorted_paths->first, table, 1);
-    
-    // alternative(
-    //         new_paths,
-    //         table,
-    //         hashtab_lookup(table, "Novosibirsk"),
-    //         hashtab_lookup(table, "Karasuk"),
-    //         1.5,
-    //         SHORTEST);
+
+    print_path(
+            best_path(sorted_paths, mapconfig->priority, destination_id),
+            table,
+            1);
+
+    alternative(
+            sorted_paths,
+            table,
+            departure_id,
+            destination_id,
+            mapconfig->altways_filter_coefficient,
+            mapconfig->priority,
+            mapconfig->altways_count);
     // printf("Karasuk: %d\n", hashtab_lookup(table, "Moshkovo"));
     // printf("%s\n", table[43].key);
 

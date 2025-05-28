@@ -19,6 +19,7 @@ void alternative(
         int src,
         int res,
         double rate,
-        Priority what_path);
+        Priority what_path,
+        int limit);
 
 #endif
