@@ -48,11 +48,12 @@ jobs:
   memcheck_main: 
     runs-on: ubuntu-latest
     steps:
-      # Running Unit-tests
+      # Running test of leaks
       - uses: actions/checkout@v4
 
-      - name: memort check of main program
+      - name: memory check of main program
         run: | 
+          apt-get install valgrind в CI
           make init
           echo "Look up memory leaks..."
           make memcheck

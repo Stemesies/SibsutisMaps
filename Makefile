@@ -5,7 +5,10 @@ LANG_DIR = c
 
 CFLAGS = -Wall -Werror -g
 CPPFLAGS = -I c/src -I c/thirdparty -MP -MMD
-VALFLAGS = --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1
+VALFLAGS = --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1 
+XML_FLAGS = --xml=yes --xml-file=
+XML_MAIN_PATH = c/memcheck/XMLmain_prog.log
+XML_TEST_PATH = 
 
 SRC_DIR = src
 OBJ_DIR = obj
@@ -55,7 +58,8 @@ run: $(APP_PATH)
 	
 .PHONY: memcheck
 memcheck: $(APP_PATH)
-	valgrind $(VALFLAGS) $(APP_PATH) 
+	valgrind $(VALFLAGS) $(XML_FLAGS)$(XML_MAIN_PATH) $(APP_PATH) 
+	valgrind-ci $(XML_MAIN_PATH) $(VALFLAGS)
 
 .PHONY: test
 test: $(TEST_PATH)
@@ -80,3 +84,4 @@ init:
 	mkdir c/obj/src/libmaps
 	mkdir c/obj/src/maps
 	mkdir c/obj/test
+	mkdir c/memcheck
