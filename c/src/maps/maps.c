@@ -4,7 +4,7 @@
 int main()
 {
     PathsContain* path = def_path_contain_construct();
-    Graph* graph = graph_create(HashTableTAB_SIZE);
+    Graph* graph = graph_create(HASHTABSIZE);
     HashTable* table = hashtab_create();
     FILE* fp = fopen("input", "r");
 
@@ -50,9 +50,14 @@ int main()
     // FIXME Добавить проверку на необходимость поиска n альтернативных путей
     PathsContain* sorted_paths = NULL;
     if (!sorted_paths)
-        sorted_paths = sort_paths(new_paths, QUICKEST);
+        sorted_paths = sort_paths(new_paths, SHORTEST);
 
-    show_paths(sorted_paths, table, hashtab_lookup(table, "Karasuk"));
+    Path* merge_path
+            = path_with_return(sorted_paths->first, sorted_paths->first->next);
+    if (!merge_path)
+        puts("oh noo()");
+
+    print_path(merge_path, table, 5);
     // alternative(
     //         new_paths,
     //         table,
@@ -74,6 +79,7 @@ int main()
     hashtab_destroy(table);
     destroy_paths_contain(new_paths);
     destroy_paths_contain(sorted_paths);
+    destroy_path(merge_path);
     fclose(fp);
 
     return 0;

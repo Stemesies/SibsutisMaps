@@ -263,12 +263,16 @@ Path* path_with_return(const Path* path_to, Path* path_back)
         PathNode* temp = res->tail;
         insert_in_path(res, insert->num, insert->edge);
         res->tail->next = next;
+        next = res->tail;
         res->tail = temp;
-        next = insert;
+        destroy_node(insert);
     }
-    for (PathNode* curr = res->head; curr != NULL; curr = curr->next) {
-        printf("%d\n", curr->num);
-    }
+    res->path = path_to->path + path_back->path;
+    res->time = path_to->time + path_back->time;
+
+    // for (PathNode* curr = res->head; curr != NULL; curr = curr->next) {
+    //     printf("%d\n", curr->num);
+    // }
 
     return res;
 }
