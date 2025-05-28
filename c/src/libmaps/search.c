@@ -18,7 +18,6 @@ void Dfs(int src, int res, PathsContain* path, Graph* graph)
                     new_list = copy_path(path->last, src);
                     insert_in_path(new_list, i, &(graph->graph_matrix[src][i]));
                     insert_in_path_contain(path, new_list);
-                    // destroy_path(new_list);
                 } else {
                     if (!is_visited(path->last, i)) {
                         if (path->count == 0) {
@@ -28,7 +27,6 @@ void Dfs(int src, int res, PathsContain* path, Graph* graph)
                                     i,
                                     &(graph->graph_matrix[src][i]));
                             insert_in_path_contain(path, new_list);
-                            // destroy_path(new_list);
                         } else
                             insert_in_path(
                                     path->last,

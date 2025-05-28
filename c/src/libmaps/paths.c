@@ -117,7 +117,7 @@ void destroy_paths_contain(PathsContain* paths)
     free(paths);
 }
 
-/*Головной элемент списка всегда занят исходной вершиной, поэтому начинаем
+/*Головной элемент пути всегда занят исходной вершиной, поэтому начинаем
  * вставку с head->next.*/
 void insert_in_path(Path* list, int num, Edge* edge)
 {

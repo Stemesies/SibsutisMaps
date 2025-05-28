@@ -13,12 +13,11 @@ typedef struct node {
 } PathNode;
 
 /*Список вершин (путь)*/
-typedef struct list {
+typedef struct path {
     PathNode *head, *tail;
     int path;
     double time;
-    // bool *visited;
-    struct list* next;
+    struct path* next;
 } Path;
 
 /*Структура для хранения путей*/
@@ -35,24 +34,46 @@ typedef struct queue {
 
 /*Прототипы функций*/
 
-PathNode* def_node_construct(int num);
+/*Создаёт узел пути, инициализируя расстояние и путь нулями (так как вершина -
+ * начальная), а номер вершины - переданным значением src.*/
+PathNode* def_node_construct(int src);
 void destroy_node(PathNode* node);
 Queue* queue_create();
 void destroy_queue(Queue* a);
 void queue_add(Queue* queue, int num, Edge* edge);
 PathNode* queue_take(Queue* queue);
-Path* def_path_construct(int num);
+/*Создаёт путь, помещая в него изначальную вершину.*/
+Path* def_path_construct(int src);
 void destroy_path(Path* a);
 PathsContain* def_path_contain_construct();
 void destroy_paths_contain(PathsContain* paths);
+
+/*Вставляет вершину num и соответствующие ей приоритеты ребра edge в путь
+ * list. Головной элемент пути всегда занят исходной вершиной, поэтому начинаем
+ * вставку с head->next.*/
 void insert_in_path(Path* list, int num, Edge* edge);
+
+/*Вставляет новый путь в контейнер путей. */
 void insert_in_path_contain(PathsContain* path, Path* insert);
+
+/*Копирует путь src до вершины num*/
 Path* copy_path(Path* src, int num);
-bool is_visited(Path* src, int num);
+
+/*Есть ли уже вершина num в пути path?*/
+bool is_visited(Path* path, int num);
+
 void print_path(const Path* path, const HashTable* table, int count);
 void show_paths(
         const PathsContain* paths, const HashTable* is_in_table, int res);
+
+/*Возвращает количество вершин из a, которых нет в b. Может быть полезно при
+реализации пути с возвратом в исходную точку, чтобы не идти по одинаковому
+пути туда и обратно. Трудоёмкий метод, O(n*k), где n и k - кол-во вершин в
+списках. Не рекоммендуется к использованию.*/
 int compare_paths(Path* a, Path* b);
+
+/*Создаёт контейнер со путями, которые дошли до итоговой точки, на основе
+ * результата Dfs. Переданный старый контейнер очищает.*/
 PathsContain* correct_paths(PathsContain* paths, int res);
 
 #endif
