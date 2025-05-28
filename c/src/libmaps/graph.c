@@ -1,5 +1,6 @@
 /*Файл для работы со структурой графа и входными данными*/
 #include <libmaps/graph.h>
+#include <wchar.h>
 
 Map* map_create()
 {
@@ -144,6 +145,15 @@ int hashtab_lookup(HashTable* hashtab, char* key)
     return -1;
 }
 
+char* hashtab_getkey(HashTable* table, int id)
+{
+    for (int i = 0; i < HASHTABSIZE; i++) {
+        if (i == id)
+            return table[i].key;
+    }
+    return NULL;
+}
+
 bool is_in_table(HashTable* table, char* key)
 {
     return (hashtab_lookup(table, key) >= 0);
@@ -151,35 +161,25 @@ bool is_in_table(HashTable* table, char* key)
 
 void graph_init(Graph* graph, HashTable* table, FILE* fp)
 {
-    int path, speed, count = 0;
-    char* str = calloc(MAXSTR + 1, sizeof(char));
+    int path, speed;
+    char* str1 = calloc(MAXSTR + 1, sizeof(char));
+    char* str2 = calloc(MAXSTR + 1, sizeof(char));
     char ch = 0;
     unsigned int v_1, v_2;
     while ((ch = fgetc(fp)) != EOF) {
         ungetc(ch, fp);
-        while ((ch = fgetc(fp)) != ' ' && ch != EOF) {
-            str[count] = ch;
-            count++;
-        }
-        str[count] = '\0';
-        v_1 = (!is_in_table(table, str)) ? hashtab_add(table, str)
-                                         : hashtab_lookup(table, str);
-        count = 0;
-        while ((ch = fgetc(fp)) != ' ' && ch != EOF) {
-            str[count] = ch;
-            count++;
-        }
-        str[count] = '\0';
-        v_2 = (!is_in_table(table, str)) ? hashtab_add(table, str)
-                                         : hashtab_lookup(table, str);
+        fscanf(fp, "%s %s %d %d", str1, str2, &path, &speed);
 
-        count = 0;
-        fscanf(fp, " %d", &path);
-        fscanf(fp, " %d", &speed);
+        v_1 = (!is_in_table(table, str1)) ? hashtab_add(table, str1)
+                                         : hashtab_lookup(table, str1);
+        v_2 = (!is_in_table(table, str2)) ? hashtab_add(table, str2)
+                                         : hashtab_lookup(table, str2);
+
         add_edge(graph, v_1, v_2, path, speed);
         fseek(fp, 1, SEEK_CUR);
     }
-    free(str);
+    free(str1);
+    free(str2);
 }
 
 /*Демонстрация графа как матрицы смежности*/

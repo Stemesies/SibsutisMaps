@@ -76,6 +76,10 @@ int compare_paths(Path* a, Path* b);
  * результата Dfs. Переданный старый контейнер очищает.*/
 PathsContain* correct_paths(PathsContain* paths, int res);
 
+/* Создает контейнер с путями, содержащими указанные населенные пункты
+ * Переданный старый контейнер очищает. */
+PathsContain* filter_paths(PathsContain* paths, int* points, int count);
+
 /*Извлекает узел из начала пути. Устанавливает указатель этого узла на следующий
  * в NULL.*/
 PathNode* pop_node(Path* path);

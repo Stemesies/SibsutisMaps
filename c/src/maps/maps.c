@@ -21,6 +21,10 @@ Map* fetch_map_data()
     return map;
 }
 
+void pointlist_to_idarray() {
+
+}
+
 int construct_paths(MapConfig* mapconfig)
 {
     Map* map = fetch_map_data();
@@ -29,20 +33,52 @@ int construct_paths(MapConfig* mapconfig)
         return -1;
 
     HashTable* table = map->hashtable;
+
+    int point_ids_size = mapconfig->points->size;
+    int* point_ids = calloc(point_ids_size, sizeof(int));
+
+    if(point_ids == NULL) {
+        printf("[ОШИБКА] Невозможно выделить память под массив идентификаторов.\n");
+        printf("Недостаточно ОЗУ для работы программы.\n.");
+        map_destroy(map);
+        return -1;
+    }
+
+    int k = 0;
+    list_foreach_inlined(mapconfig->points, {
+        if(!is_in_table(table, list_itp(char))) {
+            printf("Неизвестная точка \"%s\"\n", list_itp(char));
+            map_destroy(map);
+            return -1;
+        } else
+            point_ids[k++] = hashtab_lookup(table, list_itp(char));
+    });
+    
     PathsContain* path = def_path_contain_construct();
 
-    int src = hashtab_lookup(table, list_firstof(char, mapconfig->points));
-    int res = hashtab_lookup(table, list_lastof(char, mapconfig->points));
+    int src = point_ids[0];
+    int res = point_ids[point_ids_size-1];
 
-    SearchContext context = {map, path, mapconfig, src, res};
+    printf("src == Колывань?: %d, res == Обь?: %d\n", hashtab_lookup(table, "Колывань")==src, hashtab_lookup(table, "Обь")==res);
 
-    context_Dfs((&context));
+    Dfs(src, res, path, map->graph);
 
-    PathsContain* new_paths = correct_paths(path, res);
-    PathsContain* sorted_paths = sort_paths(new_paths, mapconfig->priority);
+    printf("Обход завершен.\n");
 
-    context.paths = sorted_paths;
-    destroy_paths_contain(new_paths);
+    PathsContain* corrected_paths = correct_paths(path, res);
+    PathsContain* filtered_paths = filter_paths(corrected_paths, point_ids+1, point_ids_size-2);
+
+    if(filtered_paths->count == 0) {
+        printf("Не получилось проложить маршрут.\n");
+        map_destroy(map);
+        destroy_paths_contain(filtered_paths);
+        return -1;
+    }
+
+    PathsContain* sorted_paths = sort_paths(filtered_paths, mapconfig->priority);
+    destroy_paths_contain(filtered_paths);
+
+    SearchContext context = {map, sorted_paths, mapconfig, src, res};
 
     // Выводим информацию о лучшем пути
     print_path(best_path(&context), table, 1);
@@ -51,14 +87,14 @@ int construct_paths(MapConfig* mapconfig)
     if (mapconfig->altways_count > 0)
         alternative(&context);
 
-    Path* merge_path
-            = path_with_return(sorted_paths->first, sorted_paths->first->next);
-    if (!merge_path)
-        puts("oh noo()");
+    // Path* merge_path
+    //         = path_with_return(sorted_paths->first, sorted_paths->first->next);
+    // if (!merge_path)
+    //     puts("oh noo()");
 
-    print_path(merge_path, table, 5);
+    // print_path(merge_path, table, 5);
 
-    destroy_path(merge_path);
+    // destroy_path(merge_path);
 
     map_destroy(map);
     destroy_paths_contain(sorted_paths);

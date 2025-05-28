@@ -64,6 +64,8 @@ unsigned int hashtab_add(HashTable* hashtab, char* key);
  * точно лежит в таблице. Если элемент отсутствует, возвращает -1.*/
 int hashtab_lookup(HashTable* hashtab, char* key);
 
+char* hashtab_getkey(HashTable* table, int id);
+
 /*Добавлен ли элемент с ключом key в таблицу table?*/
 bool is_in_table(HashTable* table, char* key);
 

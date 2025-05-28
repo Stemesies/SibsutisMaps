@@ -240,6 +240,28 @@ PathsContain* correct_paths(PathsContain* paths, int res)
     return res_paths;
 }
 
+PathsContain* filter_paths(PathsContain* paths, int* points, int count)
+{
+    if (count == 0)
+        return paths;
+
+    PathsContain* res_paths = def_path_contain_construct();
+    int contains_points = 1;
+    for (Path* curr = paths->first; curr != NULL; curr = curr->next) {
+        for (int i = 0; i < count; i++) {
+            if (!is_visited(curr, points[i]))
+                contains_points = 0;
+        }
+
+        if (contains_points)
+            insert_in_path_contain(res_paths, curr);
+        contains_points = 1;
+    }
+    destroy_paths_contain(paths);
+
+    return res_paths;
+}
+
 /*Извлечение узла из начала пути*/
 PathNode* pop_node(Path* path)
 {
