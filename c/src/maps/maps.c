@@ -36,7 +36,7 @@ int construct_paths(MapConfig* mapconfig)
 
     SearchContext context = {map, path, mapconfig, src, res};
 
-    Dfs(&context);
+    context_Dfs((&context));
 
     PathsContain* new_paths = correct_paths(path, res);
     PathsContain* sorted_paths = sort_paths(new_paths, mapconfig->priority);
@@ -51,14 +51,13 @@ int construct_paths(MapConfig* mapconfig)
     if (mapconfig->altways_count > 0)
         alternative(&context);
 
-
     Path* merge_path
             = path_with_return(sorted_paths->first, sorted_paths->first->next);
     if (!merge_path)
         puts("oh noo()");
 
     print_path(merge_path, table, 5);
-    
+
     destroy_path(merge_path);
 
     map_destroy(map);

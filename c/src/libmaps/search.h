@@ -15,7 +15,13 @@ typedef struct search_context {
 
 /*Модифицированных обход в глубину. Находит и записывает в контейнер путей все,
  * даже которые не дошли до нужной вершины.*/
-void Dfs(SearchContext* context);
+#define context_Dfs(context) \
+    Dfs(context->src, context->res, context->paths, context->map->graph)
+
+/*Модифицированных обход в глубину. Находит и записывает в контейнер путей все,
+ * даже которые не дошли до нужной вершины.*/
+void Dfs(int src, int res, PathsContain* path, Graph* graph);
+
 /*Обход в ширину. Резерв обхода в глубину, скорее всего будет выпилен.*/
 void Bfs(int src, int res, PathsContain* path, size_t n, Edge** graph);
 /*Ищет лучший путь по выбранному приоритету*/

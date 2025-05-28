@@ -53,7 +53,8 @@ CTEST(test_graph, add)
             graph->graph_matrix[ELFHash("Новосибирск")][ELFHash("Колывань")]
                     .speed);
     ASSERT_EQUAL(
-            graph->graph_matrix[ELFHash("Колывань")][ELFHash("Новосибирск")].len,
+            graph->graph_matrix[ELFHash("Колывань")][ELFHash("Новосибирск")]
+                    .len,
             graph->graph_matrix[ELFHash("Новосибирск")][ELFHash("Колывань")]
                     .len);
 

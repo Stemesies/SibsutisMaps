@@ -6,45 +6,44 @@
 #define c_graph (context->map->graph)
 #define c_table (context->map->hashtable)
 
-void Dfs(SearchContext* context)
+void Dfs(int src, int res, PathsContain* path, Graph* graph)
 {
-    if (c_src == c_res)
+    if (src == res)
         return;
 
-    if (!c_path) {
+    if (!path) {
         exit(EXIT_FAILURE);
     }
-    c_graph->visited[c_src] = true;
-    for (int i = 0; i < c_graph->n_verticles; i++) {
-        if (c_graph->graph_matrix[c_src][i].len > 0) {
-            if (!(c_graph->visited[i])) {
+    graph->visited[src] = true;
+    for (int i = 0; i < graph->n_verticles; i++) {
+        if (graph->graph_matrix[src][i].len > 0) {
+            if (!(graph->visited[i])) {
                 Path* new_list = NULL;
 
-                if (c_graph->verticles[c_src] > 0) {
-                    new_list = copy_path(c_path->last, c_src);
-                    insert_in_path(
-                            new_list, i, &(c_graph->graph_matrix[c_src][i]));
-                    insert_in_path_contain(c_path, new_list);
+                if (graph->verticles[src] > 0) {
+                    new_list = copy_path(path->last, src);
+                    insert_in_path(new_list, i, &(graph->graph_matrix[src][i]));
+                    insert_in_path_contain(path, new_list);
                 } else {
-                    if (!is_visited(c_path->last, i)) {
-                        if (c_path->count == 0) {
-                            new_list = def_path_construct(c_src);
+                    if (!is_visited(path->last, i)) {
+                        if (path->count == 0) {
+                            new_list = def_path_construct(src);
                             insert_in_path(
                                     new_list,
                                     i,
-                                    &(c_graph->graph_matrix[c_src][i]));
-                            insert_in_path_contain(c_path, new_list);
+                                    &(graph->graph_matrix[src][i]));
+                            insert_in_path_contain(path, new_list);
                         } else
                             insert_in_path(
-                                    c_path->last,
+                                    path->last,
                                     i,
-                                    &(c_graph->graph_matrix[c_src][i]));
+                                    &(graph->graph_matrix[src][i]));
                     }
                 }
 
-                c_graph->verticles[c_src]++;
-                Dfs(context);
-                c_graph->visited[i] = false;
+                graph->verticles[src]++;
+                Dfs(i, res, path, graph);
+                graph->visited[i] = false;
                 destroy_path(new_list);
             }
         }
