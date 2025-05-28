@@ -160,7 +160,8 @@ void insert_in_path_contain(PathsContain* path, Path* insert)
     path->count++;
 }
 
-Path* copy_path(Path* src, int num) // num - до какой вершины копировать список
+Path* copy_path(
+        const Path* src, int num) // num - до какой вершины копировать список
 {
     if (!src)
         return NULL;
@@ -237,4 +238,51 @@ PathsContain* correct_paths(PathsContain* paths, int res)
     destroy_paths_contain(paths);
 
     return res_paths;
+}
+
+/*Извлечение узла из начала пути*/
+PathNode* pop_node(Path* path)
+{
+    if (!path || !(path->head))
+        return NULL;
+    PathNode* res = path->head;
+    path->head = path->head->next;
+    res->next = NULL;
+
+    return res;
+}
+
+Path* path_with_return(const Path* path_to, Path* path_back)
+{
+    if (!path_to || !path_back)
+        return NULL;
+    Path* res = copy_path(path_to, path_to->tail->num);
+    PathNode *next = NULL,
+             *tail = NULL; // tail запоминает элемент, который
+                           // был добавлен первым в путь res
+    int i = 0; // счётчик итераций цикла (нужен, чтобы отследить добавление
+               // первого элемента, на который в итоге будет передвинут
+               // res->tail)
+    /*В цикле - temp запоминает текущий tail, чтобы потом к нему возвращаться,
+     * сдвигая вставленные ранее элементы дальше в конец (нужно для получения
+     * реверса); next запоминает, куда будет указывать вновьдобавленный
+     * элемент*/
+    while (path_back->head != NULL && path_back->head != path_back->tail) {
+        PathNode* insert = pop_node(path_back);
+        PathNode* temp = res->tail;
+        insert_in_path(res, insert->num, insert->edge);
+        if (i == 0)
+            tail = res->tail;
+
+        res->tail->next = next;
+        next = res->tail;
+        res->tail = temp;
+        destroy_node(insert);
+        i++;
+    }
+    res->path = path_to->path + path_back->path;
+    res->time = path_to->time + path_back->time;
+    res->tail = tail;
+
+    return res;
 }
