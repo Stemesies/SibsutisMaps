@@ -1,6 +1,6 @@
-#include <mapconfig/mapconfig.h>
+#include <libmaps/mapconfig.h>
 
-MapConfig mapconfig;
+MapConfig* mapconfig;
 
 #define isflag(str) strcmp(argv[i], str) == 0
 #define isflag2(str, str2) isflag(str) || isflag(str2)

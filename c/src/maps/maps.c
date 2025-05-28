@@ -1,43 +1,35 @@
-#include <libmaps/search.h>
-#include <libmaps/sort.h>
+#include <maps/maps.h>
 
-int main()
-{
+Map* fetch_map_data() {
+    Map* map = map_create();
+
+    if(map == NULL)
+        return NULL;
+
+    FILE* fp = fopen(DATABASE_NAME, "r");
+
+    if(fp == NULL) {
+        map_destroy(map);
+        printf("[ОШИБКА] Невозможно открыть файл \"%s\".\n", DATABASE_NAME);
+        printf("Возможно его не существует?\n.");
+    }
+
+    graph_init(map->graph, map->hashtable, fp);
+    fclose(fp);
+
+    return map;
+}
+
+int construct_paths() {
+    Map* map = fetch_map_data();
+
+    if(map == NULL)
+        return -1;
+
+    Graph* graph = map->graph;
+    HashTable* table = map->hashtable;
     PathsContain* path = def_path_contain_construct();
-    Graph* graph = graph_create(HashTableTAB_SIZE);
-    HashTable* table = hashtab_create();
-    FILE* fp = fopen("input", "r");
-
-    // graph->graph_matrix[0][1].len = 15;
-    // graph->graph_matrix[0][2].len = 10;
-    // graph->graph_matrix[0][3].len = 25;
-    // graph->graph_matrix[1][4].len = 26;
-    // graph->graph_matrix[2][4].len = 8;
-    // graph->graph_matrix[3][5].len = 17;
-    // graph->graph_matrix[4][5].len = 14;
-    // graph->graph_matrix[4][6].len = 19;
-    // graph->graph_matrix[5][6].len = 33;
-
-    // graph->graph_matrix[0][1].speed = 80;
-    // graph->graph_matrix[0][2].speed = 60;
-    // graph->graph_matrix[0][3].speed = 85;
-    // graph->graph_matrix[1][4].speed = 60;
-    // graph->graph_matrix[2][4].speed = 58;
-    // graph->graph_matrix[3][5].speed = 37;
-    // graph->graph_matrix[4][5].speed = 69;
-    // graph->graph_matrix[4][6].speed = 73;
-    // graph->graph_matrix[5][6].speed = 90;
-
-    // for (int i = 0; i < 7; i++) {
-    //     for (int j = 0; j < 7; j++)
-    //         if (graph->graph_matrix[i][j].len > 0) {
-    //             graph->graph_matrix[j][i].len =
-    //             graph->graph_matrix[i][j].len;
-    //             graph->graph_matrix[j][i].speed
-    //                     = graph->graph_matrix[i][j].speed;
-    //         }
-    // }
-    graph_init(graph, table, fp);
+    
     // show_graph(HashTableTAB_SIZE, graph->graph_matrix);
 
     Dfs(hashtab_lookup(table, "Novosibirsk"),
@@ -70,11 +62,13 @@ int main()
     // for (PathNode* temp = a->head; temp != NULL; temp = temp->next)
     //     printf("%s->", table[temp->num].key);
     // printf(": %d км, %.2lf ч\n", a->path, a->time);
-    graph_destroy(graph);
-    hashtab_destroy(table);
+
+    map_destroy(map);
+
     destroy_paths_contain(new_paths);
     destroy_paths_contain(sorted_paths);
-    fclose(fp);
+    
 
     return 0;
+
 }

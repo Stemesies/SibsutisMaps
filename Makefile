@@ -3,6 +3,7 @@ LIB_NAME = libmaps
 TEST_NAME = test_maps
 LANG_DIR = c
 
+ARGS =
 CFLAGS = -Wall -Werror -g
 CPPFLAGS = -I c/src -I c/thirdparty -MP -MMD
 VALFLAGS = --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes -s
@@ -51,7 +52,7 @@ $(TEST_PATH): $(TEST_OBJS) $(TEST_DEPS) $(LIB_PATH)
 
 .PHONY: run
 run: $(APP_PATH)
-	$(APP_PATH)	
+	$(APP_PATH)	$(ARGS)
 	
 .PHONY: memcheck
 memcheck: $(APP_PATH)
@@ -78,5 +79,6 @@ init:
 	mkdir c/obj
 	mkdir c/obj/src
 	mkdir c/obj/src/libmaps
+	mkdir c/obj/src/mapconfig
 	mkdir c/obj/src/maps
 	mkdir c/obj/test

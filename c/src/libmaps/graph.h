@@ -28,7 +28,17 @@ typedef struct hashtable {
     int count;
 } HashTable;
 
+/*Объединение графа и таблицы*/
+typedef struct map {
+    Graph* graph;
+    HashTable* hashtable;
+} Map;
+
 /*Прототипы функций*/
+
+/* Создает карту, содержащую пустой граф из n вершин и хэш-таблицу.*/
+Map* map_create();
+void map_destroy(Map* map);
 
 /*Создаёт пустой граф из n вершин.*/
 Graph* graph_create(int n);

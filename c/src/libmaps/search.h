@@ -3,7 +3,7 @@
 
 #include <libmaps/graph.h>
 #include <libmaps/paths.h>
-#include <mapconfig/mapconfig.h>
+#include <libmaps/mapconfig.h>
 
 /*Модифицированных обход в глубину. Находит и записывает в контейнер путей все,
  * даже которые не дошли до нужной вершины.*/

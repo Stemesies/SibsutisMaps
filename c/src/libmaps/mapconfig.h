@@ -36,7 +36,7 @@ typedef struct config {
 
 } MapConfig;
 
-extern MapConfig mapconfig;
+extern MapConfig* mapconfig;
 
 MapConfig* config_create();
 void config_dispose(MapConfig* config);
