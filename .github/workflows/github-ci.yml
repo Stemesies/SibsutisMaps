@@ -45,3 +45,15 @@ jobs:
           echo "Start testing functions..."
           make test
           echo "Tests complete."
+  memcheck_main: 
+    runs-on: ubuntu-latest
+    steps:
+      # Running Unit-tests
+      - uses: actions/checkout@v4
+
+      - name: memort check of main program
+        run: | 
+          make init
+          echo "Look up memory leaks..."
+          make memcheck
+          echo "No memory leaks."
