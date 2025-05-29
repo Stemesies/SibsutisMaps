@@ -1,4 +1,5 @@
 # from window.window import Window
+from pathlib import Path
 from tkinter import *
 from tkinter import ttk
 
@@ -162,7 +163,21 @@ class MainWindow(Tk):
         return self.result
 
 def main():
-    cities_list = ["Stantsionno-Oyashinskiy", "Test2", "Тест3"]
+    repo_path = Path(__file__).parent.parent
+    file_path = repo_path / "input"
+
+    cities_set = set()
+    with open(file_path, "r") as f:
+        for line in f.readlines():
+            city1, city2 = line.split()[:2]
+            cities_set.add(city1)
+            cities_set.add(city2)
+    
+    cities_list = []
+    while cities_set:
+        cities_list.append(cities_set.pop())
+    
+    cities_list.sort()
     root = MainWindow(cities_list)
     root.mainloop()
 
