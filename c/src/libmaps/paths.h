@@ -36,14 +36,14 @@ typedef struct queue {
 
 /*Создаёт узел пути, инициализируя расстояние и путь нулями (так как вершина -
  * начальная), а номер вершины - переданным значением src.*/
-PathNode* def_node_construct(int src);
+PathNode* def_node_construct();
 void destroy_node(PathNode* node);
 Queue* queue_create();
 void destroy_queue(Queue* a);
 void queue_add(Queue* queue, int num, Edge* edge);
 PathNode* queue_take(Queue* queue);
 /*Создаёт путь, помещая в него изначальную вершину.*/
-Path* def_path_construct(int src);
+Path* def_path_construct();
 void destroy_path(Path* a);
 PathsContain* def_path_contain_construct();
 void destroy_paths_contain(PathsContain* paths);

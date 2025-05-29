@@ -4,11 +4,11 @@
  * представляет собой список путей.*/
 #include <libmaps/paths.h>
 
-PathNode* def_node_construct(int src)
+PathNode* def_node_construct()
 {
     PathNode* node_list = malloc(sizeof(PathNode));
     node_list->edge = calloc(1, sizeof(Edge));
-    node_list->num = src;
+    node_list->num = 0;
     node_list->next = NULL;
     return node_list;
 }
@@ -71,10 +71,10 @@ PathNode* queue_take(Queue* queue)
     return NULL;
 }
 
-Path* def_path_construct(int src)
+Path* def_path_construct()
 {
     Path* list = malloc(sizeof(Path));
-    list->head = def_node_construct(src);
+    list->head = NULL;
     list->tail = NULL;
     list->next = NULL;
     list->path = 0;
@@ -124,9 +124,10 @@ void insert_in_path(Path* list, int num, Edge* edge)
     if (!list) {
         exit(EXIT_FAILURE);
     }
-    PathNode* insert = def_node_construct(num);
+    PathNode* insert = def_node_construct();
     insert->edge->len = edge->len;
     insert->edge->speed = edge->speed;
+    insert->num = num;
 
     if (list->head->next == NULL) {
         list->head->next = insert;
