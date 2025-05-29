@@ -50,6 +50,22 @@ class AltsWindow(Toplevel):
 
         self.destroy()
 
+class ResultWindow(Toplevel):
+    def __init__(self, parent, text, **kwargs):
+        super().__init__(parent, **kwargs)
+        self.text = text
+
+        # конфигурация окна
+        self.title("Результат")
+        self.geometry("1500x600")
+        self.config(bg="#008000")
+        self.grab_set()
+        
+        frame = Frame(self)
+        frame.pack(side=LEFT, pady=(10, 5), padx=8, fill=BOTH)
+
+        Label(frame, text=self.text, justify=LEFT, bg="#008000", fg="#FFFFFF", font=("Arial", 14)).pack(anchor=W, expand=True, fill=BOTH)
+
 class MainWindow(Tk):
     def __init__(self, cities_list):
         super().__init__()
@@ -159,21 +175,18 @@ class MainWindow(Tk):
         repo_path = Path(__file__).parent.parent
         bin_file_path = repo_path / "c" / "bin" / "maps"
 
-        print(bin_file_path)
-        print([bin_file_path, *self.result])
-
         process = subprocess.run(
             [bin_file_path, *self.result],
             capture_output=True,
             text=True
         )
 
-        print(process.stdout)
-        print("-" * 30)
         lines = [line for line in process.stdout.split("\n")][1:]
-        lines[0] = "Лучший путь" + lines[0][6:]
+        if (lines[0][:2] != "Не"):
+            lines[0] = "Лучший путь" + lines[0][6:]
         result = "\n".join(lines)
-        print(result)
+
+        ResultWindow(self, result)
     
     def add_alts(self):
         AltsWindow(self, self.cities_list, self.alts_cities)
