@@ -26,7 +26,7 @@ int pointlist_to_idarray(MapConfig* mapconfig, int* point_ids, HashTable* table)
 {
     int k = 0;
     list_foreach_inlined(mapconfig->points, {
-        if (!is_in_table(table, list_itp(char))) {
+        if (!hashtab_contains_key(table, list_itp(char))) {
             printf("Неизвестная точка \"%s\"\n", list_itp(char));
             return -1;
         } else

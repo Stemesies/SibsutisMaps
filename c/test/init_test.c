@@ -26,11 +26,11 @@ CTEST(test_hash, add_lookup)
 {
     HashTable* table = hashtab_create();
     ASSERT_EQUAL(-1, hashtab_lookup(table, "Новосибирск"));
-    ASSERT_NOT_EQUAL(true, is_in_table(table, "Новосибирск"));
+    ASSERT_NOT_EQUAL(true, hashtab_contains_key(table, "Новосибирск"));
     unsigned int v = hashtab_add(table, "Новосибирск");
-    ASSERT_EQUAL(v, ELFHash("Новосибирск"));
-    ASSERT_EQUAL(ELFHash("Новосибирск"), hashtab_lookup(table, "Новосибирск"));
-    ASSERT_EQUAL(true, is_in_table(table, "Новосибирск"));
+    ASSERT_EQUAL(v, elf_hash("Новосибирск"));
+    ASSERT_EQUAL(elf_hash("Новосибирск"), hashtab_lookup(table, "Новосибирск"));
+    ASSERT_EQUAL(true, hashtab_contains_key(table, "Новосибирск"));
     ASSERT_NOT_EQUAL(0, table->count);
 
     hashtab_destroy(table);
@@ -41,20 +41,21 @@ CTEST(test_graph, add)
     int len = 15, speed = 55;
 
     Graph* graph = graph_create(HASHTABSIZE);
-    add_edge(graph, ELFHash("Новосибирск"), ELFHash("Колывань"), len, speed);
+    graph_add_edge(
+            graph, elf_hash("Новосибирск"), elf_hash("Колывань"), len, speed);
 
     ASSERT_EQUAL(
             len,
-            graph->graph_matrix[ELFHash("Новосибирск")][ELFHash("Колывань")]
+            graph->graph_matrix[elf_hash("Новосибирск")][elf_hash("Колывань")]
                     .len);
     ASSERT_EQUAL(
             speed,
-            graph->graph_matrix[ELFHash("Новосибирск")][ELFHash("Колывань")]
+            graph->graph_matrix[elf_hash("Новосибирск")][elf_hash("Колывань")]
                     .speed);
     ASSERT_EQUAL(
-            graph->graph_matrix[ELFHash("Колывань")][ELFHash("Новосибирск")]
+            graph->graph_matrix[elf_hash("Колывань")][elf_hash("Новосибирск")]
                     .len,
-            graph->graph_matrix[ELFHash("Новосибирск")][ELFHash("Колывань")]
+            graph->graph_matrix[elf_hash("Новосибирск")][elf_hash("Колывань")]
                     .len);
 
     graph_destroy(graph);
@@ -77,7 +78,7 @@ CTEST(test_graph, init)
         count++;
     }
     str[count] = '\0';
-    ASSERT_EQUAL(true, is_in_table(table, str));
+    ASSERT_EQUAL(true, hashtab_contains_key(table, str));
     ASSERT_EQUAL(N_VERT, table->count);
 
     graph_destroy(graph);

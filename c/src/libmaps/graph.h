@@ -11,6 +11,10 @@
 // умножаем на 2 т.к. каждый символ кириллицы весит 2 байта.
 #define MAXSTR (strlen("Станционно-Ояшинский") * 2)
 
+#define graph_foreach_verticles(i, graph) \
+    for (int i = 0; i < (graph)->n_verticles; i++)
+#define graph_get(graph, i, j) (graph)->graph_matrix[i][j]
+
 /*Ребро графа*/
 typedef struct edge {
     int speed, len;
@@ -35,8 +39,6 @@ typedef struct map {
     HashTable* hashtable;
 } Map;
 
-/*Прототипы функций*/
-
 /* Создает карту, содержащую пустой граф из n вершин и хэш-таблицу.*/
 Map* map_create();
 void map_destroy(Map* map);
@@ -45,15 +47,22 @@ void map_destroy(Map* map);
 Graph* graph_create(int n);
 void graph_destroy(Graph* graph);
 
+/*Добавляет в граф graph ребро {ij} с приоритетом {speed, len}*/
+void graph_add_edge(
+        Graph* graph, unsigned int i, unsigned int j, int len, int speed);
+
+/*Заполняет параллельно граф и таблицу вершин из входного файла.*/
+void graph_init(Graph* graph, HashTable* table, FILE* fp);
+
+/*Демонстрация заполненной матрицы графа*/
+void show_graph(int v, Edge** mass);
+
 HashTable* hashtab_create();
 void hashtab_destroy(HashTable* table);
 
-/*Добавляет в граф graph ребро {ij} с приоритетом {speed, len}*/
-void add_edge(Graph* graph, unsigned int i, unsigned int j, int len, int speed);
-
 /*Хэш-функция для вычисления индекса вершины в таблице. Бывают коллизии! Не
  * используйте хэш-функцию для поиска, для этого есть lookup!*/
-unsigned int ELFHash(char* s);
+unsigned int elf_hash(char* s);
 
 /*Добавление вершины в таблицу по ключу. Для разрешения коллизий используется
  * метод открытой адресации.*/
@@ -66,12 +75,8 @@ int hashtab_lookup(HashTable* hashtab, char* key);
 char* hashtab_getkey(HashTable* table, int id);
 
 /*Добавлен ли элемент с ключом key в таблицу table?*/
-bool is_in_table(HashTable* table, char* key);
+bool hashtab_contains_key(HashTable* table, char* key);
 
-/*Заполняет параллельно граф и таблицу вершин из входного файла.*/
-void graph_init(Graph* graph, HashTable* table, FILE* fp);
-
-/*Демонстрация заполненной матрицы графа*/
-void show_graph(int v, Edge** mass);
+void hashtab_print(HashTable* table);
 
 #endif
