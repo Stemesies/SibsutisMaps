@@ -65,8 +65,8 @@ int main()
     // PathsContain* new_paths
     //         = correct_paths(path, hashtab_lookup(table, "Novosibirsk"));
     PathsContain* path = SearchAllPaths(
-            hashtab_lookup(table, "Novosibirsk"),
-            hashtab_lookup(table, "Karasuk"),
+            hashtab_lookup(table, "Kolyvan"),
+            hashtab_lookup(table, "Krivodanovka"),
             graph);
     PathsContain* sorted_paths = sort_paths(path, QUICKEST);
     show_paths(sorted_paths, table);
