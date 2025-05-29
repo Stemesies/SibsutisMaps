@@ -21,13 +21,17 @@ class AutocompleteCombobox(ttk.Combobox):
             self.event_generate('<Down>')
 
 class AltsWindow(Toplevel):
-    def __init__(self, parent, cities_list, alts_cities):
+    def __init__(self, parent, cities_list, alts_cities, src, dest):
         super().__init__(parent)
+
+        self.src = src
+        self.dest = dest
 
         self.cities_list = cities_list
         self.alts_cities = alts_cities
 
-        self.city = StringVar()
+        self.add_city = StringVar()
+        self.del_city = StringVar()
 
         # конфигурация окна
         self.title("Выбор точки")
@@ -35,19 +39,36 @@ class AltsWindow(Toplevel):
         self.config(bg="#008000")
         self.grab_set()
 
-        all_cities_frame = Frame(self, bg="#008000")
-        all_cities_frame.pack(side=LEFT, expand=True, fill=X, padx=(0, 8))
-        Label(all_cities_frame, text="Список городов:", bg="#008000").pack(anchor=CENTER)
-        self.all_cities_box = AutocompleteCombobox(all_cities_frame, textvariable=self.city, values=self.cities_list)
-        self.all_cities_box.pack(fill=X)
-        
-        self.submit_btn = ttk.Button(self, text="Подтвердить", command=self.add_and_close)
-        self.submit_btn.pack(side=LEFT, expand=True, fill=X, padx=6, pady=10)
+        top_frame = Frame(self, bg="#008000")
+        top_frame.pack(pady=(10, 5), padx=8, fill=X)
+
+        add_frame = Frame(top_frame, bg="#008000")
+        add_frame.pack(side=LEFT, expand=True, fill=X, padx=(0, 8))
+        Label(add_frame, text="Список городов:", bg="#008000").pack(anchor=CENTER)
+        self.add_cities_box = AutocompleteCombobox(add_frame, textvariable=self.add_city, values=self.cities_list)
+        self.add_cities_box.pack(fill=X)
+        self.submit_add_btn = ttk.Button(add_frame, text="Добавить", command=self.add_and_close)
+        self.submit_add_btn.pack(side=LEFT, expand=True, fill=X, padx=6, pady=10)
+
+        del_frame = Frame(top_frame, bg="#008000")
+        del_frame.pack(side=LEFT, expand=True, fill=X, padx=(0, 8))
+        Label(del_frame, text="Список городов:", bg="#008000").pack(anchor=CENTER)
+        self.del_cities_box = AutocompleteCombobox(del_frame, textvariable=self.del_city, values=self.alts_cities)
+        self.del_cities_box.pack(fill=X)
+        self.submit_add_btn = ttk.Button(del_frame, text="Удалить", command=self.del_and_close)
+        self.submit_add_btn.pack(side=LEFT, expand=True, fill=X, padx=6, pady=10)
 
     def add_and_close(self):
-        if (self.city.get() in self.cities_list) and (self.city.get() not in self.alts_cities):
-            self.alts_cities.append(self.city.get())
-
+        city = self.add_city.get()
+        if (city in self.cities_list) and (city not in self.alts_cities)\
+              and (city != self.src) and (city != self.dest):
+            self.alts_cities.append(city)
+        self.destroy()
+    
+    def del_and_close(self):
+        city = self.del_city.get()
+        if city in self.alts_cities:
+            self.alts_cities.remove(city)
         self.destroy()
 
 class ResultWindow(Toplevel):
@@ -145,7 +166,7 @@ class MainWindow(Tk):
         bottom_frame.pack(pady=(5, 15))
         self.submit_btn = ttk.Button(bottom_frame, text="Подтвердить", state=DISABLED, command=self.on_submit)
         self.submit_btn.pack(side=LEFT, expand=True, fill=X, padx=6, pady=10)
-        self.alts_btn = ttk.Button(bottom_frame, text="Добавить точку в маршрут", state=DISABLED, command=self.add_alts)
+        self.alts_btn = ttk.Button(bottom_frame, text="Изменить маршрут", state=DISABLED, command=self.add_alts)
         self.alts_btn.pack(side=RIGHT, expand=True, fill=X, padx=6, pady=10)
 
         self.result = None
@@ -189,7 +210,8 @@ class MainWindow(Tk):
         ResultWindow(self, result)
     
     def add_alts(self):
-        AltsWindow(self, self.cities_list, self.alts_cities)
+        self.alts_cities = [city for city in self.alts_cities if (city != self.src.get()) and (city != self.dest.get())]
+        AltsWindow(self, self.cities_list, self.alts_cities, self.src.get(), self.dest.get())
 
     def get_data(self):
         return self.result
