@@ -49,10 +49,10 @@ class AltsWindow(Toplevel):
         self.destroy()
 
 class MainWindow(Tk):
-    def __init__(self):
+    def __init__(self, cities_list):
         super().__init__()
 
-        self.cities_list = ["Stantsionno-Oyashinskiy", "Test2", "Тест3"]
+        self.cities_list = cities_list
  
         quickest_text = "Быстрый"
         longest_text = "Длинный"
@@ -162,7 +162,8 @@ class MainWindow(Tk):
         return self.result
 
 def main():
-    root = MainWindow()
+    cities_list = ["Stantsionno-Oyashinskiy", "Test2", "Тест3"]
+    root = MainWindow(cities_list)
     root.mainloop()
 
     print(root.get_data())
