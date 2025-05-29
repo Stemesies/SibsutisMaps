@@ -29,12 +29,13 @@ class Window(Tk):
 
         # конфигурация окна
         self.title("Основное окно")
-        self.geometry("550x200")
+        self.geometry("550x300")
 
         self.src = StringVar()
         self.dest = StringVar()
         self.priority = StringVar(value="--quickest")
 
+        self.limit = StringVar(value=0)
 
         top_frame = Frame(self)
         top_frame.pack(pady=(10, 5), padx=10, fill=X)
@@ -45,6 +46,7 @@ class Window(Tk):
         self.src_box = AutocompleteCombobox(src_frame, textvariable=self.src, values=self.cities_list)
         self.src_box.pack(fill=X)
         self.src_box.bind("<<ComboboxSelected>>", self.check)
+        self.src_box.bind("<KeyRelease>", self.check)
 
         dest_frame = Frame(top_frame)
         dest_frame.pack(side=LEFT, expand=True, fill=X, padx=(8, 8))
@@ -52,6 +54,7 @@ class Window(Tk):
         self.dest_box = AutocompleteCombobox(dest_frame, textvariable=self.dest, values=self.cities_list)
         self.dest_box.pack(fill=X)
         self.dest_box.bind("<<ComboboxSelected>>", self.check)
+        self.dest_box.bind("<KeyRelease>", self.check)
 
         priority_frame = Frame(top_frame)
         priority_frame.pack(side=LEFT, expand=True, fill=X, padx=0, pady=(0, 0))
@@ -63,8 +66,18 @@ class Window(Tk):
         self.shortest_btn = ttk.Radiobutton(priority_frame, text=shortest_text, value="--shortest", variable=self.priority)
         self.shortest_btn.pack(side=TOP, expand=True, fill=X)
 
+        middle_frame = Frame(self)
+        middle_frame.pack(pady=(10, 15), fill=X)
+        
+        limit_frame = Frame(middle_frame)
+        limit_frame.pack(side=LEFT, expand=True, fill=X, padx=0, pady=(0, 0))
+        Label(limit_frame, text="Кол-во промеж. точек").pack(anchor=W)
+        limit_spinbox = ttk.Spinbox(limit_frame, from_=0.0, to=20.0, state="readonly", textvariable=self.limit)
+        limit_spinbox.pack(anchor=W)
+        
+
         bottom_frame = Frame(self)
-        bottom_frame.pack(pady=(10, 15))
+        bottom_frame.pack(pady=(5, 15))
         self.submit_btn = ttk.Button(bottom_frame, text="Подтвердить", state=DISABLED, command=self.close)
         self.submit_btn.pack(pady=10)
 
@@ -80,7 +93,7 @@ class Window(Tk):
         self.submit_btn.config(state=NORMAL)
 
     def close(self):
-        self.result = [self.src.get(), self.dest.get(), self.priority.get()]
+        self.result = [self.src.get(), self.dest.get(), self.priority.get(), self.limit.get()]
         self.destroy()
 
     def get_data(self):
