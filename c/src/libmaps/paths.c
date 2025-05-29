@@ -293,6 +293,9 @@ void pop_back(Path* path)
     for (PathNode* curr = path->head; curr != NULL; curr = curr->next) {
         if (curr->next == pop) {
             path->tail = curr;
+            path->path -= pop->edge->len;
+            path->time -= (double)((double)pop->edge->len
+                                   / (double)pop->edge->speed);
             destroy_node(pop);
             break;
         }

@@ -47,8 +47,6 @@ int main()
         curr,
         path);
 
-    show_paths(path, table);
-
     // int count = 0;
     // for (Path* curr = path->first; curr != NULL; curr = curr->next) {
     //     count++;
@@ -67,8 +65,9 @@ int main()
     // FIXME Добавить проверку на необходимость поиска n альтернативных путей
     // PathsContain* new_paths
     //         = correct_paths(path, hashtab_lookup(table, "Novosibirsk"));
-    // PathsContain* sorted_paths = sort_paths(new_paths, SHORTEST);
-    // show_paths(sorted_paths, table);
+    PathsContain* sorted_paths = sort_paths(path, QUICKEST);
+    show_paths(sorted_paths, table);
+    // show_paths(path, table);
 
     Path* merge_path = path_with_return(path->first, path->first->next);
     // if (!merge_path)
