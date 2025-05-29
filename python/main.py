@@ -60,7 +60,7 @@ class MainWindow(Tk):
 
         # конфигурация окна
         self.title("Основное окно")
-        self.geometry("550x300")
+        self.geometry("600x350")
         self.config(bg="#008000")
 
         self.src = StringVar()
@@ -69,7 +69,7 @@ class MainWindow(Tk):
 
         self.limit = StringVar(value=0)
         self.alts = StringVar(value=0)
-        self.altf = StringVar(value=0)
+        self.altf = StringVar(value=1.0)
 
         self.alts_cities = []
 
