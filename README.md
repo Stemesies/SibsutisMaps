@@ -1,10 +1,20 @@
 # Sibsutis Maps
 
-[![Build Status](https://github.com/Stemesies/SibsutisMaps/actions/workflows/github-ci.yml/badge.svg?branch=master)](https://github.com/Stemesies/SibsutisMaps/actions)
+[![Статус сборки](https://github.com/Stemesies/SibsutisMaps/actions/workflows/github-ci.yml/badge.svg?branch=master)](https://github.com/Stemesies/SibsutisMaps/actions)
 
-### Тема курсовой работы: задачи на графах
+## Тема курсовой работы: задачи на графах
 
 Нахождение кратчайшего пути между городами, количества разных маршрутов между городами, длиннейшего пути между городами. 
+
+## Сборка проекта:
+
+### Linux (Ubuntu):
+
+После клонирования, перед началом работы необходимо  
+инициализировать структуру проекта с помощью:  
+`make init`  
+Для сборки можете воспользоваться командой:  
+`make` или `make all`
 
 ### Полезные ссылки:
 [Раздел Issues](https://github.com/Stemesies/SibsutisMaps/issues)
