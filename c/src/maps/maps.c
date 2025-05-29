@@ -95,8 +95,11 @@ int main()
     graph_destroy(graph);
     hashtab_destroy(table);
     // destroy_paths_contain(new_paths);
-    // destroy_paths_contain(sorted_paths);
-    // destroy_path(merge_path);
+    destroy_paths_contain(sorted_paths);
+
+    free(curr);
+    destroy_path(merge_path);
+    destroy_paths_contain(path);
     fclose(fp);
 
     return 0;

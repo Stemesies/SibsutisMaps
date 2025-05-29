@@ -291,13 +291,14 @@ void pop_back(Path* path)
 {
     PathNode* pop = path->tail;
     for (PathNode* curr = path->head; curr != NULL; curr = curr->next) {
-        if (curr->next == pop) {
+        if (curr->next == path->tail) {
             path->tail = curr;
+            curr->next = NULL;
             path->path -= pop->edge->len;
             path->time -= (double)((double)pop->edge->len
                                    / (double)pop->edge->speed);
-            destroy_node(pop);
             break;
         }
     }
+    destroy_node(pop);
 }
