@@ -37,6 +37,7 @@ class Window(Tk):
 
         self.limit = StringVar(value=0)
         self.alts = StringVar(value=0)
+        self.altf = StringVar(value=0)
 
         top_frame = Frame(self)
         top_frame.pack(pady=(10, 5), padx=8, fill=X)
@@ -71,16 +72,22 @@ class Window(Tk):
         middle_frame.pack(pady=(10, 15), padx=8, fill=X)
         
         limit_frame = Frame(middle_frame)
-        limit_frame.pack(side=LEFT, expand=True, fill=X, padx=(0, 8))
+        limit_frame.pack(side=LEFT, expand=True, fill=X, padx=(0, 6))
         Label(limit_frame, text="--limit").pack(anchor=W)
         limit_spinbox = ttk.Spinbox(limit_frame, from_=0.0, to=20.0, state="readonly", textvariable=self.limit)
         limit_spinbox.pack(fill=X)
 
         alts_frame = Frame(middle_frame)
-        alts_frame.pack(side=LEFT, expand=True, fill=X, padx=(8, 8))
+        alts_frame.pack(side=LEFT, expand=True, fill=X, padx=(6, 6))
         Label(alts_frame, text="-alts").pack(anchor=W)
         alts_spinbox = ttk.Spinbox(alts_frame, from_=0.0, to=20.0, state="readonly", textvariable=self.alts)
         alts_spinbox.pack(fill=X)
+
+        altf_frame = Frame(middle_frame)
+        altf_frame.pack(side=LEFT, expand=True, fill=X, padx=(6, 6))
+        Label(altf_frame, text="-altf").pack(anchor=W)
+        altf_spinbox = ttk.Spinbox(altf_frame, from_=1.0, to=10.0, increment=0.1, state="readonly", textvariable=self.altf)
+        altf_spinbox.pack(fill=X)
 
         bottom_frame = Frame(self)
         bottom_frame.pack(pady=(5, 15))
@@ -99,7 +106,7 @@ class Window(Tk):
         self.submit_btn.config(state=NORMAL)
 
     def close(self):
-        self.result = [self.src.get(), self.dest.get(), self.priority.get(), self.limit.get(), self.alts.get()]
+        self.result = [self.src.get(), self.dest.get(), self.priority.get(), self.limit.get(), self.alts.get(), self.altf.get()]
         self.destroy()
 
     def get_data(self):
