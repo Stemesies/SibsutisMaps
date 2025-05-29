@@ -80,6 +80,10 @@ PathsContain* correct_paths(PathsContain* paths, int res);
  * Переданный старый контейнер очищает. */
 PathsContain* filter_paths(PathsContain* paths, int* points, int count);
 
+/* Создает контейнер с путями, содержащими максимум max_count вершин
+ * Переданный старый контейнер очищает. */
+PathsContain* trim_paths(PathsContain* paths, int max_count);
+
 /*Извлекает узел из начала пути. Устанавливает указатель этого узла на следующий
  * в NULL.*/
 PathNode* pop_node(Path* path);

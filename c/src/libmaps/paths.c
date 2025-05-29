@@ -262,6 +262,31 @@ PathsContain* filter_paths(PathsContain* paths, int* points, int count)
     return res_paths;
 }
 
+PathsContain* trim_paths(PathsContain* paths, int max_count)
+{
+    if (max_count == 0)
+        return paths;
+
+    PathsContain* res_paths = def_path_contain_construct();
+
+    int i = 0;
+    for (Path* curr = paths->first; curr != NULL; curr = curr->next) {
+        i = 0;
+        for (PathNode* pn = curr->head; pn != NULL; pn = pn->next) {
+            if (i > max_count)
+                break;
+            i++;
+        }
+
+        if(i <= max_count)
+            insert_in_path_contain(res_paths, curr);
+        
+    }
+    destroy_paths_contain(paths);
+
+    return res_paths;
+}
+
 /*Извлечение узла из начала пути*/
 PathNode* pop_node(Path* path)
 {

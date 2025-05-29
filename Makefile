@@ -55,7 +55,7 @@ run: $(APP_PATH)
 	
 .PHONY: memcheck
 memcheck: $(APP_PATH)
-	valgrind $(VALFLAGS) $(APP_PATH) 
+	valgrind $(VALFLAGS) $(APP_PATH)  $(ARGS)
 
 .PHONY: test
 test: $(TEST_PATH)

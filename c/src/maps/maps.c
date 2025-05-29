@@ -59,14 +59,16 @@ int construct_paths(MapConfig* mapconfig)
     int src = point_ids[0];
     int res = point_ids[point_ids_size-1];
 
-    printf("src == Колывань?: %d, res == Обь?: %d\n", hashtab_lookup(table, "Колывань")==src, hashtab_lookup(table, "Обь")==res);
-
     Dfs(src, res, path, map->graph);
 
     printf("Обход завершен.\n");
 
     PathsContain* corrected_paths = correct_paths(path, res);
-    PathsContain* filtered_paths = filter_paths(corrected_paths, point_ids+1, point_ids_size-2);
+    PathsContain* trimmed_paths = trim_paths(corrected_paths, mapconfig->limit);
+    PathsContain* filtered_paths = filter_paths(trimmed_paths, point_ids+1, point_ids_size-2);
+
+    free(point_ids);
+    point_ids = NULL;
 
     if(filtered_paths->count == 0) {
         printf("Не получилось проложить маршрут.\n");
