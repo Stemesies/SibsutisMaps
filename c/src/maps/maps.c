@@ -61,6 +61,18 @@ int construct_paths(MapConfig* mapconfig)
 
     Dfs(src, res, path, map->graph);
 
+    //  PathsContain* path = SearchAllPaths(
+    //         hashtab_lookup(table, "Kolyvan"),
+    //         hashtab_lookup(table, "Krivodanovka"),
+    //         graph);
+    // PathsContain* sorted_paths = sort_paths(path, QUICKEST);
+    // show_paths(sorted_paths, table);
+    // // show_paths(path, table);
+
+    // Path* merge_path = path_with_return(path->first, path->first->next);
+    // // if (!merge_path)
+    // //     puts("oh noo()");
+
     printf("Обход завершен.\n");
 
     PathsContain* corrected_paths = correct_paths(path, res);

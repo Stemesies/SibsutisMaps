@@ -20,13 +20,15 @@ typedef struct search_context {
 
 /*Модифицированных обход в глубину. Находит и записывает в контейнер путей все,
  * даже которые не дошли до нужной вершины.*/
-void Dfs(int src, int res, PathsContain* path, Graph* graph);
-
+void Dfs(int src, int res, Graph* graph, Path* current_path, PathsContain* all);
 /*Обход в ширину. Резерв обхода в глубину, скорее всего будет выпилен.*/
 void Bfs(int src, int res, PathsContain* path, size_t n, Edge** graph);
 /*Ищет лучший путь по выбранному приоритету*/
 Path* best_path(SearchContext* context);
 /*Ищет альтернативные пути, в rate раз медленнее/дольше/короче лучшего*/
 void alternative(SearchContext* context);
+
+/*Поиск всех путей (вызывает Dfs)*/
+PathsContain* SearchAllPaths(int src, int res, Graph* graph);
 
 #endif

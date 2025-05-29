@@ -1,6 +1,6 @@
 #include <ctest.h>
 #include <libmaps/graph.h>
-#define N_VERT 83
+#define N_VERT 82
 
 CTEST(test_graph, create)
 {
