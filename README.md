@@ -1,6 +1,6 @@
 # Sibsutis Maps
 
-[![Build Status](https://github.com/Stemesies/SibsutisMaps/workflows/Tests/badge.svg?event=push)](https://github.com/Stemesies/SibsutisMaps/actions)
+[![Build Status](https://github.com/Stemesies/SibsutisMaps/actions/workflows/github-ci.yml/badge.svg?branch=master)](https://github.com/Stemesies/SibsutisMaps/actions)
 
 ### Тема курсовой работы: задачи на графах
 
