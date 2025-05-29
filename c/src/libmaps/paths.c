@@ -129,8 +129,8 @@ void insert_in_path(Path* list, int num, Edge* edge)
     insert->edge->speed = edge->speed;
     insert->num = num;
 
-    if (list->head->next == NULL) {
-        list->head->next = insert;
+    if (list->head == NULL) {
+        list->head = insert;
         list->tail = insert;
     } else {
         list->tail->next = insert;

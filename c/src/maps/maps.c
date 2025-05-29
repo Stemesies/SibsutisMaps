@@ -38,26 +38,55 @@ int main()
     //         }
     // }
     graph_init(graph, table, fp);
-    // show_graph(HashTableTAB_SIZE, graph->graph_matrix);
+    // show_graph(7, graph->graph_matrix);
 
+    // Dfs(hashtab_lookup(table, "Novosibirsk"),
+    //     hashtab_lookup(table, "Koltsovo"),
+    //     path,
+    //     graph);
+
+    // Dfs(0, 5, path, graph);
+    // Bfs(0, 5, path, 7, graph->graph_matrix);
+    Path* curr = def_path_construct();
     Dfs(hashtab_lookup(table, "Novosibirsk"),
         hashtab_lookup(table, "Karasuk"),
-        path,
-        graph);
-    PathsContain* new_paths
-            = correct_paths(path, hashtab_lookup(table, "Karasuk"));
+        graph,
+        curr,
+        path);
+
+    // int count = 0;
+    // for (Path* curr = path->first; curr != NULL; curr = curr->next) {
+    //     count++;
+    //     printf("Путь %d: ", count);
+    //     PathNode* temp = curr->head;
+    //     if (!temp) {
+    //         return 1;
+    //     }
+    //     printf("%d", temp->num);
+    //     temp = temp->next;
+    //     for (; temp != NULL; temp = temp->next)
+    //         printf("->%d", temp->num);
+    //     printf(": %d км, %.2lf ч\n", curr->path, curr->time);
+    // }
+
+    show_paths(path, table, 5);
+
+    // PathsContain* new_paths
+    // = correct_paths(path, hashtab_lookup(table, "Koltsovo"));
 
     // FIXME Добавить проверку на необходимость поиска n альтернативных путей
-    PathsContain* sorted_paths = NULL;
-    if (!sorted_paths)
-        sorted_paths = sort_paths(new_paths, SHORTEST);
+    // PathsContain* sorted_paths = NULL;
+    // if (!sorted_paths)
+    //     sorted_paths = sort_paths(new_paths, SHORTEST);
 
-    Path* merge_path
-            = path_with_return(sorted_paths->first, sorted_paths->first->next);
-    if (!merge_path)
-        puts("oh noo()");
+    // Path* merge_path
+    //         = path_with_return(sorted_paths->first,
+    //         sorted_paths->first->next);
+    // if (!merge_path)
+    //     puts("oh noo()");
 
-    print_path(merge_path, table, 5);
+    // print_path(merge_path, table, 5);
+
     // alternative(
     //         new_paths,
     //         table,
@@ -77,9 +106,9 @@ int main()
     // printf(": %d км, %.2lf ч\n", a->path, a->time);
     graph_destroy(graph);
     hashtab_destroy(table);
-    destroy_paths_contain(new_paths);
-    destroy_paths_contain(sorted_paths);
-    destroy_path(merge_path);
+    // destroy_paths_contain(new_paths);
+    // destroy_paths_contain(sorted_paths);
+    // destroy_path(merge_path);
     fclose(fp);
 
     return 0;
