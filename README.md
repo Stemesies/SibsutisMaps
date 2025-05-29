@@ -1,5 +1,7 @@
 # Sibsutis Maps
 
+[![Build Status](https://github.com/Stemesies/SibsutisMaps/workflows/Tests/badge.svg?event=push)](https://github.com/Stemesies/SibsutisMaps/actions)
+
 ### Тема курсовой работы: задачи на графах
 
 Нахождение кратчайшего пути между городами, количества разных маршрутов между городами, длиннейшего пути между городами. 
