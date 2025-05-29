@@ -18,9 +18,40 @@ class AutocompleteCombobox(ttk.Combobox):
         if (typed and matches): 
             self.event_generate('<Down>')
 
-class Window(Tk):
+class AltsWindow(Toplevel):
+    def __init__(self, parent, cities_list, alts_cities):
+        super().__init__(parent)
+
+        self.cities_list = cities_list
+        self.alts_cities = alts_cities
+
+        self.city = StringVar()
+
+        # конфигурация окна
+        self.title("Выбор точки")
+        self.geometry("550x300")
+        self.config(bg="#008000")
+        self.grab_set()
+
+        all_cities_frame = Frame(self, bg="#008000")
+        all_cities_frame.pack(side=LEFT, expand=True, fill=X, padx=(0, 8))
+        Label(all_cities_frame, text="Список городов:", bg="#008000").pack(anchor=CENTER)
+        self.all_cities_box = AutocompleteCombobox(all_cities_frame, textvariable=self.city, values=self.cities_list)
+        self.all_cities_box.pack(fill=X)
+        
+        self.submit_btn = ttk.Button(self, text="Подтвердить", command=self.add_and_close)
+        self.submit_btn.pack(side=LEFT, expand=True, fill=X, padx=6, pady=10)
+
+    def add_and_close(self):
+        if (self.city.get() in self.cities_list) and (self.city.get() not in self.alts_cities):
+            self.alts_cities.append(self.city.get())
+
+        self.destroy()
+
+class MainWindow(Tk):
     def __init__(self):
         super().__init__()
+
         self.cities_list = ["Stantsionno-Oyashinskiy", "Test2", "Тест3"]
  
         quickest_text = "Быстрый"
@@ -123,13 +154,13 @@ class Window(Tk):
         self.destroy()
     
     def add_alts(self):
-        pass
+        AltsWindow(self, self.cities_list, self.alts_cities)
 
     def get_data(self):
         return self.result
 
 def main():
-    root = Window()
+    root = MainWindow()
     root.mainloop()
 
     print(root.get_data())
