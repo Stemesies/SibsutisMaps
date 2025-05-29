@@ -7,7 +7,6 @@ CTEST(test_graph, create)
     Graph* graph = graph_create(HASHTABSIZE);
     ASSERT_NOT_NULL(graph);
     ASSERT_NOT_NULL(graph->graph_matrix);
-    ASSERT_NOT_NULL(graph->verticles);
     ASSERT_NOT_NULL(graph->visited);
 
     graph_destroy(graph);

@@ -20,8 +20,6 @@ typedef struct edge {
 typedef struct graph {
     int n_verticles;
     Edge** graph_matrix;
-    int* verticles; // массив verticles отвечает за количество посещений каждой
-                    // вершины
     bool* visited;
 } Graph;
 

@@ -41,7 +41,6 @@ Graph* graph_create(int n)
     for (int i = 0; i < n; i++)
         graph->graph_matrix[i] = calloc(n, sizeof(Edge));
     graph->n_verticles = n;
-    graph->verticles = calloc(n, sizeof(int));
     graph->visited = calloc(n, sizeof(bool));
     return graph;
 }
@@ -49,7 +48,6 @@ Graph* graph_create(int n)
 void graph_destroy(Graph* graph)
 {
     free(graph->visited);
-    free(graph->verticles);
     for (int i = 0; i < graph->n_verticles; i++) {
         free(graph->graph_matrix[i]);
     }

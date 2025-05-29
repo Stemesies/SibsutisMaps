@@ -77,11 +77,11 @@ PathsContain* correct_paths(PathsContain* paths, int res);
 
 /* Создает контейнер с путями, содержащими указанные населенные пункты
  * Переданный старый контейнер очищает. */
-PathsContain* filter_paths(PathsContain* paths, int* points, int count);
+bool path_contains_all(Path* path, int* points, int points_count);
 
 /* Создает контейнер с путями, содержащими максимум max_count вершин
  * Переданный старый контейнер очищает. */
-PathsContain* trim_paths(PathsContain* paths, int max_count);
+bool path_fits_limit(Path* path, int limit);
 
 /*Извлекает узел из начала пути. Устанавливает указатель этого узла на следующий
  * в NULL.*/

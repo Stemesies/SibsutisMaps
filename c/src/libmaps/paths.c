@@ -227,64 +227,34 @@ int compare_paths(Path* a, Path* b)
     return count;
 }
 
-PathsContain* correct_paths(PathsContain* paths, int res)
+bool path_contains_all(Path* path, int* points, int points_count)
 {
-    PathsContain* res_paths = def_path_contain_construct();
-    for (Path* curr = paths->first; curr != NULL; curr = curr->next) {
-        if (curr->tail->num == res) {
-            insert_in_path_contain(res_paths, curr);
-        }
-    }
-    destroy_paths_contain(paths);
+    if (points_count == 0)
+        return true;
 
-    return res_paths;
-}
-
-PathsContain* filter_paths(PathsContain* paths, int* points, int count)
-{
-    if (count == 0)
-        return paths;
-
-    PathsContain* res_paths = def_path_contain_construct();
     int contains_points = 1;
-    for (Path* curr = paths->first; curr != NULL; curr = curr->next) {
-        for (int i = 0; i < count; i++) {
-            if (!is_visited(curr, points[i]))
-                contains_points = 0;
-        }
-
-        if (contains_points)
-            insert_in_path_contain(res_paths, curr);
-        contains_points = 1;
+    
+    for (int i = 0; i < points_count; i++) {
+        if (!is_visited(path, points[i]))
+            contains_points = 0;
     }
-    destroy_paths_contain(paths);
 
-    return res_paths;
+    return contains_points;
 }
 
-PathsContain* trim_paths(PathsContain* paths, int max_count)
+bool path_fits_limit(Path* path, int limit)
 {
-    if (max_count == 0)
-        return paths;
-
-    PathsContain* res_paths = def_path_contain_construct();
+    if (limit == 0)
+        return true;
 
     int i = 0;
-    for (Path* curr = paths->first; curr != NULL; curr = curr->next) {
-        i = 0;
-        for (PathNode* pn = curr->head; pn != NULL; pn = pn->next) {
-            if (i > max_count)
-                break;
-            i++;
+    for (PathNode* pn = path->head; pn != NULL; pn = pn->next) {
+        if (i++ >= limit+1) {
+            return false;
         }
-
-        if(i <= max_count)
-            insert_in_path_contain(res_paths, curr);
-        
+            
     }
-    destroy_paths_contain(paths);
-
-    return res_paths;
+    return true;
 }
 
 /*Извлечение узла из начала пути*/

@@ -2,7 +2,6 @@
 #define MAPS_H_
 
 #include <libmaps/search.h>
-#include <libmaps/sort.h>
 
 #define DATABASE_NAME "input"
 
