@@ -139,6 +139,22 @@ void insert_in_path(Path* list, int num, Edge* edge)
     list->time += ((double)edge->len / (double)edge->speed);
 }
 
+void insert_in_path_contain_no_copy(PathsContain* path, Path* insert)
+{
+    if (!path || !insert) {
+        exit(EXIT_FAILURE);
+    }
+
+    if (path->count == 0) {
+        path->first = insert;
+        path->last = insert;
+    } else {
+        path->last->next = insert;
+        path->last = insert;
+    }
+    path->count++;
+}
+
 void insert_in_path_contain(PathsContain* path, Path* insert)
 {
     if (!path || !insert) {
@@ -150,14 +166,7 @@ void insert_in_path_contain(PathsContain* path, Path* insert)
     else
         copy = copy_path(insert, insert->tail->num);
 
-    if (path->count == 0) {
-        path->first = copy;
-        path->last = copy;
-    } else {
-        path->last->next = copy;
-        path->last = copy;
-    }
-    path->count++;
+    insert_in_path_contain_no_copy(path, copy);
 }
 
 Path* copy_path(
@@ -169,11 +178,23 @@ Path* copy_path(
     if (src->head->num == num)
         return res;
     PathNode* current = src->head->next;
+    PathNode* lasn_num = NULL;
     while (current != NULL) {
         insert_in_path(res, current->num, current->edge);
         if (current->num == num)
-            break;
+            lasn_num = res->tail;
         current = current->next;
+    }
+    if(lasn_num != NULL) {
+        PathNode* to_delete = lasn_num->next;
+        PathNode* to_delete_next = NULL;
+        lasn_num->next = NULL;
+        while (to_delete != NULL) {
+            to_delete_next = to_delete->next;
+            destroy_node(to_delete);
+            to_delete = to_delete_next;
+        }
+        
     }
     return res;
 }
@@ -227,17 +248,25 @@ int compare_paths(Path* a, Path* b)
     return count;
 }
 
-bool path_contains_all(Path* path, int* points, int points_count)
+bool path_contains_all(
+        Path* path, int* points, int points_count, HashTable* table)
 {
     if (points_count == 0)
         return true;
 
-    int contains_points = 1;
+    bool contains_points = true;
 
     for (int i = 0; i < points_count; i++) {
         if (!is_visited(path, points[i]))
-            contains_points = 0;
+            contains_points = false;
     }
+
+    
+        for (int i = 0; i < points_count; i++) {
+            printf("Contains %s: %d\n",
+                   hashtab_getkey(table, points[i]),
+                   is_visited(path, points[i]));
+        }
 
     return contains_points;
 }

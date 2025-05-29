@@ -67,6 +67,12 @@ int construct_paths(MapConfig* mapconfig)
         return -1;
     }
 
+    for (int i = 0; i < context.input_points_size; i++)
+    {
+        printf("Point %d: %d (%s)\n", i, context.input_points[i], hashtab_getkey(context.map->hashtable, context.input_points[i]));
+    }
+    
+
     context.paths = def_path_contain_construct();
     context.src = context.input_points[0];
     context.res = context.input_points[context.input_points_size - 1];

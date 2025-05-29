@@ -10,8 +10,12 @@ bool validate_path(Path* path, SearchContext* context)
 {
     if (!path_fits_limit(path, context->config->limit))
         return false;
+    print_path(path, c_table, 1);
     if (!path_contains_all(
-                path, context->input_points, context->input_points_size))
+                path,
+                context->input_points,
+                context->input_points_size,
+                c_table))
         return false;
 
     return true;
@@ -30,15 +34,17 @@ void Dfs(SearchContext* context, int src, Path* current_path)
                 current_path,
                 c_res,
                 &(c_graph->graph_matrix[c_res][current_path->tail->num]));
+
         if (!validate_path(current_path, context)) {
             c_graph->visited[src] = false;
             pop_back(current_path);
         } else {
             insert_in_path_contain(c_paths, current_path);
+            printf("(%p) ", c_paths->last);
+            print_path(c_paths->last, c_table, 1);
             c_graph->visited[src] = false;
             pop_back(current_path);
             pop_back(current_path);
-            return;
         }
     }
 
@@ -87,7 +93,10 @@ void alternative(SearchContext* context)
 
     int count = 0;
     Path* a = best_path(context->paths);
-    PathsContain* alt_paths = def_path_contain_construct();
+
+    printf("Альтернативные пути %s - %s:\n",
+           c_table[c_src].key,
+           c_table[c_res].key);
 
     for (Path* curr = c_paths->first; curr != NULL; curr = curr->next) {
         if (curr->tail->num == c_res) {
@@ -99,19 +108,22 @@ void alternative(SearchContext* context)
             case LONGEST:
                 if (((double)a->path / (double)curr->path) <= rate) {
                     count++;
-                    insert_in_path_contain(alt_paths, curr);
+                    printf("(%p) ", curr);
+                    print_path(curr, c_table, count);
                 }
                 break;
             case SHORTEST:
                 if (((double)curr->path / (double)a->path) <= rate) {
                     count++;
-                    insert_in_path_contain(alt_paths, curr);
+                    printf("(%p) ", curr);
+                    print_path(curr, c_table, count);
                 }
                 break;
             case QUICKEST:
                 if ((curr->time / a->time) <= rate) {
                     count++;
-                    insert_in_path_contain(alt_paths, curr);
+                    printf("(%p) ", curr);
+                    print_path(curr, c_table, count);
                 }
                 break;
 
@@ -125,17 +137,7 @@ void alternative(SearchContext* context)
             break;
     }
 
-    if (alt_paths->count == 0) {
+    if (count == 0) {
         printf("Альтернативных путей не найдено.\n");
-    } else {
-        printf("Альтернативные пути %s - %s:\n",
-               c_table[c_src].key,
-               c_table[c_res].key);
-        count = 0;
-        for (Path* curr = alt_paths->first; curr != NULL; curr = curr->next) {
-            putchar('\t');
-            print_path(curr, c_table, ++count);
-        }
     }
-    destroy_paths_contain(alt_paths);
 }

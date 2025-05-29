@@ -56,6 +56,9 @@ void insert_in_path(Path* list, int num, Edge* edge);
 /*Вставляет новый путь в контейнер путей. */
 void insert_in_path_contain(PathsContain* path, Path* insert);
 
+void insert_in_path_contain_no_copy(PathsContain* path, Path* insert);
+
+
 /*Копирует путь src до вершины num*/
 Path* copy_path(const Path* src, int num);
 
@@ -72,7 +75,7 @@ void show_paths(const PathsContain* paths, const HashTable* is_in_table);
 int compare_paths(Path* a, Path* b);
 
 /* Проверяет все ли населенные пункты points посещены в данном маршруте. */
-bool path_contains_all(Path* path, int* points, int points_count);
+bool path_contains_all(Path* path, int* points, int points_count, HashTable* table);
 
 /* Проверяет данный маршрут на превышение количества населенных пунктов */
 bool path_fits_limit(Path* path, int limit);

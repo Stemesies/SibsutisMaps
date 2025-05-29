@@ -9,7 +9,7 @@
 #define HASHTABSIZE 100
 
 // умножаем на 2 т.к. каждый символ кириллицы весит 2 байта.
-#define MAXSTR (strlen("Станционно-Ояшинский") * 2)
+#define MAXSTR (strlen("Станционно-Ояшинский") )
 
 #define graph_foreach_verticles(i, graph) \
     for (int i = 0; i < (graph)->n_verticles; i++)

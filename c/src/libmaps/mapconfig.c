@@ -14,9 +14,33 @@
         exit(-1);                                                          \
     }
 
-void print_help()
+void print_help(char* argv[])
 {
-    printf("Тут должна быть документация по использованию программы\n");
+    printf("использование: %s <список населенных пунктов>\n", argv[0]);
+    printf("\t[-Q | --quickest] [-S | --shortest] [-L | --longest]\n");
+    printf("\t[-l <цел> | -limit <цел>] [-alts <цел> | --show-alternatives <цел>]\n");
+    printf("\t[-altf <вещ> | --alt-filter <вещ>] [-p | --path]\n");
+    printf("\t[-f <путь> | --print-to-file <путь> ] [-h | --help]\n");
+    putchar('\n');
+    putchar('\n');
+    printf("<список населенных пунктов> - перечисление названий\n");
+    printf("\tгородов, сел, деревень, через которые должен проходить\n");
+    printf("\tмаршрут. Перввый и последний пункты будут считаться за\n");
+    printf("\tпункт отправления и пункт назначения соответственно.\n");
+    putchar('\n');
+    printf("[-Q | --quickest] - программа будет искать наибыстрейший\n");
+    printf("\tи близкие к нему маршруты. (меньше затрата по времени)\n");
+    putchar('\n');
+    printf("[-S | --slowest] - программа будет искать наикратчайший\n");
+    printf("\tи близкие к нему маршруты. (меньше расстояние)\n");
+    putchar('\n');
+    printf("[-L | --longest] - программа будет искать наидлиннейший\n");
+    printf("\tи близкие к нему маршруты. (больше расстояние)\n");
+    putchar('\n');
+    printf("[-l <цел> | -limit <цел>] - маршрут должен содержать не\n");
+    printf("\tболее чем <цел> населенных пунктов. Пункты отправления\n");
+    printf("\tи назначения тоже включаются.");
+
 }
 
 MapConfig* config_create()
@@ -108,7 +132,7 @@ void config_print(MapConfig* config)
 void parse_arguments(MapConfig* config, int argc, char* argv[])
 {
     if (argc < 2) { // аргументов нет
-        print_help();
+        print_help(argv);
         config_destroy(config);
         exit(0);
     }
@@ -146,7 +170,7 @@ void parse_arguments(MapConfig* config, int argc, char* argv[])
                 expect_argument("путь к файлу");
                 config->output_stream = argv[++i];
             } else if (isflag2("-h", "--help")) {
-                print_help();
+                print_help(argv);
                 config_destroy(config);
                 exit(0);
             } else {
