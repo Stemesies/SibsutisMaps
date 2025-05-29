@@ -1,6 +1,5 @@
 #include <ctest.h>
 #include <libmaps/search.h>
-#include <libmaps/sort.h>
 
 CTEST(test_correct_paths, validate)
 {
@@ -35,16 +34,26 @@ CTEST(test_correct_paths, validate)
                         = graph->graph_matrix[i][j].speed;
             }
     }
+    Map map = {graph, NULL};
+    MapConfig config = {.limit = 0};
+    SearchContext context
+            = {.map = &map,
+               .src = 0,
+               .res = 5,
+               .paths = path,
+               .config = &config,
+               0};
 
-    Dfs(0, 5, path, graph);
-    PathsContain* new_paths = correct_paths(path, 5);
+    Path* supp = def_path_construct(0);
+    Dfs(&context, 0, supp);
 
-    ASSERT_EQUAL(5, new_paths->first->tail->num);
-    ASSERT_EQUAL(5, new_paths->last->tail->num);
-    ASSERT_EQUAL(5, new_paths->first->next->tail->num);
+    ASSERT_EQUAL(5, context.paths->first->tail->num);
+    ASSERT_EQUAL(5, context.paths->last->tail->num);
+    ASSERT_EQUAL(5, context.paths->first->next->tail->num);
 
     graph_destroy(graph);
-    destroy_paths_contain(new_paths);
+    destroy_paths_contain(context.paths);
+    free(supp);
 }
 
 CTEST(test_sort, validate)
@@ -81,10 +90,20 @@ CTEST(test_sort, validate)
             }
     }
 
-    Dfs(0, 5, path, graph);
-    PathsContain* new_paths = correct_paths(path, 5);
+    Map map = {graph, NULL};
+    MapConfig config = {.limit = 0};
+    SearchContext context
+            = {.map = &map,
+               .src = 0,
+               .res = 5,
+               .paths = path,
+               .config = &config,
+               0};
 
-    PathsContain* sorted_paths1 = sort_paths(new_paths, SHORTEST);
+    Path* supp = def_path_construct(0);
+    Dfs(&context, 0, supp);
+
+    PathsContain* sorted_paths1 = sort_paths(context.paths, SHORTEST);
     ASSERT_EQUAL(32, sorted_paths1->first->path);
 
     PathsContain* sorted_paths2 = sort_paths(sorted_paths1, LONGEST);
@@ -94,8 +113,9 @@ CTEST(test_sort, validate)
     ASSERT_DBL_NEAR_TOL(0.5, sorted_paths3->first->time, 0.1);
 
     graph_destroy(graph);
-    destroy_paths_contain(new_paths);
+    destroy_paths_contain(context.paths);
     destroy_paths_contain(sorted_paths1);
     destroy_paths_contain(sorted_paths2);
     destroy_paths_contain(sorted_paths3);
+    free(supp);
 }

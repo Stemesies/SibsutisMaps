@@ -1,6 +1,4 @@
-#include <mapconfig/mapconfig.h>
-
-MapConfig mapconfig;
+#include <libmaps/mapconfig.h>
 
 #define isflag(str) strcmp(argv[i], str) == 0
 #define isflag2(str, str2) isflag(str) || isflag(str2)
@@ -35,7 +33,7 @@ MapConfig* config_create()
     return mapconfig;
 }
 
-void config_dispose(MapConfig* config)
+void config_destroy(MapConfig* config)
 {
     if (config != NULL) {
         list_free(config->points);
@@ -56,9 +54,6 @@ void config_init(MapConfig* config)
     config->more_detailed_output = 0;
 }
 
-/*
-Сравнивает поданые конфиги, возвращая 1 если они идентичны, 0 - если нет.
-*/
 bool config_compare(MapConfig* config1, MapConfig* config2)
 {
     if (config1->altways_count != config2->altways_count)
@@ -76,15 +71,13 @@ bool config_compare(MapConfig* config1, MapConfig* config2)
     return config1->priority == config2->priority;
 }
 
-/*
-Данный метод чисто для дебага. Возможно вскоре будет удален.
-*/
 void config_print(MapConfig* config)
 {
     printf("\n--- Конфиг приложения ---\n");
 
     printf("Путь: ");
     list_foreach_inlined(config->points, { printf("%s -> ", list_itp(char)); });
+    putchar('\n');
 
     printf("Приоритет: ");
 
@@ -112,15 +105,11 @@ void config_print(MapConfig* config)
     printf("Путь к файлу: %s\n", config->output_stream);
 }
 
-/*
-Обрабатывает аргументы, поданные при запуске программы
-Составляет конфиг. Вы можете обратиться к нему через
-переменную mapconfig из любой точки программы.
-*/
 void parse_arguments(MapConfig* config, int argc, char* argv[])
 {
     if (argc < 2) { // аргументов нет
         print_help();
+        config_destroy(config);
         exit(0);
     }
 
@@ -158,6 +147,7 @@ void parse_arguments(MapConfig* config, int argc, char* argv[])
                 config->output_stream = argv[++i];
             } else if (isflag2("-h", "--help")) {
                 print_help();
+                config_destroy(config);
                 exit(0);
             } else {
                 printf("Неизвестный флаг \"%s\".\n", argv[i]);

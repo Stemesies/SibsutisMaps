@@ -1,5 +1,38 @@
 /*Файл для работы со структурой графа и входными данными*/
 #include <libmaps/graph.h>
+#include <wchar.h>
+
+Map* map_create()
+{
+    Map* map = (Map*)malloc(sizeof(Map));
+    Graph* graph = graph_create(HASHTABSIZE);
+    HashTable* table = hashtab_create();
+
+    if (map == NULL || graph == NULL || table == NULL) {
+        printf("[ОШИБКА] Невозможно выделить память под карту.\n");
+        printf("Недостаточно ОЗУ для работы программы.\n.");
+        free(map);
+        free(graph);
+        free(table);
+        return NULL;
+    }
+
+    map->graph = graph;
+    map->hashtable = table;
+
+    return map;
+}
+
+void map_destroy(Map* map)
+{
+    if (map != NULL) {
+        graph_destroy(map->graph);
+        hashtab_destroy(map->hashtable);
+        map->graph = NULL;
+        map->hashtable = NULL;
+    }
+    free(map);
+}
 
 Graph* graph_create(int n)
 {
@@ -8,7 +41,6 @@ Graph* graph_create(int n)
     for (int i = 0; i < n; i++)
         graph->graph_matrix[i] = calloc(n, sizeof(Edge));
     graph->n_verticles = n;
-    graph->verticles = calloc(n, sizeof(int));
     graph->visited = calloc(n, sizeof(bool));
     return graph;
 }
@@ -16,7 +48,6 @@ Graph* graph_create(int n)
 void graph_destroy(Graph* graph)
 {
     free(graph->visited);
-    free(graph->verticles);
     for (int i = 0; i < graph->n_verticles; i++) {
         free(graph->graph_matrix[i]);
     }
@@ -43,13 +74,13 @@ unsigned int ELFHash(char* s)
             h ^= g >> 24;
         h &= ~g;
     }
-    return h % HashTableTAB_SIZE;
+    return h % HASHTABSIZE;
 }
 
 HashTable* hashtab_create()
 {
-    HashTable* a = (HashTable*)calloc(HashTableTAB_SIZE, sizeof(HashTable));
-    for (int i = 0; i < HashTableTAB_SIZE; i++) {
+    HashTable* a = (HashTable*)calloc(HASHTABSIZE, sizeof(HashTable));
+    for (int i = 0; i < HASHTABSIZE; i++) {
         a[i].key = NULL;
     }
     a->count = 0;
@@ -58,7 +89,7 @@ HashTable* hashtab_create()
 
 void hashtab_destroy(HashTable* table)
 {
-    for (int i = 0; i < HashTableTAB_SIZE; i++) {
+    for (int i = 0; i < HASHTABSIZE; i++) {
         if (!table[i].key)
             continue;
         free(table[i].key);
@@ -71,7 +102,7 @@ unsigned int hashtab_add(HashTable* hashtab, char* key)
     unsigned int index = ELFHash(key), temp = index;
 
     if (hashtab[index].key != NULL) {
-        for (int i = index; i < HashTableTAB_SIZE; i++) {
+        for (int i = index; i < HASHTABSIZE; i++) {
             if (hashtab[i].key == NULL) {
                 hashtab[i].key = calloc(strlen(key) + 1, sizeof(char));
                 strcpy(hashtab[i].key, key);
@@ -79,7 +110,7 @@ unsigned int hashtab_add(HashTable* hashtab, char* key)
                 hashtab->count++;
                 break;
             }
-            if ((index == temp) && (i == HashTableTAB_SIZE - 1))
+            if ((index == temp) && (i == HASHTABSIZE - 1))
                 i = -1;
         }
     } else {
@@ -99,17 +130,26 @@ int hashtab_lookup(HashTable* hashtab, char* key)
     if (hashtab[index].key == NULL)
         return -1;
 
-    for (int i = index; i < HashTableTAB_SIZE; i++) {
+    for (int i = index; i < HASHTABSIZE; i++) {
         if (hashtab[i].key == NULL)
             return -1;
         if (strcmp(hashtab[i].key, key) == 0)
             return i;
-        if (i == HashTableTAB_SIZE - 1) {
+        if (i == HASHTABSIZE - 1) {
             i = -1;
         }
     }
 
     return -1;
+}
+
+char* hashtab_getkey(HashTable* table, int id)
+{
+    for (int i = 0; i < HASHTABSIZE; i++) {
+        if (i == id)
+            return table[i].key;
+    }
+    return NULL;
 }
 
 bool is_in_table(HashTable* table, char* key)
@@ -119,35 +159,25 @@ bool is_in_table(HashTable* table, char* key)
 
 void graph_init(Graph* graph, HashTable* table, FILE* fp)
 {
-    int path, speed, count = 0;
-    char* str = calloc(MAXSTR + 1, sizeof(char));
+    int path, speed;
+    char* str1 = calloc(MAXSTR + 1, sizeof(char));
+    char* str2 = calloc(MAXSTR + 1, sizeof(char));
     char ch = 0;
     unsigned int v_1, v_2;
     while ((ch = fgetc(fp)) != EOF) {
         ungetc(ch, fp);
-        while ((ch = fgetc(fp)) != ' ' && ch != EOF) {
-            str[count] = ch;
-            count++;
-        }
-        str[count] = '\0';
-        v_1 = (!is_in_table(table, str)) ? hashtab_add(table, str)
-                                         : hashtab_lookup(table, str);
-        count = 0;
-        while ((ch = fgetc(fp)) != ' ' && ch != EOF) {
-            str[count] = ch;
-            count++;
-        }
-        str[count] = '\0';
-        v_2 = (!is_in_table(table, str)) ? hashtab_add(table, str)
-                                         : hashtab_lookup(table, str);
+        fscanf(fp, "%s %s %d %d", str1, str2, &path, &speed);
 
-        count = 0;
-        fscanf(fp, " %d", &path);
-        fscanf(fp, " %d", &speed);
+        v_1 = (!is_in_table(table, str1)) ? hashtab_add(table, str1)
+                                          : hashtab_lookup(table, str1);
+        v_2 = (!is_in_table(table, str2)) ? hashtab_add(table, str2)
+                                          : hashtab_lookup(table, str2);
+
         add_edge(graph, v_1, v_2, path, speed);
         fseek(fp, 1, SEEK_CUR);
     }
-    free(str);
+    free(str1);
+    free(str2);
 }
 
 /*Демонстрация графа как матрицы смежности*/

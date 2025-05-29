@@ -3,9 +3,10 @@ LIB_NAME = libmaps
 TEST_NAME = test_maps
 LANG_DIR = c
 
+ARGS =
 CFLAGS = -Wall -Werror -g
 CPPFLAGS = -I c/src -I c/thirdparty -MP -MMD
-VALFLAGS = --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes -s
+VALFLAGS = --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1 
 
 SRC_DIR = src
 OBJ_DIR = obj
@@ -27,7 +28,6 @@ LIB_OBJS = $(LIB_SRCS:$(LANG_DIR)/$(SRC_DIR)/%.$(SRC_EXT)=$(LANG_DIR)/$(OBJ_DIR)
 
 TEST_SRCS = $(shell find $(LANG_DIR)/$(TEST_DIR) -name '*.$(SRC_EXT)')
 TEST_OBJS = $(TEST_SRCS:$(LANG_DIR)/$(TEST_DIR)/%.$(SRC_EXT)=$(LANG_DIR)/$(OBJ_DIR)/$(TEST_DIR)/%.$(OBJ_EXT))
-TEST_DEPS = $(LANG_DIR)/$(SRC_DIR)/mapconfig/mapconfig.${SRC_EXT}
 
 DEPS = $(APP_OBJS:.$(OBJ_EXT)=.d) $(LIB_OBJS:.$(OBJ_EXT)=.d) $(LIB_OBJS:.$(OBJ_EXT)=.d) $(TEST_OBJS:.$(OBJ_EXT)=.d)
 
@@ -46,16 +46,16 @@ $(LIB_PATH): $(LIB_OBJS)
 $(LANG_DIR)/$(OBJ_DIR)/%.$(OBJ_EXT): $(LANG_DIR)/%.$(SRC_EXT)
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
 
-$(TEST_PATH): $(TEST_OBJS) $(TEST_DEPS) $(LIB_PATH)
+$(TEST_PATH): $(TEST_OBJS) $(LIB_PATH)
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $@
 
 .PHONY: run
 run: $(APP_PATH)
-	$(APP_PATH)	
+	$(APP_PATH)	$(ARGS)
 	
 .PHONY: memcheck
 memcheck: $(APP_PATH)
-	valgrind $(VALFLAGS) $(APP_PATH) 
+	valgrind $(VALFLAGS) $(APP_PATH)  $(ARGS)
 
 .PHONY: test
 test: $(TEST_PATH)
@@ -78,5 +78,6 @@ init:
 	mkdir c/obj
 	mkdir c/obj/src
 	mkdir c/obj/src/libmaps
+	mkdir c/obj/src/mapconfig
 	mkdir c/obj/src/maps
 	mkdir c/obj/test

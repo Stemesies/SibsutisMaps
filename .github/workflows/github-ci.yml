@@ -45,3 +45,29 @@ jobs:
           echo "Start testing functions..."
           make test
           echo "Tests complete."
+  memcheck_main: 
+    runs-on: ubuntu-latest
+    steps:
+      # Running test of leaks
+      - uses: actions/checkout@v4
+
+      - name: memory check of main program
+        run: | 
+          sudo apt-get install valgrind
+          make init
+          echo "Look up memory leaks..."
+          make memcheck
+          echo "No memory leaks."
+  memcheck_test: 
+    runs-on: ubuntu-latest
+    steps:
+      # Running test of leaks in testing program
+      - uses: actions/checkout@v4
+
+      - name: memory check of testing program
+        run: | 
+          sudo apt-get install valgrind
+          make init
+          echo "Look up memory leaks..."
+          make memcheck_tests
+          echo "No memory leaks."

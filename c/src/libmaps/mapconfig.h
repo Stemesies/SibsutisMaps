@@ -10,8 +10,6 @@ typedef enum priority { SHORTEST, QUICKEST, LONGEST } Priority;
 
 /*
 Настройки данной программы.
-Вы можете обратиться к ним из любой точки программы
-с помощью переменной mapconfig, если подключите mapconfig.h
 
 ** priority: кратчайший/быстрейший/длиннейший приоритет программы
 ** limit: ограничение кол-ва промежуточных точек при нахождении пути
@@ -36,10 +34,8 @@ typedef struct config {
 
 } MapConfig;
 
-extern MapConfig mapconfig;
-
 MapConfig* config_create();
-void config_dispose(MapConfig* config);
+void config_destroy(MapConfig* config);
 void config_init(MapConfig* config);
 
 /*
@@ -54,8 +50,7 @@ void config_print(MapConfig* config);
 
 /*
 Обрабатывает аргументы, поданные при запуске программы
-Составляет конфиг. Вы можете обратиться к нему через
-переменную mapconfig из любой точки программы.
+Составляет конфиг.
 */
 void parse_arguments(MapConfig* config, int argc, char* argv[]);
 

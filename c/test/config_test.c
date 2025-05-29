@@ -1,12 +1,12 @@
 #include <ctest.h>
-#include <mapconfig/mapconfig.h>
+#include <libmaps/mapconfig.h>
 
 CTEST(config, config_create)
 {
     MapConfig* cfg = config_create();
     ASSERT_NOT_NULL(cfg);
     ASSERT_NOT_NULL(cfg->points);
-    config_dispose(cfg);
+    config_destroy(cfg);
 }
 
 CTEST(config, quckest_short)
@@ -16,7 +16,7 @@ CTEST(config, quckest_short)
     char* argv[] = {"./test", "-Q"};
     parse_arguments(cfg, argc, argv);
     ASSERT_EQUAL(cfg->priority, QUICKEST);
-    config_dispose(cfg);
+    config_destroy(cfg);
 }
 
 CTEST(config, shortest_full)
@@ -26,7 +26,7 @@ CTEST(config, shortest_full)
     char* argv[] = {"./test", "--shortest"};
     parse_arguments(cfg, argc, argv);
     ASSERT_EQUAL(cfg->priority, SHORTEST);
-    config_dispose(cfg);
+    config_destroy(cfg);
 }
 
 CTEST(config, altways_count_full)
@@ -36,7 +36,7 @@ CTEST(config, altways_count_full)
     char* argv[] = {"./test", "--show-alternatives", "10"};
     parse_arguments(cfg, argc, argv);
     ASSERT_EQUAL(cfg->altways_count, 10);
-    config_dispose(cfg);
+    config_destroy(cfg);
 }
 
 CTEST(config, altway_coeff_short)
@@ -46,7 +46,7 @@ CTEST(config, altway_coeff_short)
     char* argv[] = {"./test", "-altf", "0.3"};
     parse_arguments(cfg, argc, argv);
     ASSERT_EQUAL(cfg->altways_filter_coefficient, 0.3);
-    config_dispose(cfg);
+    config_destroy(cfg);
 }
 
 CTEST(config, output_short)
@@ -56,7 +56,7 @@ CTEST(config, output_short)
     char* argv[] = {"./test", "-f", "null"};
     parse_arguments(cfg, argc, argv);
     ASSERT_STR(cfg->output_stream, "null");
-    config_dispose(cfg);
+    config_destroy(cfg);
 }
 
 CTEST(config, points)
@@ -70,7 +70,7 @@ CTEST(config, points)
 
     ASSERT_STR(list_getof(char, cfg->points, 0), "Novosibirsk");
     ASSERT_STR(list_getof(char, cfg->points, 1), "Chulym");
-    config_dispose(cfg);
+    config_destroy(cfg);
 }
 
 CTEST(config, set_of_arguments)
@@ -109,5 +109,5 @@ CTEST(config, set_of_arguments)
     ASSERT_STR(list_getof(char, cfg->points, 2), "Dovolnoe");
     ASSERT_STR(list_getof(char, cfg->points, 3), "Novosibirsk");
     ASSERT_STR(list_getof(char, cfg->points, 4), "Kolyvan");
-    config_dispose(cfg);
+    config_destroy(cfg);
 }

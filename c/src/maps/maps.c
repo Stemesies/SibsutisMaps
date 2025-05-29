@@ -1,80 +1,102 @@
-#include <libmaps/search.h>
-#include <libmaps/sort.h>
+#include <maps/maps.h>
 
-int main()
+Map* fetch_map_data()
 {
-    PathsContain* path = def_path_contain_construct();
-    Graph* graph = graph_create(HashTableTAB_SIZE);
-    HashTable* table = hashtab_create();
-    FILE* fp = fopen("input", "r");
+    Map* map = map_create();
 
-    // graph->graph_matrix[0][1].len = 15;
-    // graph->graph_matrix[0][2].len = 10;
-    // graph->graph_matrix[0][3].len = 25;
-    // graph->graph_matrix[1][4].len = 26;
-    // graph->graph_matrix[2][4].len = 8;
-    // graph->graph_matrix[3][5].len = 17;
-    // graph->graph_matrix[4][5].len = 14;
-    // graph->graph_matrix[4][6].len = 19;
-    // graph->graph_matrix[5][6].len = 33;
+    if (map == NULL)
+        return NULL;
 
-    // graph->graph_matrix[0][1].speed = 80;
-    // graph->graph_matrix[0][2].speed = 60;
-    // graph->graph_matrix[0][3].speed = 85;
-    // graph->graph_matrix[1][4].speed = 60;
-    // graph->graph_matrix[2][4].speed = 58;
-    // graph->graph_matrix[3][5].speed = 37;
-    // graph->graph_matrix[4][5].speed = 69;
-    // graph->graph_matrix[4][6].speed = 73;
-    // graph->graph_matrix[5][6].speed = 90;
+    FILE* fp = fopen(DATABASE_NAME, "r");
 
-    // for (int i = 0; i < 7; i++) {
-    //     for (int j = 0; j < 7; j++)
-    //         if (graph->graph_matrix[i][j].len > 0) {
-    //             graph->graph_matrix[j][i].len =
-    //             graph->graph_matrix[i][j].len;
-    //             graph->graph_matrix[j][i].speed
-    //                     = graph->graph_matrix[i][j].speed;
-    //         }
-    // }
-    graph_init(graph, table, fp);
-    // show_graph(HashTableTAB_SIZE, graph->graph_matrix);
+    if (fp == NULL) {
+        map_destroy(map);
+        printf("[ОШИБКА] Невозможно открыть файл \"%s\".\n", DATABASE_NAME);
+        printf("Возможно его не существует?\n.");
+        return NULL;
+    }
 
-    Dfs(hashtab_lookup(table, "Novosibirsk"),
-        hashtab_lookup(table, "Karasuk"),
-        path,
-        graph);
-    PathsContain* new_paths
-            = correct_paths(path, hashtab_lookup(table, "Karasuk"));
-
-    // FIXME Добавить проверку на необходимость поиска n альтернативных путей
-    PathsContain* sorted_paths = NULL;
-    if (!sorted_paths)
-        sorted_paths = sort_paths(new_paths, QUICKEST);
-
-    show_paths(sorted_paths, table, hashtab_lookup(table, "Karasuk"));
-    // alternative(
-    //         new_paths,
-    //         table,
-    //         hashtab_lookup(table, "Novosibirsk"),
-    //         hashtab_lookup(table, "Karasuk"),
-    //         1.5,
-    //         SHORTEST);
-    // printf("Karasuk: %d\n", hashtab_lookup(table, "Moshkovo"));
-    // printf("%s\n", table[43].key);
-
-    // Path* a = best_path(path, LONGEST, hashtab_lookup(table, "Karasuk"));
-    // // printf("%p\n", a);
-
-    // printf("Самый длинный путь из Новосибирска в Карасук: \n");
-    // for (PathNode* temp = a->head; temp != NULL; temp = temp->next)
-    //     printf("%s->", table[temp->num].key);
-    // printf(": %d км, %.2lf ч\n", a->path, a->time);
-    graph_destroy(graph);
-    hashtab_destroy(table);
-    destroy_paths_contain(new_paths);
-    destroy_paths_contain(sorted_paths);
+    graph_init(map->graph, map->hashtable, fp);
     fclose(fp);
+
+    return map;
+}
+
+int pointlist_to_idarray(MapConfig* mapconfig, int* point_ids, HashTable* table)
+{
+    int k = 0;
+    list_foreach_inlined(mapconfig->points, {
+        if (!is_in_table(table, list_itp(char))) {
+            printf("Неизвестная точка \"%s\"\n", list_itp(char));
+            return -1;
+        } else
+            point_ids[k++] = hashtab_lookup(table, list_itp(char));
+    });
+    return 0;
+}
+
+int construct_paths(MapConfig* mapconfig)
+{
+    Map* map = fetch_map_data();
+    if (map == NULL)
+        return -1;
+
+    SearchContext context
+            = {.map = map,
+               .paths = NULL,
+               .config = mapconfig,
+               .src = -1,
+               .res = -1,
+               .input_points_size = mapconfig->points->size,
+               .input_points = calloc(mapconfig->points->size, sizeof(int))};
+
+    if (context.input_points == NULL) {
+        printf("[ОШИБКА] Невозможно выделить память под массив "
+               "идентификаторов.\n");
+        printf("Недостаточно ОЗУ для работы программы.\n.");
+        map_destroy(map);
+        return -1;
+    }
+
+    // Конвертируем названия населенных пунктов в айдиншики + проверяем
+    // на правильность ввода.
+    if (pointlist_to_idarray(
+                mapconfig, context.input_points, context.map->hashtable)
+        == -1) {
+        map_destroy(map);
+        return -1;
+    }
+
+    context.paths = def_path_contain_construct();
+    context.src = context.input_points[0];
+    context.res = context.input_points[context.input_points_size - 1];
+
+    PathsContain* search_result = search_all_paths(&context);
+    printf("Обход завершен.\n");
+
+    free(context.input_points);
+    context.input_points = NULL;
+
+    if (search_result == NULL) {
+        printf("Не получилось проложить маршрут.\n");
+        map_destroy(map);
+        destroy_paths_contain(context.paths);
+        return -1;
+    }
+
+    // Выводим информацию о лучшем пути
+    print_path(best_path(context.paths), context.map->hashtable, 1);
+
+    // Выводим информацию об альтернативных путях
+    if (mapconfig->altways_count > 0)
+        alternative(&context);
+
+    // Path* merge_path = path_with_return(path->first, path->first->next);
+    // if (!merge_path)
+    //     puts("oh noo()");
+
+    map_destroy(map);
+    destroy_paths_contain(context.paths);
 
     return 0;
 }
