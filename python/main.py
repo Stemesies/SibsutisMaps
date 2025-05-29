@@ -2,6 +2,22 @@
 from tkinter import *
 from tkinter import ttk
 
+class AutocompleteCombobox(ttk.Combobox):
+    def __init__(self, parent, values, **kwargs):
+        super().__init__(parent, **kwargs)
+        self.values = values
+        self.bind("<KeyRelease>", self.on_keyrelease)
+        self['values'] = self.values
+    
+    def on_keyrelease(self, event):
+        typed = self.get().lower()
+        
+        matches = [value for value in self.values if typed in value.lower()]
+        self['values'] = matches
+        
+        if (typed and matches): 
+            self.event_generate('<Down>')
+
 class Window(Tk):
     def __init__(self):
         super().__init__()
@@ -15,8 +31,8 @@ class Window(Tk):
         self.title("Основное окно")
         self.geometry("550x200")
 
-        self.src = StringVar(value=self.cities_list[0])
-        self.dest = StringVar(value=self.cities_list[0])
+        self.src = StringVar()
+        self.dest = StringVar()
         self.priority = StringVar(value="--quickest")
 
 
@@ -26,14 +42,14 @@ class Window(Tk):
         src_frame = Frame(top_frame)
         src_frame.pack(side=LEFT, expand=True, fill=X, padx=(0, 8))
         Label(src_frame, text="Источник:").pack(anchor=W)
-        self.src_box = ttk.Combobox(src_frame, textvariable=self.src, values=self.cities_list, state="readonly")
+        self.src_box = AutocompleteCombobox(src_frame, textvariable=self.src, values=self.cities_list)
         self.src_box.pack(fill=X)
         self.src_box.bind("<<ComboboxSelected>>", self.check)
 
         dest_frame = Frame(top_frame)
         dest_frame.pack(side=LEFT, expand=True, fill=X, padx=(8, 8))
         Label(dest_frame, text="Назначение:").pack(anchor=W)
-        self.dest_box = ttk.Combobox(dest_frame, textvariable=self.dest, values=self.cities_list, state="readonly")
+        self.dest_box = AutocompleteCombobox(dest_frame, textvariable=self.dest, values=self.cities_list)
         self.dest_box.pack(fill=X)
         self.dest_box.bind("<<ComboboxSelected>>", self.check)
 
