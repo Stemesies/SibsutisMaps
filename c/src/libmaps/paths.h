@@ -85,4 +85,7 @@ PathNode* pop_node(Path* path);
  * находимся в этой вершине.)*/
 Path* path_with_return(const Path* path_to, Path* path_back);
 
+/*Удаление вершины с конца пути*/
+void pop_back(Path* path);
+
 #endif

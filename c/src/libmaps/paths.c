@@ -287,3 +287,15 @@ Path* path_with_return(const Path* path_to, Path* path_back)
 
     return res;
 }
+
+void pop_back(Path* path)
+{
+    PathNode* pop = path->tail;
+    for (PathNode* curr = path->head; curr != NULL; curr = curr->next) {
+        if (curr->next == pop) {
+            path->tail = curr;
+            destroy_node(pop);
+            break;
+        }
+    }
+}
