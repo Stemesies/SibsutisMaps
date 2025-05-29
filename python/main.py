@@ -40,11 +40,11 @@ class Window(Tk):
         priority_frame = Frame(top_frame)
         priority_frame.pack(side=LEFT, expand=True, fill=X, padx=0, pady=(0, 0))
         Label(priority_frame, text="Приоритет:").pack(anchor=W)
-        self.quickest_btn = ttk.Radiobutton(priority_frame, text=quickest_text, value="--quickest", variable=self.priority, command=self.check)
+        self.quickest_btn = ttk.Radiobutton(priority_frame, text=quickest_text, value="--quickest", variable=self.priority)
         self.quickest_btn.pack(side=TOP, expand=True, fill=X)
-        self.longest_btn = ttk.Radiobutton(priority_frame, text=longest_text, value="--longest", variable=self.priority, command=self.check)
+        self.longest_btn = ttk.Radiobutton(priority_frame, text=longest_text, value="--longest", variable=self.priority)
         self.longest_btn.pack(side=TOP, expand=True, fill=X)
-        self.shortest_btn = ttk.Radiobutton(priority_frame, text=shortest_text, value="--shortest", variable=self.priority, command=self.check)
+        self.shortest_btn = ttk.Radiobutton(priority_frame, text=shortest_text, value="--shortest", variable=self.priority)
         self.shortest_btn.pack(side=TOP, expand=True, fill=X)
 
         bottom_frame = Frame(self)
@@ -55,14 +55,16 @@ class Window(Tk):
         self.result = None
  
     def check(self, event=None):
-        if self.src.get() == self.dest.get():
+        if ((self.src.get() not in self.cities_list)\
+             or (self.dest.get() not in self.cities_list)\
+                  or (self.src.get() == self.dest.get())):
             self.submit_btn.config(state=DISABLED)
             return
         
         self.submit_btn.config(state=NORMAL)
 
     def close(self):
-        self.result = [self.src.get(), self.dest.get()]
+        self.result = [self.src.get(), self.dest.get(), self.priority.get()]
         self.destroy()
 
     def get_data(self):
