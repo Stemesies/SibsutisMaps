@@ -8,25 +8,34 @@ class Window(Tk):
  
         # конфигурация окна
         self.title("Основное окно")
-        self.geometry("250x200")
+        self.geometry("450x200")
 
         self.src = StringVar()
         self.dest = StringVar()
- 
-        self.cities_list = ["Test1", "Test2"]
+        self.cities_list = ["Stantsionno-Oyashinskiy", "Test2"]
 
-        self.src_box = ttk.Combobox(self, textvariable=self.src, values=self.cities_list, state="readonly")
-        self.src_box.pack(anchor=NW, padx=5, pady=5)
+        top_frame = Frame(self)
+        top_frame.pack(pady=(10, 5), padx=10, fill=X)
+
+        src_frame = Frame(top_frame)
+        src_frame.pack(side=LEFT, expand=True, fill=X, padx=(0, 8))
+        Label(src_frame, text="Источник:").pack(anchor=W)
+        self.src_box = ttk.Combobox(src_frame, textvariable=self.src, values=self.cities_list, state="readonly")
+        self.src_box.pack(fill=X)
         self.src_box.bind("<<ComboboxSelected>>", self.check)
 
-        self.dest_box = ttk.Combobox(self, textvariable=self.dest, values=self.cities_list, state="readonly")
-        self.dest_box.pack(anchor=NW, padx=5, pady=5)
+        dest_frame = Frame(top_frame)
+        dest_frame.pack(side=RIGHT, expand=True, fill=X, padx=(8, 0))
+        Label(dest_frame, text="Назначение:").pack(anchor=W)
+        self.dest_box = ttk.Combobox(dest_frame, textvariable=self.dest, values=self.cities_list, state="readonly")
+        self.dest_box.pack(fill=X)
         self.dest_box.bind("<<ComboboxSelected>>", self.check)
 
-        ttk.Button(self, text="Подтвердить", command=self.close).pack(pady=10)
+        bottom_frame = Frame(self)
+        bottom_frame.pack(pady=(10, 15))
+        ttk.Button(bottom_frame, text="Подтвердить", command=self.close).pack(pady=10)
 
         self.result = None
-        
  
     def check(self, event):
         pass
