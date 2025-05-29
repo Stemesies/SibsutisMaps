@@ -133,15 +133,17 @@ class MainWindow(Tk):
         self.result = None
  
     def check(self, event=None):
-        if ((self.src.get() not in self.cities_list)\
-             or (self.dest.get() not in self.cities_list)\
-                  or (self.src.get() == self.dest.get())):
-            self.submit_btn.config(state=DISABLED)
-            self.alts_btn.config(state=DISABLED)
+        src = self.src.get()
+        dest = self.dest.get()
+        cities = self.cities_list
+
+        if (src in cities ) and (dest in cities) and (src != dest):
+            self.submit_btn.config(state=NORMAL)
+            self.alts_btn.config(state=NORMAL)
             return
         
-        self.submit_btn.config(state=NORMAL)
-        self.alts_btn.config(state=NORMAL)
+        self.submit_btn.config(state=DISABLED)
+        self.alts_btn.config(state=DISABLED)
 
     def close(self):
         self.result = [self.src.get()]
