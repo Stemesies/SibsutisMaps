@@ -5,6 +5,7 @@ from tkinter import ttk
 class Window(Tk):
     def __init__(self):
         super().__init__()
+        self.cities_list = ["Stantsionno-Oyashinskiy", "Test2"]
  
         quickest_text = "Быстрый"
         longest_text = "Длинный"
@@ -12,13 +13,12 @@ class Window(Tk):
 
         # конфигурация окна
         self.title("Основное окно")
-        self.geometry("750x200")
+        self.geometry("550x200")
 
-        self.src = StringVar()
-        self.dest = StringVar()
-        self.priority = StringVar()
+        self.src = StringVar(value=self.cities_list[0])
+        self.dest = StringVar(value=self.cities_list[0])
+        self.priority = StringVar(value="--quickest")
 
-        self.cities_list = ["Stantsionno-Oyashinskiy", "Test2"]
 
         top_frame = Frame(self)
         top_frame.pack(pady=(10, 5), padx=10, fill=X)
@@ -38,19 +38,28 @@ class Window(Tk):
         self.dest_box.bind("<<ComboboxSelected>>", self.check)
 
         priority_frame = Frame(top_frame)
-        priority_frame.pack(side=LEFT, expand=True, fill=X, padx=0)
+        priority_frame.pack(side=LEFT, expand=True, fill=X, padx=0, pady=(0, 0))
         Label(priority_frame, text="Приоритет:").pack(anchor=W)
-        self.quickest_btn = ttk.Radiobutton(priority_frame, text=quickest_text, value="--quickest", variable=self.priority)
+        self.quickest_btn = ttk.Radiobutton(priority_frame, text=quickest_text, value="--quickest", variable=self.priority, command=self.check)
         self.quickest_btn.pack(side=TOP, expand=True, fill=X)
+        self.longest_btn = ttk.Radiobutton(priority_frame, text=longest_text, value="--longest", variable=self.priority, command=self.check)
+        self.longest_btn.pack(side=TOP, expand=True, fill=X)
+        self.shortest_btn = ttk.Radiobutton(priority_frame, text=shortest_text, value="--shortest", variable=self.priority, command=self.check)
+        self.shortest_btn.pack(side=TOP, expand=True, fill=X)
 
         bottom_frame = Frame(self)
         bottom_frame.pack(pady=(10, 15))
-        ttk.Button(bottom_frame, text="Подтвердить", command=self.close).pack(pady=10)
+        self.submit_btn = ttk.Button(bottom_frame, text="Подтвердить", state=DISABLED, command=self.close)
+        self.submit_btn.pack(pady=10)
 
         self.result = None
  
-    def check(self, event):
-        pass
+    def check(self, event=None):
+        if self.src.get() == self.dest.get():
+            self.submit_btn.config(state=DISABLED)
+            return
+        
+        self.submit_btn.config(state=NORMAL)
 
     def close(self):
         self.result = [self.src.get(), self.dest.get()]
