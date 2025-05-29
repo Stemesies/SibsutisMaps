@@ -45,14 +45,15 @@ void map_destroy(Map* map);
 Graph* graph_create(int n);
 void graph_destroy(Graph* graph);
 
+HashTable* hashtab_create();
+void hashtab_destroy(HashTable* table);
+
 /*Добавляет в граф graph ребро {ij} с приоритетом {speed, len}*/
 void add_edge(Graph* graph, unsigned int i, unsigned int j, int len, int speed);
 
 /*Хэш-функция для вычисления индекса вершины в таблице. Бывают коллизии! Не
  * используйте хэш-функцию для поиска, для этого есть lookup!*/
 unsigned int ELFHash(char* s);
-HashTable* hashtab_create();
-void hashtab_destroy(HashTable* table);
 
 /*Добавление вершины в таблицу по ключу. Для разрешения коллизий используется
  * метод открытой адресации.*/

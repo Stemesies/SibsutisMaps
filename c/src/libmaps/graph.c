@@ -169,9 +169,9 @@ void graph_init(Graph* graph, HashTable* table, FILE* fp)
         fscanf(fp, "%s %s %d %d", str1, str2, &path, &speed);
 
         v_1 = (!is_in_table(table, str1)) ? hashtab_add(table, str1)
-                                         : hashtab_lookup(table, str1);
+                                          : hashtab_lookup(table, str1);
         v_2 = (!is_in_table(table, str2)) ? hashtab_add(table, str2)
-                                         : hashtab_lookup(table, str2);
+                                          : hashtab_lookup(table, str2);
 
         add_edge(graph, v_1, v_2, path, speed);
         fseek(fp, 1, SEEK_CUR);

@@ -233,7 +233,7 @@ bool path_contains_all(Path* path, int* points, int points_count)
         return true;
 
     int contains_points = 1;
-    
+
     for (int i = 0; i < points_count; i++) {
         if (!is_visited(path, points[i]))
             contains_points = 0;
@@ -249,10 +249,9 @@ bool path_fits_limit(Path* path, int limit)
 
     int i = 0;
     for (PathNode* pn = path->head; pn != NULL; pn = pn->next) {
-        if (i++ >= limit+1) {
+        if (i++ >= limit + 1) {
             return false;
         }
-            
     }
     return true;
 }

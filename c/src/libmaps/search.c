@@ -60,13 +60,14 @@ PathsContain* search_all_paths(SearchContext* context)
      * указывают вникуда*/
     free(supp);
 
-    if(context->paths->count == 0) {
+    if (context->paths->count == 0) {
         destroy_paths_contain(context->paths);
         context->paths = NULL;
         return NULL;
     }
     // Сортируем найденные пути
-    PathsContain* sorted_paths = sort_paths(context->paths, context->config->priority);
+    PathsContain* sorted_paths
+            = sort_paths(context->paths, context->config->priority);
     destroy_paths_contain(context->paths);
     context->paths = sorted_paths;
 
@@ -86,9 +87,8 @@ void alternative(SearchContext* context)
 
     int count = 0;
     Path* a = best_path(context->paths);
-    printf("Альтернативные пути %s - %s:\n",
-           c_table[c_src].key,
-           c_table[c_res].key);
+    PathsContain* alt_paths = def_path_contain_construct();
+
     for (Path* curr = c_paths->first; curr != NULL; curr = curr->next) {
         if (curr->tail->num == c_res) {
             // Лучший путь не учитываем, как альтернативный
@@ -99,19 +99,19 @@ void alternative(SearchContext* context)
             case LONGEST:
                 if (((double)a->path / (double)curr->path) <= rate) {
                     count++;
-                    print_path(curr, c_table, count);
+                    insert_in_path_contain(alt_paths, curr);
                 }
                 break;
             case SHORTEST:
                 if (((double)curr->path / (double)a->path) <= rate) {
                     count++;
-                    print_path(curr, c_table, count);
+                    insert_in_path_contain(alt_paths, curr);
                 }
                 break;
             case QUICKEST:
                 if ((curr->time / a->time) <= rate) {
                     count++;
-                    print_path(curr, c_table, count);
+                    insert_in_path_contain(alt_paths, curr);
                 }
                 break;
 
@@ -124,4 +124,18 @@ void alternative(SearchContext* context)
         if (count >= alt_limit)
             break;
     }
+
+    if (alt_paths->count == 0) {
+        printf("Альтернативных путей не найдено.\n");
+    } else {
+        printf("Альтернативные пути %s - %s:\n",
+               c_table[c_src].key,
+               c_table[c_res].key);
+        count = 0;
+        for (Path* curr = alt_paths->first; curr != NULL; curr = curr->next) {
+            putchar('\t');
+            print_path(curr, c_table, ++count);
+        }
+    }
+    destroy_paths_contain(alt_paths);
 }
