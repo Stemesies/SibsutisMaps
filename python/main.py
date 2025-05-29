@@ -36,9 +36,10 @@ class Window(Tk):
         self.priority = StringVar(value="--quickest")
 
         self.limit = StringVar(value=0)
+        self.alts = StringVar(value=0)
 
         top_frame = Frame(self)
-        top_frame.pack(pady=(10, 5), padx=10, fill=X)
+        top_frame.pack(pady=(10, 5), padx=8, fill=X)
 
         src_frame = Frame(top_frame)
         src_frame.pack(side=LEFT, expand=True, fill=X, padx=(0, 8))
@@ -57,7 +58,7 @@ class Window(Tk):
         self.dest_box.bind("<KeyRelease>", self.check)
 
         priority_frame = Frame(top_frame)
-        priority_frame.pack(side=LEFT, expand=True, fill=X, padx=0, pady=(0, 0))
+        priority_frame.pack(side=LEFT, expand=True, fill=X, padx=0)
         Label(priority_frame, text="Приоритет:").pack(anchor=W)
         self.quickest_btn = ttk.Radiobutton(priority_frame, text=quickest_text, value="--quickest", variable=self.priority)
         self.quickest_btn.pack(side=TOP, expand=True, fill=X)
@@ -67,14 +68,19 @@ class Window(Tk):
         self.shortest_btn.pack(side=TOP, expand=True, fill=X)
 
         middle_frame = Frame(self)
-        middle_frame.pack(pady=(10, 15), fill=X)
+        middle_frame.pack(pady=(10, 15), padx=8, fill=X)
         
         limit_frame = Frame(middle_frame)
-        limit_frame.pack(side=LEFT, expand=True, fill=X, padx=0, pady=(0, 0))
-        Label(limit_frame, text="Кол-во промеж. точек").pack(anchor=W)
+        limit_frame.pack(side=LEFT, expand=True, fill=X, padx=(0, 8))
+        Label(limit_frame, text="--limit").pack(anchor=W)
         limit_spinbox = ttk.Spinbox(limit_frame, from_=0.0, to=20.0, state="readonly", textvariable=self.limit)
-        limit_spinbox.pack(anchor=W)
-        
+        limit_spinbox.pack(fill=X)
+
+        alts_frame = Frame(middle_frame)
+        alts_frame.pack(side=LEFT, expand=True, fill=X, padx=(8, 8))
+        Label(alts_frame, text="-alts").pack(anchor=W)
+        alts_spinbox = ttk.Spinbox(alts_frame, from_=0.0, to=20.0, state="readonly", textvariable=self.alts)
+        alts_spinbox.pack(fill=X)
 
         bottom_frame = Frame(self)
         bottom_frame.pack(pady=(5, 15))
@@ -93,7 +99,7 @@ class Window(Tk):
         self.submit_btn.config(state=NORMAL)
 
     def close(self):
-        self.result = [self.src.get(), self.dest.get(), self.priority.get(), self.limit.get()]
+        self.result = [self.src.get(), self.dest.get(), self.priority.get(), self.limit.get(), self.alts.get()]
         self.destroy()
 
     def get_data(self):
