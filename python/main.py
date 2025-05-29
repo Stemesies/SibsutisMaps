@@ -2,6 +2,7 @@
 from pathlib import Path
 from tkinter import *
 from tkinter import ttk
+import subprocess
 
 class AutocompleteCombobox(ttk.Combobox):
     def __init__(self, parent, values, **kwargs):
@@ -126,7 +127,7 @@ class MainWindow(Tk):
 
         bottom_frame = Frame(self, bg="#008000")
         bottom_frame.pack(pady=(5, 15))
-        self.submit_btn = ttk.Button(bottom_frame, text="Подтвердить", state=DISABLED, command=self.close)
+        self.submit_btn = ttk.Button(bottom_frame, text="Подтвердить", state=DISABLED, command=self.on_submit)
         self.submit_btn.pack(side=LEFT, expand=True, fill=X, padx=6, pady=10)
         self.alts_btn = ttk.Button(bottom_frame, text="Добавить точку в маршрут", state=DISABLED, command=self.add_alts)
         self.alts_btn.pack(side=RIGHT, expand=True, fill=X, padx=6, pady=10)
@@ -146,7 +147,7 @@ class MainWindow(Tk):
         self.submit_btn.config(state=DISABLED)
         self.alts_btn.config(state=DISABLED)
 
-    def close(self):
+    def on_submit(self):
         self.result = [self.src.get()]
 
         for city in self.alts_cities:
@@ -154,7 +155,25 @@ class MainWindow(Tk):
                 self.result.append(city)
 
         self.result = self.result + [self.dest.get(), self.priority.get(), "--limit", self.limit.get(), "-alts", self.alts.get(), "-altf", self.altf.get()]
-        self.destroy()
+
+        repo_path = Path(__file__).parent.parent
+        bin_file_path = repo_path / "c" / "bin" / "maps"
+
+        print(bin_file_path)
+        print([bin_file_path, *self.result])
+
+        process = subprocess.run(
+            [bin_file_path, *self.result],
+            capture_output=True,
+            text=True
+        )
+
+        print(process.stdout)
+        print("-" * 30)
+        lines = [line for line in process.stdout.split("\n")][1:]
+        lines[0] = "Лучший путь" + lines[0][6:]
+        result = "\n".join(lines)
+        print(result)
     
     def add_alts(self):
         AltsWindow(self, self.cities_list, self.alts_cities)
