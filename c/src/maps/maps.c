@@ -40,19 +40,14 @@ int main()
     graph_init(graph, table, fp);
     // show_graph(7, graph->graph_matrix);
 
-    // Dfs(hashtab_lookup(table, "Novosibirsk"),
-    //     hashtab_lookup(table, "Koltsovo"),
-    //     path,
-    //     graph);
-
-    // Dfs(0, 5, path, graph);
-    // Bfs(0, 5, path, 7, graph->graph_matrix);
-    Path* curr = def_path_construct();
+    Path* curr = def_path_construct(hashtab_lookup(table, "Novosibirsk"));
     Dfs(hashtab_lookup(table, "Novosibirsk"),
         hashtab_lookup(table, "Karasuk"),
         graph,
         curr,
         path);
+
+    show_paths(path, table);
 
     // int count = 0;
     // for (Path* curr = path->first; curr != NULL; curr = curr->next) {
@@ -69,23 +64,17 @@ int main()
     //     printf(": %d км, %.2lf ч\n", curr->path, curr->time);
     // }
 
-    show_paths(path, table, 5);
-
-    // PathsContain* new_paths
-    // = correct_paths(path, hashtab_lookup(table, "Koltsovo"));
-
     // FIXME Добавить проверку на необходимость поиска n альтернативных путей
-    // PathsContain* sorted_paths = NULL;
-    // if (!sorted_paths)
-    //     sorted_paths = sort_paths(new_paths, SHORTEST);
+    // PathsContain* new_paths
+    //         = correct_paths(path, hashtab_lookup(table, "Novosibirsk"));
+    // PathsContain* sorted_paths = sort_paths(new_paths, SHORTEST);
+    // show_paths(sorted_paths, table);
 
-    // Path* merge_path
-    //         = path_with_return(sorted_paths->first,
-    //         sorted_paths->first->next);
+    Path* merge_path = path_with_return(path->first, path->first->next);
     // if (!merge_path)
     //     puts("oh noo()");
 
-    // print_path(merge_path, table, 5);
+    print_path(merge_path, table, 5);
 
     // alternative(
     //         new_paths,

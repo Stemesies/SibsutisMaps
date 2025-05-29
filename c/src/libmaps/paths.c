@@ -4,11 +4,11 @@
  * представляет собой список путей.*/
 #include <libmaps/paths.h>
 
-PathNode* def_node_construct()
+PathNode* def_node_construct(int src)
 {
     PathNode* node_list = malloc(sizeof(PathNode));
     node_list->edge = calloc(1, sizeof(Edge));
-    node_list->num = 0;
+    node_list->num = src;
     node_list->next = NULL;
     return node_list;
 }
@@ -71,10 +71,10 @@ PathNode* queue_take(Queue* queue)
     return NULL;
 }
 
-Path* def_path_construct()
+Path* def_path_construct(int src)
 {
     Path* list = malloc(sizeof(Path));
-    list->head = NULL;
+    list->head = def_node_construct(src);
     list->tail = NULL;
     list->next = NULL;
     list->path = 0;
@@ -124,13 +124,12 @@ void insert_in_path(Path* list, int num, Edge* edge)
     if (!list) {
         exit(EXIT_FAILURE);
     }
-    PathNode* insert = def_node_construct();
+    PathNode* insert = def_node_construct(num);
     insert->edge->len = edge->len;
     insert->edge->speed = edge->speed;
-    insert->num = num;
 
-    if (list->head == NULL) {
-        list->head = insert;
+    if (list->head->next == NULL) {
+        list->head->next = insert;
         list->tail = insert;
     } else {
         list->tail->next = insert;
@@ -204,7 +203,7 @@ void print_path(const Path* path, const HashTable* table, int count)
     printf(": %d км, %.2lf ч\n", path->path, path->time);
 }
 
-void show_paths(const PathsContain* paths, const HashTable* table, int res)
+void show_paths(const PathsContain* paths, const HashTable* table)
 {
     int count = 0;
     for (Path* curr = paths->first; curr != NULL; curr = curr->next) {
@@ -228,11 +227,11 @@ int compare_paths(Path* a, Path* b)
     return count;
 }
 
-PathsContain* correct_paths(PathsContain* paths, int res)
+PathsContain* correct_paths(PathsContain* paths, int src)
 {
     PathsContain* res_paths = def_path_contain_construct();
     for (Path* curr = paths->first; curr != NULL; curr = curr->next) {
-        if (curr->tail->num == res) {
+        if (curr->head->num == src) {
             insert_in_path_contain(res_paths, curr);
         }
     }

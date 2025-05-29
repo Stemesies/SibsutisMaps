@@ -23,8 +23,7 @@ void Dfs(int src, int res, Graph* graph, Path* current_path, PathsContain* all)
 
     for (int i = 0; i < graph->n_verticles; i++) {
         if (graph->graph_matrix[src][i].len > 0 && !(graph->visited[i])) {
-            // if (current_path->head->next != NULL)
-            insert_in_path(current_path, src, &(graph->graph_matrix[src][i]));
+            insert_in_path(current_path, i, &(graph->graph_matrix[src][i]));
             Dfs(i, res, graph, current_path, all);
         }
     }

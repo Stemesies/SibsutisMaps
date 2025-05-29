@@ -36,14 +36,14 @@ typedef struct queue {
 
 /*Создаёт узел пути, инициализируя расстояние и путь нулями (так как вершина -
  * начальная), а номер вершины - переданным значением src.*/
-PathNode* def_node_construct();
+PathNode* def_node_construct(int src);
 void destroy_node(PathNode* node);
 Queue* queue_create();
 void destroy_queue(Queue* a);
 void queue_add(Queue* queue, int num, Edge* edge);
 PathNode* queue_take(Queue* queue);
 /*Создаёт путь, помещая в него изначальную вершину.*/
-Path* def_path_construct();
+Path* def_path_construct(int src);
 void destroy_path(Path* a);
 PathsContain* def_path_contain_construct();
 void destroy_paths_contain(PathsContain* paths);
@@ -63,8 +63,7 @@ Path* copy_path(const Path* src, int num);
 bool is_visited(Path* path, int num);
 
 void print_path(const Path* path, const HashTable* table, int count);
-void show_paths(
-        const PathsContain* paths, const HashTable* is_in_table, int res);
+void show_paths(const PathsContain* paths, const HashTable* is_in_table);
 
 /*Возвращает количество вершин из a, которых нет в b. Может быть полезно при
 реализации пути с возвратом в исходную точку, чтобы не идти по одинаковому
