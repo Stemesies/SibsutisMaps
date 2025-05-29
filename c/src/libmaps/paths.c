@@ -203,7 +203,7 @@ void print_path(const Path* path, const HashTable* table, int count)
     printf(": %d км, %.2lf ч\n", path->path, path->time);
 }
 
-void show_paths(const PathsContain* paths, const HashTable* table, int res)
+void show_paths(const PathsContain* paths, const HashTable* table)
 {
     int count = 0;
     for (Path* curr = paths->first; curr != NULL; curr = curr->next) {
@@ -285,4 +285,20 @@ Path* path_with_return(const Path* path_to, Path* path_back)
     res->tail = tail;
 
     return res;
+}
+
+void pop_back(Path* path)
+{
+    PathNode* pop = path->tail;
+    for (PathNode* curr = path->head; curr != NULL; curr = curr->next) {
+        if (curr->next == path->tail) {
+            path->tail = curr;
+            curr->next = NULL;
+            path->path -= pop->edge->len;
+            path->time -= (double)((double)pop->edge->len
+                                   / (double)pop->edge->speed);
+            break;
+        }
+    }
+    destroy_node(pop);
 }

@@ -36,7 +36,8 @@ CTEST(test_correct_paths, validate)
             }
     }
 
-    Dfs(0, 5, path, graph);
+    Path* supp = def_path_construct(0);
+    Dfs(0, 5, graph, supp, path);
     PathsContain* new_paths = correct_paths(path, 5);
 
     ASSERT_EQUAL(5, new_paths->first->tail->num);
@@ -45,6 +46,7 @@ CTEST(test_correct_paths, validate)
 
     graph_destroy(graph);
     destroy_paths_contain(new_paths);
+    free(supp);
 }
 
 CTEST(test_sort, validate)
@@ -81,7 +83,8 @@ CTEST(test_sort, validate)
             }
     }
 
-    Dfs(0, 5, path, graph);
+    Path* supp = def_path_construct(0);
+    Dfs(0, 5, graph, supp, path);
     PathsContain* new_paths = correct_paths(path, 5);
 
     PathsContain* sorted_paths1 = sort_paths(new_paths, SHORTEST);
@@ -98,4 +101,5 @@ CTEST(test_sort, validate)
     destroy_paths_contain(sorted_paths1);
     destroy_paths_contain(sorted_paths2);
     destroy_paths_contain(sorted_paths3);
+    free(supp);
 }

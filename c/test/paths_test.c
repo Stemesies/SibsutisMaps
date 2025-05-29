@@ -173,7 +173,7 @@ CTEST(pop_test, path)
     destroy_node(pop);
 }
 
-CTEST(1, 2)
+CTEST(test_paths, merge)
 {
     Path* to = def_path_construct(0);   // путь: 0->3->4->5
     Path* back = def_path_construct(9); // путь: 9->1->2->5
@@ -222,4 +222,33 @@ CTEST(1, 2)
     destroy_path(to);
     destroy_path(back);
     destroy_path(res);
+}
+
+CTEST(pop_test, back)
+{
+    Path* back = def_path_construct(9); // путь: 9->1->2->5
+
+    Edge* edge_1 = calloc(1, sizeof(Edge));
+    edge_1->len = LEN;
+    edge_1->speed = SPEED;
+    Edge* edge_2 = calloc(1, sizeof(Edge));
+    edge_2->len = 3;
+    edge_2->speed = 60;
+    Edge* edge_3 = calloc(1, sizeof(Edge));
+    edge_3->len = 17;
+    edge_3->speed = 47;
+    insert_in_path(back, 1, edge_1);
+    insert_in_path(back, 2, edge_2);
+    insert_in_path(back, 5, edge_3);
+
+    ASSERT_EQUAL(back->tail->num, 5);
+    pop_back(back);
+    ASSERT_EQUAL(back->tail->num, 2);
+
+    destroy_node(pop_node(back));
+
+    destroy_path(back);
+    free(edge_1);
+    free(edge_2);
+    free(edge_3);
 }

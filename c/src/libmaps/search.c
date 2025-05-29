@@ -1,47 +1,45 @@
 #include <libmaps/search.h>
 
-void Dfs(int src, int res, PathsContain* path, Graph* graph)
+void Dfs(int src, int res, Graph* graph, Path* current_path, PathsContain* all)
 {
-    if (src == res)
+    if (graph->visited[src] == true)
         return;
 
-    if (!path) {
-        exit(EXIT_FAILURE);
-    }
     graph->visited[src] = true;
+
+    /*Если входная вершина равна результирующей и путь заполнен, вставляем в
+     * конец итоговую вершину и удаляем её и предыдущую с конца списка.*/
+    if (src == res) {
+        insert_in_path(
+                current_path,
+                res,
+                &(graph->graph_matrix[res][current_path->tail->num]));
+        insert_in_path_contain(all, current_path);
+        graph->visited[src] = false;
+        pop_back(current_path);
+        pop_back(current_path);
+        return;
+    }
+
     for (int i = 0; i < graph->n_verticles; i++) {
-        if (graph->graph_matrix[src][i].len > 0) {
-            if (!(graph->visited[i])) {
-                Path* new_list = NULL;
-
-                if (graph->verticles[src] > 0) {
-                    new_list = copy_path(path->last, src);
-                    insert_in_path(new_list, i, &(graph->graph_matrix[src][i]));
-                    insert_in_path_contain(path, new_list);
-                } else {
-                    if (!is_visited(path->last, i)) {
-                        if (path->count == 0) {
-                            new_list = def_path_construct(src);
-                            insert_in_path(
-                                    new_list,
-                                    i,
-                                    &(graph->graph_matrix[src][i]));
-                            insert_in_path_contain(path, new_list);
-                        } else
-                            insert_in_path(
-                                    path->last,
-                                    i,
-                                    &(graph->graph_matrix[src][i]));
-                    }
-                }
-
-                graph->verticles[src]++;
-                Dfs(i, res, path, graph);
-                graph->visited[i] = false;
-                destroy_path(new_list);
-            }
+        if (graph->graph_matrix[src][i].len > 0 && !(graph->visited[i])) {
+            insert_in_path(current_path, i, &(graph->graph_matrix[src][i]));
+            Dfs(i, res, graph, current_path, all);
         }
     }
+    pop_back(current_path);
+    graph->visited[src] = false;
+}
+
+PathsContain* SearchAllPaths(int src, int res, Graph* graph)
+{
+    PathsContain* all_paths = def_path_contain_construct();
+    Path* supp = def_path_construct(src);
+    Dfs(src, res, graph, supp, all_paths);
+    /*Очищаем не весь путь, а только его оболочку, потому что узлы его очищены и
+     * указывают вникуда*/
+    free(supp);
+    return all_paths;
 }
 
 void Bfs(int src, int res, PathsContain* path, size_t n, Edge** graph)
