@@ -3,7 +3,6 @@
 
 int main()
 {
-    PathsContain* path = def_path_contain_construct();
     Graph* graph = graph_create(HASHTABSIZE);
     HashTable* table = hashtab_create();
     FILE* fp = fopen("input", "r");
@@ -40,12 +39,12 @@ int main()
     graph_init(graph, table, fp);
     // show_graph(7, graph->graph_matrix);
 
-    Path* curr = def_path_construct(hashtab_lookup(table, "Novosibirsk"));
-    Dfs(hashtab_lookup(table, "Novosibirsk"),
-        hashtab_lookup(table, "Karasuk"),
-        graph,
-        curr,
-        path);
+    // Path* curr = def_path_construct(hashtab_lookup(table, "Novosibirsk"));
+    // Dfs(hashtab_lookup(table, "Novosibirsk"),
+    //     hashtab_lookup(table, "Karasuk"),
+    //     graph,
+    //     curr,
+    //     path);
 
     // int count = 0;
     // for (Path* curr = path->first; curr != NULL; curr = curr->next) {
@@ -65,6 +64,10 @@ int main()
     // FIXME Добавить проверку на необходимость поиска n альтернативных путей
     // PathsContain* new_paths
     //         = correct_paths(path, hashtab_lookup(table, "Novosibirsk"));
+    PathsContain* path = SearchAllPaths(
+            hashtab_lookup(table, "Novosibirsk"),
+            hashtab_lookup(table, "Karasuk"),
+            graph);
     PathsContain* sorted_paths = sort_paths(path, QUICKEST);
     show_paths(sorted_paths, table);
     // show_paths(path, table);
@@ -94,10 +97,7 @@ int main()
     // printf(": %d км, %.2lf ч\n", a->path, a->time);
     graph_destroy(graph);
     hashtab_destroy(table);
-    // destroy_paths_contain(new_paths);
     destroy_paths_contain(sorted_paths);
-
-    free(curr);
     destroy_path(merge_path);
     destroy_paths_contain(path);
     fclose(fp);

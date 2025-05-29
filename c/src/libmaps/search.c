@@ -31,6 +31,17 @@ void Dfs(int src, int res, Graph* graph, Path* current_path, PathsContain* all)
     graph->visited[src] = false;
 }
 
+PathsContain* SearchAllPaths(int src, int res, Graph* graph)
+{
+    PathsContain* all_paths = def_path_contain_construct();
+    Path* supp = def_path_construct(src);
+    Dfs(src, res, graph, supp, all_paths);
+    /*Очищаем не весь путь, а только его оболочку, потому что узлы его очищены и
+     * указывают вникуда*/
+    free(supp);
+    return all_paths;
+}
+
 void Bfs(int src, int res, PathsContain* path, size_t n, Edge** graph)
 {
     bool* visited = calloc(n, sizeof(bool));

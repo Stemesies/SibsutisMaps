@@ -21,4 +21,7 @@ void alternative(
         double rate,
         Priority what_path);
 
+/*Поиск всех путей (вызывает Dfs)*/
+PathsContain* SearchAllPaths(int src, int res, Graph* graph);
+
 #endif
