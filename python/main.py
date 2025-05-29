@@ -21,7 +21,7 @@ class AutocompleteCombobox(ttk.Combobox):
 class Window(Tk):
     def __init__(self):
         super().__init__()
-        self.cities_list = ["Stantsionno-Oyashinskiy", "Test2"]
+        self.cities_list = ["Stantsionno-Oyashinskiy", "Test2", "Тест3"]
  
         quickest_text = "Быстрый"
         longest_text = "Длинный"
@@ -48,7 +48,7 @@ class Window(Tk):
         self.src_box = AutocompleteCombobox(src_frame, textvariable=self.src, values=self.cities_list)
         self.src_box.pack(fill=X)
         self.src_box.bind("<<ComboboxSelected>>", self.check)
-        self.src_box.bind("<KeyRelease>", self.check)
+        self.src_box.bind("<KeyRelease>", self.check, add='+')
 
         dest_frame = Frame(top_frame)
         dest_frame.pack(side=LEFT, expand=True, fill=X, padx=(8, 8))
@@ -56,7 +56,7 @@ class Window(Tk):
         self.dest_box = AutocompleteCombobox(dest_frame, textvariable=self.dest, values=self.cities_list)
         self.dest_box.pack(fill=X)
         self.dest_box.bind("<<ComboboxSelected>>", self.check)
-        self.dest_box.bind("<KeyRelease>", self.check)
+        self.dest_box.bind("<KeyRelease>", self.check, add='+')
 
         priority_frame = Frame(top_frame)
         priority_frame.pack(side=LEFT, expand=True, fill=X, padx=0)
@@ -106,7 +106,7 @@ class Window(Tk):
         self.submit_btn.config(state=NORMAL)
 
     def close(self):
-        self.result = [self.src.get(), self.dest.get(), self.priority.get(), self.limit.get(), self.alts.get(), self.altf.get()]
+        self.result = [self.src.get(), self.dest.get(), self.priority.get(), "--limit", self.limit.get(), "-alts", self.alts.get(), "-altf", self.altf.get()]
         self.destroy()
 
     def get_data(self):
