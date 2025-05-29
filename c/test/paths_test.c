@@ -173,7 +173,7 @@ CTEST(pop_test, path)
     destroy_node(pop);
 }
 
-CTEST(1, 2)
+CTEST(test_paths, merge)
 {
     Path* to = def_path_construct(0);   // путь: 0->3->4->5
     Path* back = def_path_construct(9); // путь: 9->1->2->5

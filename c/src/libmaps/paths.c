@@ -227,11 +227,11 @@ int compare_paths(Path* a, Path* b)
     return count;
 }
 
-PathsContain* correct_paths(PathsContain* paths, int src)
+PathsContain* correct_paths(PathsContain* paths, int res)
 {
     PathsContain* res_paths = def_path_contain_construct();
     for (Path* curr = paths->first; curr != NULL; curr = curr->next) {
-        if (curr->head->num == src) {
+        if (curr->tail->num == res) {
             insert_in_path_contain(res_paths, curr);
         }
     }
