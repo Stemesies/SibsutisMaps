@@ -10,26 +10,39 @@ class Window(Tk):
         self.title("Основное окно")
         self.geometry("250x200")
 
-        self.src = []
+        self.src = StringVar()
+        self.dest = StringVar()
  
-        self.src_list = ["Test1", "Test2"]
+        self.cities_list = ["Test1", "Test2"]
 
-        self.src_box = ttk.Combobox(values=self.src_list, state="readonly")
+        self.src_box = ttk.Combobox(self, textvariable=self.src, values=self.cities_list, state="readonly")
         self.src_box.pack(anchor=NW, padx=5, pady=5)
-        self.src_box.bind("<<ComboboxSelected>>", self.src_selected)
+        self.src_box.bind("<<ComboboxSelected>>", self.check)
+
+        self.dest_box = ttk.Combobox(self, textvariable=self.dest, values=self.cities_list, state="readonly")
+        self.dest_box.pack(anchor=NW, padx=5, pady=5)
+        self.dest_box.bind("<<ComboboxSelected>>", self.check)
+
+        ttk.Button(self, text="Подтвердить", command=self.close).pack(pady=10)
+
+        self.result = None
         
  
-    def src_selected(self, event):
-        self.src = self.src_box.get()
+    def check(self, event):
+        pass
 
-    def get_src(self):
-        return self.src
+    def close(self):
+        self.result = [self.src.get(), self.dest.get()]
+        self.destroy()
+
+    def get_data(self):
+        return self.result
 
 def main():
     root = Window()
     root.mainloop()
 
-    print(root.get_src())
+    print(root.get_data())
 
 
 if __name__ == "__main__":
