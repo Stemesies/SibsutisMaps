@@ -30,6 +30,7 @@ class Window(Tk):
         # конфигурация окна
         self.title("Основное окно")
         self.geometry("550x300")
+        self.config(bg="#008000")
 
         self.src = StringVar()
         self.dest = StringVar()
@@ -39,28 +40,30 @@ class Window(Tk):
         self.alts = StringVar(value=0)
         self.altf = StringVar(value=0)
 
-        top_frame = Frame(self)
+        self.alts_cities = []
+
+        top_frame = Frame(self, bg="#008000")
         top_frame.pack(pady=(10, 5), padx=8, fill=X)
 
-        src_frame = Frame(top_frame)
+        src_frame = Frame(top_frame, bg="#008000")
         src_frame.pack(side=LEFT, expand=True, fill=X, padx=(0, 8))
-        Label(src_frame, text="Источник:").pack(anchor=W)
+        Label(src_frame, text="Источник:", bg="#008000").pack(anchor=W)
         self.src_box = AutocompleteCombobox(src_frame, textvariable=self.src, values=self.cities_list)
         self.src_box.pack(fill=X)
         self.src_box.bind("<<ComboboxSelected>>", self.check)
         self.src_box.bind("<KeyRelease>", self.check, add='+')
 
-        dest_frame = Frame(top_frame)
+        dest_frame = Frame(top_frame, bg="#008000")
         dest_frame.pack(side=LEFT, expand=True, fill=X, padx=(8, 8))
-        Label(dest_frame, text="Назначение:").pack(anchor=W)
+        Label(dest_frame, text="Назначение:", bg="#008000").pack(anchor=W)
         self.dest_box = AutocompleteCombobox(dest_frame, textvariable=self.dest, values=self.cities_list)
         self.dest_box.pack(fill=X)
         self.dest_box.bind("<<ComboboxSelected>>", self.check)
         self.dest_box.bind("<KeyRelease>", self.check, add='+')
 
-        priority_frame = Frame(top_frame)
+        priority_frame = Frame(top_frame, bg="#008000")
         priority_frame.pack(side=LEFT, expand=True, fill=X, padx=0)
-        Label(priority_frame, text="Приоритет:").pack(anchor=W)
+        Label(priority_frame, text="Приоритет:", bg="#008000").pack(anchor=W)
         self.quickest_btn = ttk.Radiobutton(priority_frame, text=quickest_text, value="--quickest", variable=self.priority)
         self.quickest_btn.pack(side=TOP, expand=True, fill=X)
         self.longest_btn = ttk.Radiobutton(priority_frame, text=longest_text, value="--longest", variable=self.priority)
@@ -68,31 +71,33 @@ class Window(Tk):
         self.shortest_btn = ttk.Radiobutton(priority_frame, text=shortest_text, value="--shortest", variable=self.priority)
         self.shortest_btn.pack(side=TOP, expand=True, fill=X)
 
-        middle_frame = Frame(self)
+        middle_frame = Frame(self, bg="#008000")
         middle_frame.pack(pady=(10, 15), padx=8, fill=X)
         
-        limit_frame = Frame(middle_frame)
+        limit_frame = Frame(middle_frame, bg="#008000")
         limit_frame.pack(side=LEFT, expand=True, fill=X, padx=(0, 6))
-        Label(limit_frame, text="--limit").pack(anchor=W)
+        Label(limit_frame, text="--limit", bg="#008000").pack(anchor=W)
         limit_spinbox = ttk.Spinbox(limit_frame, from_=0.0, to=20.0, state="readonly", textvariable=self.limit)
         limit_spinbox.pack(fill=X)
 
-        alts_frame = Frame(middle_frame)
+        alts_frame = Frame(middle_frame, bg="#008000")
         alts_frame.pack(side=LEFT, expand=True, fill=X, padx=(6, 6))
-        Label(alts_frame, text="-alts").pack(anchor=W)
+        Label(alts_frame, text="-alts", bg="#008000").pack(anchor=W)
         alts_spinbox = ttk.Spinbox(alts_frame, from_=0.0, to=20.0, state="readonly", textvariable=self.alts)
         alts_spinbox.pack(fill=X)
 
-        altf_frame = Frame(middle_frame)
+        altf_frame = Frame(middle_frame, bg="#008000")
         altf_frame.pack(side=LEFT, expand=True, fill=X, padx=(6, 6))
-        Label(altf_frame, text="-altf").pack(anchor=W)
+        Label(altf_frame, text="-altf", bg="#008000").pack(anchor=W)
         altf_spinbox = ttk.Spinbox(altf_frame, from_=1.0, to=10.0, increment=0.1, state="readonly", textvariable=self.altf)
         altf_spinbox.pack(fill=X)
 
-        bottom_frame = Frame(self)
+        bottom_frame = Frame(self, bg="#008000")
         bottom_frame.pack(pady=(5, 15))
         self.submit_btn = ttk.Button(bottom_frame, text="Подтвердить", state=DISABLED, command=self.close)
-        self.submit_btn.pack(pady=10)
+        self.submit_btn.pack(side=LEFT, expand=True, fill=X, padx=6, pady=10)
+        self.alts_btn = ttk.Button(bottom_frame, text="Добавить точку в маршрут", state=DISABLED, command=self.add_alts)
+        self.alts_btn.pack(side=RIGHT, expand=True, fill=X, padx=6, pady=10)
 
         self.result = None
  
@@ -101,13 +106,24 @@ class Window(Tk):
              or (self.dest.get() not in self.cities_list)\
                   or (self.src.get() == self.dest.get())):
             self.submit_btn.config(state=DISABLED)
+            self.alts_btn.config(state=DISABLED)
             return
         
         self.submit_btn.config(state=NORMAL)
+        self.alts_btn.config(state=NORMAL)
 
     def close(self):
-        self.result = [self.src.get(), self.dest.get(), self.priority.get(), "--limit", self.limit.get(), "-alts", self.alts.get(), "-altf", self.altf.get()]
+        self.result = [self.src.get()]
+
+        for city in self.alts_cities:
+            if ((city != self.src.get()) and (city != self.dest.get())):
+                self.result.append(city)
+
+        self.result = self.result + [self.dest.get(), self.priority.get(), "--limit", self.limit.get(), "-alts", self.alts.get(), "-altf", self.altf.get()]
         self.destroy()
+    
+    def add_alts(self):
+        pass
 
     def get_data(self):
         return self.result
