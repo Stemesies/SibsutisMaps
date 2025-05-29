@@ -176,7 +176,7 @@ class MainWindow(Tk):
         dest = self.dest.get()
         cities = self.cities_list
 
-        if (src in cities ) and (dest in cities) and (src != dest):
+        if (src in cities ) and (dest in cities):
             self.submit_btn.config(state=NORMAL)
             self.alts_btn.config(state=NORMAL)
             return
@@ -203,9 +203,11 @@ class MainWindow(Tk):
         )
 
         lines = [line for line in process.stdout.split("\n")][1:]
-        if (lines[0][:2] != "Не"):
+        if (lines and lines[0][:2] != "Не"):
             lines[0] = "Лучший путь" + lines[0][6:]
-        result = "\n".join(lines)
+            result = "\n".join(lines)
+        else:
+            result = "Не удалось построить маршрут."
 
         ResultWindow(self, result)
     
