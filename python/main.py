@@ -1,4 +1,3 @@
-# from window.window import Window
 from pathlib import Path
 from tkinter import *
 from tkinter import ttk
@@ -8,10 +7,10 @@ class AutocompleteCombobox(ttk.Combobox):
     def __init__(self, parent, values, **kwargs):
         super().__init__(parent, **kwargs)
         self.values = values
-        self.bind("<KeyRelease>", self.on_keyrelease)
+        self.bind("<KeyRelease>", self.update_list)
         self['values'] = self.values
     
-    def on_keyrelease(self, event):
+    def update_list(self, event=None):
         typed = self.get().lower()
         
         matches = [value for value in self.values if typed in value.lower()]
@@ -47,7 +46,7 @@ class AltsWindow(Toplevel):
         Label(add_frame, text="Список городов:", bg="#008000").pack(anchor=CENTER)
         self.add_cities_box = AutocompleteCombobox(add_frame, textvariable=self.add_city, values=self.cities_list)
         self.add_cities_box.pack(fill=X)
-        self.submit_add_btn = ttk.Button(add_frame, text="Добавить", command=self.add_and_close)
+        self.submit_add_btn = ttk.Button(add_frame, text="Добавить", command=self.add)
         self.submit_add_btn.pack(side=LEFT, expand=True, fill=X, padx=6, pady=10)
 
         del_frame = Frame(top_frame, bg="#008000")
@@ -55,21 +54,25 @@ class AltsWindow(Toplevel):
         Label(del_frame, text="Список городов:", bg="#008000").pack(anchor=CENTER)
         self.del_cities_box = AutocompleteCombobox(del_frame, textvariable=self.del_city, values=self.alts_cities)
         self.del_cities_box.pack(fill=X)
-        self.submit_add_btn = ttk.Button(del_frame, text="Удалить", command=self.del_and_close)
+        self.submit_add_btn = ttk.Button(del_frame, text="Удалить", command=self.delete)
         self.submit_add_btn.pack(side=LEFT, expand=True, fill=X, padx=6, pady=10)
 
-    def add_and_close(self):
+    def add(self):
         city = self.add_city.get()
         if (city in self.cities_list) and (city not in self.alts_cities)\
               and (city != self.src) and (city != self.dest):
             self.alts_cities.append(city)
-        self.destroy()
+            self.del_cities_box.config(values=self.alts_cities)
+            self.del_cities_box.update_list()
+            self.add_city.set("")
     
-    def del_and_close(self):
+    def delete(self):
         city = self.del_city.get()
         if city in self.alts_cities:
             self.alts_cities.remove(city)
-        self.destroy()
+            self.del_cities_box.config(values=self.alts_cities)
+            self.del_city.set("")
+            self.del_cities_box.update_list()
 
 class ResultWindow(Toplevel):
     def __init__(self, parent, text, **kwargs):
@@ -83,9 +86,12 @@ class ResultWindow(Toplevel):
         self.grab_set()
         
         frame = Frame(self)
-        frame.pack(side=LEFT, pady=(10, 5), padx=8, fill=BOTH)
+        frame.pack(pady=(10, 5), padx=8, fill=BOTH, expand=True)
 
-        Label(frame, text=self.text, justify=LEFT, bg="#008000", fg="#FFFFFF", font=("Arial", 14)).pack(anchor=W, expand=True, fill=BOTH)
+        self.text_widget = Text(frame, bg="#008000", fg="#FFFFFF", font=("Arial", 14), bd=0, highlightthickness=0)
+        self.text_widget.pack(anchor=W, expand=True, fill=BOTH)
+        self.text_widget.insert('1.0', self.text)
+        self.text_widget.config(state=DISABLED)
 
 class MainWindow(Tk):
     def __init__(self, cities_list):
@@ -106,9 +112,9 @@ class MainWindow(Tk):
         self.dest = StringVar()
         self.priority = StringVar(value="--quickest")
 
-        self.limit = StringVar(value=0)
-        self.alts = StringVar(value=0)
-        self.altf = StringVar(value=1.0)
+        self.limit = StringVar(value="0")
+        self.alts = StringVar(value="0")
+        self.altf = StringVar(value="1.0")
 
         self.alts_cities = []
 
@@ -176,7 +182,7 @@ class MainWindow(Tk):
         dest = self.dest.get()
         cities = self.cities_list
 
-        if (src in cities ) and (dest in cities):
+        if (src in cities) and (dest in cities):
             self.submit_btn.config(state=NORMAL)
             self.alts_btn.config(state=NORMAL)
             return
@@ -201,6 +207,7 @@ class MainWindow(Tk):
             capture_output=True,
             text=True
         )
+        print(process.stdout)
 
         lines = [line for line in process.stdout.split("\n")][1:]
         if (lines and lines[0][:2] != "Не"):
