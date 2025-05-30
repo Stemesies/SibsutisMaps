@@ -89,4 +89,10 @@ Path* path_with_return(const Path* path_to, Path* path_back);
 /*Удаление вершины с конца пути*/
 void pop_back(Path* path);
 
+/*Поиск вершины в пути по её номеру*/
+int path_lookup(Path* path, int vert);
+
+/*По порядку ли расположены вершины в пути?*/
+bool is_in_order(Path* path, int* points, int points_count);
+
 #endif

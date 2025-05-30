@@ -227,19 +227,43 @@ int compare_paths(Path* a, Path* b)
     return count;
 }
 
+/*Поиск вершины в пути по её номеру*/
+int path_lookup(Path* path, int vert)
+{
+    int index = 0;
+    for (PathNode* curr = path->head; curr != NULL; curr = curr->next) {
+        if (curr->num == vert)
+            return index;
+        index++;
+    }
+    return -1;
+}
+
+/*Последовательно ли идут вершины в пути?*/
+bool is_in_order(Path* path, int* points, int points_count)
+{
+    if (points_count == 2 || points_count == 3)
+        return true;
+    for (int i = 1; i < points_count; i++) {
+        if (path_lookup(path, points[i]) < path_lookup(path, points[i - 1]))
+            return false;
+    }
+    return true;
+}
+
 bool path_contains_all(Path* path, int* points, int points_count)
 {
     if (points_count == 0)
         return true;
 
-    int contains_points = 1;
-
     for (int i = 0; i < points_count; i++) {
         if (!is_visited(path, points[i]))
-            contains_points = 0;
+            return false;
+        if (!is_in_order(path, points, points_count))
+            return false;
     }
 
-    return contains_points;
+    return true;
 }
 
 bool path_fits_limit(Path* path, int limit)
