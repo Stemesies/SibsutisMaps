@@ -3,7 +3,7 @@ LIB_NAME = libmaps
 TEST_NAME = test_maps
 LANG_DIR = c
 
-ARGS =
+ARGS = Александровка Новосибирск Колывань Коченёво Амба --shortest --limit 0 -alts 0 -altf 1
 CFLAGS = -Wall -Werror -g
 CPPFLAGS = -I c/src -I c/thirdparty -MP -MMD
 VALFLAGS = --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1 

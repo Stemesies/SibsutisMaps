@@ -227,7 +227,8 @@ int compare_paths(Path* a, Path* b)
     return count;
 }
 
-int path_lookup(Path* path, int vert)
+/*Поиск вершины в пути по её номеру*/
+static int path_lookup(Path* path, int vert)
 {
     int index = 0;
     for (PathNode* curr = path->head; curr != NULL; curr = curr->next) {
@@ -238,7 +239,8 @@ int path_lookup(Path* path, int vert)
     return -1;
 }
 
-bool is_in_order(Path* path, int* points, int points_count)
+/*Последовательно ли идут вершины в пути?*/
+static bool is_in_order(Path* path, int* points, int points_count)
 {
     if (points_count == 2 || points_count == 3)
         return true;
