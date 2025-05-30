@@ -240,7 +240,7 @@ static int path_lookup(Path* path, int vert)
 }
 
 /*Последовательно ли идут вершины в пути?*/
-static bool is_in_order(Path* path, int* points, int points_count)
+bool is_in_order(Path* path, int* points, int points_count)
 {
     if (points_count == 2 || points_count == 3)
         return true;

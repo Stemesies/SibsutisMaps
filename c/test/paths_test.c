@@ -252,3 +252,36 @@ CTEST(pop_test, back)
     free(edge_2);
     free(edge_3);
 }
+
+CTEST(test_path, order)
+{
+    Path* back = def_path_construct(9); // путь: 9->1->2->5
+
+    Edge* edge_1 = calloc(1, sizeof(Edge));
+    edge_1->len = LEN;
+    edge_1->speed = SPEED;
+    Edge* edge_2 = calloc(1, sizeof(Edge));
+    edge_2->len = 3;
+    edge_2->speed = 60;
+    Edge* edge_3 = calloc(1, sizeof(Edge));
+    edge_3->len = 17;
+    edge_3->speed = 47;
+    insert_in_path(back, 1, edge_1);
+    insert_in_path(back, 2, edge_2);
+    insert_in_path(back, 5, edge_3);
+
+    int points_true[] = {9, 1, 2, 5};
+    ASSERT_EQUAL(
+            true,
+            is_in_order(back, points_true, sizeof(points_true) / sizeof(int)));
+    int points_wrong[] = {9, 2, 1, 5};
+    ASSERT_NOT_EQUAL(
+            true,
+            is_in_order(
+                    back, points_wrong, sizeof(points_wrong) / sizeof(int)));
+
+    destroy_path(back);
+    free(edge_1);
+    free(edge_2);
+    free(edge_3);
+}
