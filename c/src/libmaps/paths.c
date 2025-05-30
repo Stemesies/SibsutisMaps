@@ -228,7 +228,7 @@ int compare_paths(Path* a, Path* b)
 }
 
 /*Поиск вершины в пути по её номеру*/
-static int path_lookup(Path* path, int vert)
+int path_lookup(Path* path, int vert)
 {
     int index = 0;
     for (PathNode* curr = path->head; curr != NULL; curr = curr->next) {

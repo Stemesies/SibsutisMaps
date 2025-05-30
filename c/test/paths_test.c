@@ -285,3 +285,29 @@ CTEST(test_path, order)
     free(edge_2);
     free(edge_3);
 }
+
+CTEST(test_path, lookup)
+{
+    Path* back = def_path_construct(9); // путь: 9->1->2->5
+
+    Edge* edge_1 = calloc(1, sizeof(Edge));
+    edge_1->len = LEN;
+    edge_1->speed = SPEED;
+    Edge* edge_2 = calloc(1, sizeof(Edge));
+    edge_2->len = 3;
+    edge_2->speed = 60;
+    Edge* edge_3 = calloc(1, sizeof(Edge));
+    edge_3->len = 17;
+    edge_3->speed = 47;
+    insert_in_path(back, 1, edge_1);
+    insert_in_path(back, 2, edge_2);
+    insert_in_path(back, 5, edge_3);
+
+    ASSERT_EQUAL(2, path_lookup(back, 2));
+    ASSERT_EQUAL(3, path_lookup(back, 5));
+
+    destroy_path(back);
+    free(edge_1);
+    free(edge_2);
+    free(edge_3);
+}
