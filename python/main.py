@@ -74,13 +74,13 @@ class AltsWindow(Toplevel):
             self.del_city.set("")
             self.del_cities_box.update_list()
 
-class ResultWindow(Toplevel):
-    def __init__(self, parent, text, **kwargs):
+class InfoWindow(Toplevel):
+    def __init__(self, parent, text, title, **kwargs):
         super().__init__(parent, **kwargs)
         self.text = text
 
         # конфигурация окна
-        self.title("Результат")
+        self.title(title)
         self.geometry("1500x600")
         self.config(bg="#008000")
         self.grab_set()
@@ -138,7 +138,7 @@ class MainWindow(Tk):
         self.dest_box.bind("<KeyRelease>", self.check, add='+')
 
         priority_frame = Frame(top_frame, bg="#008000")
-        priority_frame.pack(side=LEFT, expand=True, fill=X, padx=0)
+        priority_frame.pack(side=LEFT, expand=True, fill=X, padx=(8, 0))
         Label(priority_frame, text="Приоритет:", bg="#008000").pack(anchor=W)
         self.quickest_btn = ttk.Radiobutton(priority_frame, text=quickest_text, value="--quickest", variable=self.priority)
         self.quickest_btn.pack(side=TOP, expand=True, fill=X)
@@ -175,6 +175,9 @@ class MainWindow(Tk):
         self.alts_btn = ttk.Button(bottom_frame, text="Изменить маршрут", state=DISABLED, command=self.add_alts)
         self.alts_btn.pack(side=RIGHT, expand=True, fill=X, padx=6, pady=10)
 
+        self.help_btn = ttk.Button(self, text="Помощь", command=self.show_help)
+        self.help_btn.pack(side=BOTTOM, anchor=W, padx=6, pady=(10, 5))
+
         self.result = None
  
     def check(self, event=None):
@@ -198,6 +201,7 @@ class MainWindow(Tk):
                 self.result.append(city)
 
         self.result = self.result + [self.dest.get(), self.priority.get(), "--limit", self.limit.get(), "-alts", self.alts.get(), "-altf", self.altf.get()]
+        print(*self.result)
 
         repo_path = Path(__file__).parent.parent
         bin_file_path = repo_path / "c" / "bin" / "maps"
@@ -216,7 +220,7 @@ class MainWindow(Tk):
         else:
             result = "Не удалось построить маршрут."
 
-        ResultWindow(self, result)
+        InfoWindow(self, result, "Результат")
     
     def add_alts(self):
         self.alts_cities = [city for city in self.alts_cities if (city != self.src.get()) and (city != self.dest.get())]
@@ -224,6 +228,18 @@ class MainWindow(Tk):
 
     def get_data(self):
         return self.result
+    
+    def show_help(self):
+        repo_path = Path(__file__).parent.parent
+        bin_file_path = repo_path / "c" / "bin" / "maps"
+
+        process = subprocess.run(
+            [bin_file_path],
+            capture_output=True,
+            text=True
+        )
+
+        InfoWindow(self, process.stdout, "Помощь")
 
 def main():
     repo_path = Path(__file__).parent.parent
