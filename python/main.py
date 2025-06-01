@@ -62,7 +62,6 @@ class AltsWindow(Toplevel):
         if (city in self.cities_list) and (city not in self.alts_cities)\
               and (city != self.src) and (city != self.dest):
             self.alts_cities.append(city)
-            self.del_cities_box.config(values=self.alts_cities)
             self.del_cities_box.update_list()
             self.add_city.set("")
     
@@ -70,7 +69,6 @@ class AltsWindow(Toplevel):
         city = self.del_city.get()
         if city in self.alts_cities:
             self.alts_cities.remove(city)
-            self.del_cities_box.config(values=self.alts_cities)
             self.del_city.set("")
             self.del_cities_box.update_list()
 
@@ -201,7 +199,6 @@ class MainWindow(Tk):
                 self.result.append(city)
 
         self.result = self.result + [self.dest.get(), self.priority.get(), "--limit", self.limit.get(), "-alts", self.alts.get(), "-altf", self.altf.get()]
-        print(*self.result)
 
         repo_path = Path(__file__).parent.parent
         bin_file_path = repo_path / "c" / "bin" / "maps"
@@ -211,7 +208,6 @@ class MainWindow(Tk):
             capture_output=True,
             text=True
         )
-        print(process.stdout)
 
         lines = [line for line in process.stdout.split("\n")][1:]
         if (lines and lines[0][:2] != "Не"):
@@ -225,9 +221,6 @@ class MainWindow(Tk):
     def add_alts(self):
         self.alts_cities = [city for city in self.alts_cities if (city != self.src.get()) and (city != self.dest.get())]
         AltsWindow(self, self.cities_list, self.alts_cities, self.src.get(), self.dest.get())
-
-    def get_data(self):
-        return self.result
     
     def show_help(self):
         repo_path = Path(__file__).parent.parent
@@ -259,8 +252,6 @@ def main():
     cities_list.sort()
     root = MainWindow(cities_list)
     root.mainloop()
-
-    print(root.get_data())
 
 if __name__ == "__main__":
     main()
