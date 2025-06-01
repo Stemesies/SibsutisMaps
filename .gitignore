@@ -2,3 +2,4 @@ c/bin/*
 c/obj/*
 .vscode
 .venv
+python/__pycache__

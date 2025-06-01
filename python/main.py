@@ -1,4 +1,5 @@
-from pathlib import Path
+from config import *
+
 from tkinter import *
 from tkinter import ttk
 import subprocess
@@ -33,29 +34,29 @@ class AltsWindow(Toplevel):
         self.del_city = StringVar()
 
         # конфигурация окна
-        self.title("Выбор точки")
-        self.geometry("550x300")
-        self.config(bg="#008000")
+        self.title(ALTS_WINDOW_TITLE)
+        self.geometry(ALTS_WINDOW_GEOMETRY)
+        self.config(bg=ALTS_WINDOW_BACKGROUND)
         self.grab_set()
 
-        top_frame = Frame(self, bg="#008000")
-        top_frame.pack(pady=(10, 5), padx=8, fill=X)
+        main_frame = Frame(self, bg=MAIN_FRAME_BACKGROUND)
+        main_frame.pack(pady=(10, 5), padx=8, fill=X)
 
-        add_frame = Frame(top_frame, bg="#008000")
+        add_frame = Frame(main_frame, bg=ADD_FRAME_BACKGROUND)
         add_frame.pack(side=LEFT, expand=True, fill=X, padx=(0, 8))
-        Label(add_frame, text="Список городов:", bg="#008000").pack(anchor=CENTER)
+        Label(add_frame, text=ADD_FRAME_LABEL_TEXT, bg=ADD_FRAME_LABEL_BACKGROUND).pack(anchor=CENTER)
         self.add_cities_box = AutocompleteCombobox(add_frame, textvariable=self.add_city, values=self.cities_list)
         self.add_cities_box.pack(fill=X)
-        self.submit_add_btn = ttk.Button(add_frame, text="Добавить", command=self.add)
+        self.submit_add_btn = ttk.Button(add_frame, text=SUBMIT_ADD_BTN_TEXT, command=self.add)
         self.submit_add_btn.pack(side=LEFT, expand=True, fill=X, padx=6, pady=10)
 
-        del_frame = Frame(top_frame, bg="#008000")
+        del_frame = Frame(main_frame, bg=DEL_FRAME_BACKGROUND)
         del_frame.pack(side=LEFT, expand=True, fill=X, padx=(0, 8))
-        Label(del_frame, text="Список городов:", bg="#008000").pack(anchor=CENTER)
+        Label(del_frame, text=DEL_FRAME_LABEL_TEXT, bg=DEL_FRAME_LABEL_BACKGROUND).pack(anchor=CENTER)
         self.del_cities_box = AutocompleteCombobox(del_frame, textvariable=self.del_city, values=self.alts_cities)
         self.del_cities_box.pack(fill=X)
-        self.submit_add_btn = ttk.Button(del_frame, text="Удалить", command=self.delete)
-        self.submit_add_btn.pack(side=LEFT, expand=True, fill=X, padx=6, pady=10)
+        self.submit_del_btn = ttk.Button(del_frame, text=SUBMIT_DEL_BTN_TEXT, command=self.delete)
+        self.submit_del_btn.pack(side=LEFT, expand=True, fill=X, padx=6, pady=10)
 
     def add(self):
         city = self.add_city.get()
@@ -79,14 +80,14 @@ class InfoWindow(Toplevel):
 
         # конфигурация окна
         self.title(title)
-        self.geometry("1500x600")
-        self.config(bg="#008000")
+        self.geometry(INFO_WINDOW_GEOMETRY)
+        self.config(bg=INFO_WINDOW_BACKGROUND)
         self.grab_set()
         
         frame = Frame(self)
         frame.pack(pady=(10, 5), padx=8, fill=BOTH, expand=True)
 
-        self.text_widget = Text(frame, bg="#008000", fg="#FFFFFF", font=("Arial", 14), bd=0, highlightthickness=0)
+        self.text_widget = Text(frame, bg=TEXT_WIDGET_BACKGROUND, fg=TEXT_WIDGET_FOREGROUND, font=TEXT_WIDGET_FONT, bd=0, highlightthickness=0)
         self.text_widget.pack(anchor=W, expand=True, fill=BOTH)
         self.text_widget.insert('1.0', self.text)
         self.text_widget.config(state=DISABLED)
@@ -96,84 +97,80 @@ class MainWindow(Tk):
         super().__init__()
 
         self.cities_list = cities_list
- 
-        quickest_text = "Быстрый"
-        longest_text = "Длинный"
-        shortest_text = "Короткий"
 
         # конфигурация окна
-        self.title("Основное окно")
-        self.geometry("600x350")
-        self.config(bg="#008000")
+        self.title(MAIN_WINDOW_TITLE)
+        self.geometry(MAIN_WINDOW_GEOMETRY)
+        self.config(bg=MAIN_WINDOW_BACKGROUND)
 
         self.src = StringVar()
         self.dest = StringVar()
-        self.priority = StringVar(value="--quickest")
+        self.priority = StringVar(value=PRIORITY_DEFAULT_VALUE)
 
-        self.limit = StringVar(value="0")
-        self.alts = StringVar(value="0")
-        self.altf = StringVar(value="1.0")
+        self.limit = StringVar(value=LIMIT_DEFAULT_VALUE)
+        self.alts = StringVar(value=ALTS_DEFAULT_VALUE)
+        self.altf = StringVar(value=ALTF_DEFAULT_VALUE)
 
         self.alts_cities = []
 
-        top_frame = Frame(self, bg="#008000")
+        top_frame = Frame(self, bg=TOP_FRAME_BACKGROUND)
         top_frame.pack(pady=(10, 5), padx=8, fill=X)
 
-        src_frame = Frame(top_frame, bg="#008000")
+        src_frame = Frame(top_frame, bg=SRC_FRAME_BACKGROUND)
         src_frame.pack(side=LEFT, expand=True, fill=X, padx=(0, 8))
-        Label(src_frame, text="Источник:", bg="#008000").pack(anchor=W)
+        Label(src_frame, text=SRC_FRAME_LABEL_TEXT, bg=SRC_FRAME_LABEL_BACKGROUND).pack(anchor=W)
         self.src_box = AutocompleteCombobox(src_frame, textvariable=self.src, values=self.cities_list)
         self.src_box.pack(fill=X)
         self.src_box.bind("<<ComboboxSelected>>", self.check)
         self.src_box.bind("<KeyRelease>", self.check, add='+')
 
-        dest_frame = Frame(top_frame, bg="#008000")
+        dest_frame = Frame(top_frame, bg=DEST_FRAME_BACKGROUND)
         dest_frame.pack(side=LEFT, expand=True, fill=X, padx=(8, 8))
-        Label(dest_frame, text="Назначение:", bg="#008000").pack(anchor=W)
+        Label(dest_frame, text=DEST_FRAME_LABEL_TEXT, bg=DEST_FRAME_LABEL_BACKGROUND).pack(anchor=W)
         self.dest_box = AutocompleteCombobox(dest_frame, textvariable=self.dest, values=self.cities_list)
         self.dest_box.pack(fill=X)
         self.dest_box.bind("<<ComboboxSelected>>", self.check)
         self.dest_box.bind("<KeyRelease>", self.check, add='+')
 
-        priority_frame = Frame(top_frame, bg="#008000")
+        priority_frame = Frame(top_frame, bg=PRIORITY_FRAME_BACKGROUND)
         priority_frame.pack(side=LEFT, expand=True, fill=X, padx=(8, 0))
-        Label(priority_frame, text="Приоритет:", bg="#008000").pack(anchor=W)
-        self.quickest_btn = ttk.Radiobutton(priority_frame, text=quickest_text, value="--quickest", variable=self.priority)
+        Label(priority_frame, text=PRIORITY_FRAME_LABEL_TEXT, bg=PRIORITY_FRAME_LABEL_BACKGROUND).pack(anchor=W)
+        self.quickest_btn = ttk.Radiobutton(priority_frame, text=PRIORITY_QUICKEST_TEXT, value=QUICKEST_BTN_VALUE, variable=self.priority)
         self.quickest_btn.pack(side=TOP, expand=True, fill=X)
-        self.longest_btn = ttk.Radiobutton(priority_frame, text=longest_text, value="--longest", variable=self.priority)
+        self.longest_btn = ttk.Radiobutton(priority_frame, text=PRIORITY_LONGEST_TEXT, value=LONGEST_BTN_VALUE, variable=self.priority)
         self.longest_btn.pack(side=TOP, expand=True, fill=X)
-        self.shortest_btn = ttk.Radiobutton(priority_frame, text=shortest_text, value="--shortest", variable=self.priority)
+        self.shortest_btn = ttk.Radiobutton(priority_frame, text=PRIORITY_SHORTEST_TEXT, value=SHORTEST_BTN_VALUE, variable=self.priority)
         self.shortest_btn.pack(side=TOP, expand=True, fill=X)
 
-        middle_frame = Frame(self, bg="#008000")
+        middle_frame = Frame(self, bg=MIDDLE_FRAME_BACKGROUND)
         middle_frame.pack(pady=(10, 15), padx=8, fill=X)
         
-        limit_frame = Frame(middle_frame, bg="#008000")
+        limit_frame = Frame(middle_frame, bg=LIMIT_FRAME_BACKGROUND)
         limit_frame.pack(side=LEFT, expand=True, fill=X, padx=(0, 8))
-        Label(limit_frame, text="--limit", bg="#008000").pack(anchor=W)
-        limit_spinbox = ttk.Spinbox(limit_frame, from_=0.0, to=8.0, state="readonly", textvariable=self.limit)
+        Label(limit_frame, text=LIMIT_FRAME_LABEL_TEXT, bg=LIMIT_FRAME_LABEL_BACKGROUND).pack(anchor=W)
+        limit_spinbox = ttk.Spinbox(limit_frame, from_=LIMIT_SPINBOX_FROM, to=LIMIT_SPINBOX_TO, state="readonly", textvariable=self.limit)
         limit_spinbox.pack(fill=X)
 
-        alts_frame = Frame(middle_frame, bg="#008000")
+        alts_frame = Frame(middle_frame, bg=ALTS_FRAME_BACKGROUND)
         alts_frame.pack(side=LEFT, expand=True, fill=X, padx=(6, 6))
-        Label(alts_frame, text="-alts", bg="#008000").pack(anchor=W)
-        alts_spinbox = ttk.Spinbox(alts_frame, from_=0.0, to=10.0, state="readonly", textvariable=self.alts)
+        Label(alts_frame, text=ALTS_FRAME_LABEL_TEXT, bg=ALTS_FRAME_LABEL_BACKGROUND).pack(anchor=W)
+        alts_spinbox = ttk.Spinbox(alts_frame, from_=ALTS_SPINBOX_FROM, to=ALTS_SPINBOX_TO, state="readonly", textvariable=self.alts)
         alts_spinbox.pack(fill=X)
 
-        altf_frame = Frame(middle_frame, bg="#008000")
+        altf_frame = Frame(middle_frame, bg=ALTF_FRAME_BACKGROUND)
         altf_frame.pack(side=LEFT, expand=True, fill=X, padx=(6, 6))
-        Label(altf_frame, text="-altf", bg="#008000").pack(anchor=W)
-        altf_spinbox = ttk.Spinbox(altf_frame, from_=1.0, to=6.0, increment=0.1, state="readonly", textvariable=self.altf)
+        Label(altf_frame, text=ALTF_FRAME_LABEL_TEXT, bg=ALTF_FRAME_LABEL_BACKGROUND).pack(anchor=W)
+        altf_spinbox = ttk.Spinbox(altf_frame, from_=ALTF_SPINBOX_FROM, to=ALTF_SPINBOX_TO, increment=ALTF_SPINBOX_INCREMENT, state="readonly", textvariable=self.altf)
         altf_spinbox.pack(fill=X)
 
-        bottom_frame = Frame(self, bg="#008000")
+        bottom_frame = Frame(self, bg=BOTTOM_FRAME_BACKGROUND)
         bottom_frame.pack(pady=(5, 15))
-        self.submit_btn = ttk.Button(bottom_frame, text="Подтвердить", state=DISABLED, command=self.on_submit)
+        self.submit_btn = ttk.Button(bottom_frame, text=SUBMIT_BTN_TEXT, state=DISABLED, command=self.on_submit)
         self.submit_btn.pack(side=LEFT, expand=True, fill=X, padx=6, pady=10)
-        self.alts_btn = ttk.Button(bottom_frame, text="Изменить маршрут", state=DISABLED, command=self.add_alts)
+        self.alts_btn = ttk.Button(bottom_frame, text=ALTS_BTN_TEXT, state=DISABLED, command=self.add_alts)
         self.alts_btn.pack(side=RIGHT, expand=True, fill=X, padx=6, pady=10)
 
-        self.help_btn = ttk.Button(self, text="Помощь", command=self.show_help)
+        self.help_btn = ttk.Button(self, text=HELP_BTN_TEXT, command=self.show_help)
         self.help_btn.pack(side=BOTTOM, anchor=W, padx=6, pady=(10, 5))
 
         self.result = None
@@ -198,13 +195,11 @@ class MainWindow(Tk):
             if ((city != self.src.get()) and (city != self.dest.get())):
                 self.result.append(city)
 
-        self.result = self.result + [self.dest.get(), self.priority.get(), "--limit", self.limit.get(), "-alts", self.alts.get(), "-altf", self.altf.get()]
-
-        repo_path = Path(__file__).parent.parent
-        bin_file_path = repo_path / "c" / "bin" / "maps"
+        self.result = self.result + [self.dest.get(), self.priority.get(), LIMIT_ARG, self.limit.get(), ALTS_ARG, self.alts.get(), ALTF_ARG, self.altf.get()]
+        print(*self.result)
 
         process = subprocess.run(
-            [bin_file_path, *self.result],
+            [BIN_FILE_PATH, *self.result],
             capture_output=True,
             text=True
         )
@@ -214,32 +209,26 @@ class MainWindow(Tk):
             lines[0] = "Лучший путь" + lines[0][6:]
             result = "\n".join(lines)
         else:
-            result = "Не удалось построить маршрут."
+            result = FAILURE_TEXT
 
-        InfoWindow(self, result, "Результат")
+        InfoWindow(self, result, RESULT_TITLE)
     
     def add_alts(self):
         self.alts_cities = [city for city in self.alts_cities if (city != self.src.get()) and (city != self.dest.get())]
         AltsWindow(self, self.cities_list, self.alts_cities, self.src.get(), self.dest.get())
     
     def show_help(self):
-        repo_path = Path(__file__).parent.parent
-        bin_file_path = repo_path / "c" / "bin" / "maps"
-
         process = subprocess.run(
-            [bin_file_path],
+            [BIN_FILE_PATH],
             capture_output=True,
             text=True
         )
 
-        InfoWindow(self, process.stdout, "Помощь")
+        InfoWindow(self, process.stdout, HELP_TITLE)
 
 def main():
-    repo_path = Path(__file__).parent.parent
-    file_path = repo_path / "input"
-
     cities_set = set()
-    with open(file_path, "r") as f:
+    with open(INPUT_FILE_PATH, "r") as f:
         for line in f.readlines():
             city1, city2 = line.split()[:2]
             cities_set.add(city1)
